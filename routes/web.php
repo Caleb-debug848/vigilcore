@@ -1,11 +1,11 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Livewire\Volt\Volt;
+use App\Livewire\Dashboard;
 
 Route::get('/', function () {
     return redirect('/dashboard');
 });
 
-// Route vers le Dashboard Volt
-Volt::route('/dashboard', 'incident-dashboard');
+// Route vers le composant Livewire Dashboard
+Route::get('/dashboard', Dashboard::class);
