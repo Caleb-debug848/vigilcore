@@ -35,4 +35,10 @@ return [
         ],
     ],
 
+    'statuspage' => [
+        'page_id' => env('STATUSPAGE_PAGE_ID'),
+        'key' => env('STATUSPAGE_API_KEY'),
+        'base_url' => 'https://api.statuspage.io/v1/pages/',
+    ],
+
 ];

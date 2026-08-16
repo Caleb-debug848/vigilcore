@@ -2,12 +2,24 @@
 
 use Livewire\Component;
 use App\Models\Incident;
+use App\Services\StatuspageService;
 
 new class extends Component
 {
     public string $filter = 'all';
     public ?int $selectedIncidentId = null;
     public ?array $activePayload = null;
+    public array $statusComponents = [];
+
+    public function mount(StatuspageService $statuspage)
+    {
+        $this->loadStatusComponents($statuspage);
+    }
+
+    public function loadStatusComponents(StatuspageService $statuspage)
+    {
+        $this->statusComponents = $statuspage->getComponents();
+    }
 
     public function triggerSimulation(string $type = 'kibana')
     {
@@ -57,15 +69,40 @@ new class extends Component
         }
     }
 
-    public function resolveIncident($id)
+    public function simulateKibanaIncident()
     {
-        $incident = Incident::find($id);
+        $this->triggerSimulation('kibana');
+    }
+
+    public function simulateZabbixAlert()
+    {
+        $this->triggerSimulation('zabbix');
+    }
+
+    public function simulateN8nDispatch()
+    {
+        $this->triggerSimulation('n8n');
+    }
+
+    public function resolveIncident($incidentId, StatuspageService $statuspage)
+    {
+        $incident = Incident::find($incidentId);
         if ($incident) {
-            $incident->delete();
+            $incident->update(['status' => 'resolved']);
+
+            if (!empty($incident->statuspage_incident_id)) {
+                $statuspage->resolveIncident(
+                    $incident->statuspage_incident_id,
+                    'Incident rétabli par les opérations.'
+                );
+            }
         }
-        if ($this->selectedIncidentId === $id) {
+
+        if ($this->selectedIncidentId === $incidentId) {
             $this->closePayloadModal();
         }
+
+        $this->loadStatusComponents($statuspage);
     }
 
     public function inspectPayload($id)
@@ -83,24 +120,24 @@ new class extends Component
         $this->activePayload = null;
     }
 
-    public function with()
+    public function with(StatuspageService $statuspage)
     {
-        $query = Incident::latest();
+        $query = Incident::where('status', '!=', 'resolved')->latest();
 
         if ($this->filter !== 'all') {
             $query->where('severity', $this->filter);
         }
 
         $incidents = $query->get();
-        $total = Incident::count();
-        $critical = Incident::where('severity', 'critical')->count();
-        $warning = Incident::where('severity', 'warning')->count();
-        $info = Incident::where('severity', 'info')->count();
+        $total = Incident::where('status', '!=', 'resolved')->count();
+        $critical = Incident::where('status', '!=', 'resolved')->where('severity', 'critical')->count();
+        $warning = Incident::where('status', '!=', 'resolved')->where('severity', 'warning')->count();
+        $info = Incident::where('status', '!=', 'resolved')->where('severity', 'info')->count();
 
-        $hasS3pIncident    = Incident::where(fn($q) => $q->where('title', 'like', '%s3p%')->orWhere('description', 'like', '%s3p%'))->exists();
-        $hasDbIncident     = Incident::where(fn($q) => $q->where('title', 'like', '%database%')->orWhere('title', 'like', '%mysql%'))->exists();
-        $hasKibanaIncident = Incident::where('source', 'like', '%Kibana%')->exists();
-        $hasZabbixIncident = Incident::where('source', 'like', '%Zabbix%')->exists();
+        $hasS3pIncident    = Incident::where('status', '!=', 'resolved')->where(fn($q) => $q->where('title', 'like', '%s3p%')->orWhere('description', 'like', '%s3p%'))->exists();
+        $hasDbIncident     = Incident::where('status', '!=', 'resolved')->where(fn($q) => $q->where('title', 'like', '%database%')->orWhere('title', 'like', '%mysql%'))->exists();
+        $hasKibanaIncident = Incident::where('status', '!=', 'resolved')->where('source', 'like', '%Kibana%')->exists();
+        $hasZabbixIncident = Incident::where('status', '!=', 'resolved')->where('source', 'like', '%Zabbix%')->exists();
 
         $services = [
             [
@@ -141,14 +178,15 @@ new class extends Component
         ];
 
         return [
-            'incidents'       => $incidents,
-            'totalIncidents'  => $total,
-            'criticalCount'   => $critical,
-            'warningCount'    => $warning,
-            'infoCount'       => $info,
-            'services'        => $services,
-            'kibanaErrorRate' => Incident::where('source', 'like', '%Kibana%')->count(),
-            'systemHealth'    => $critical > 0 ? 'CRITICAL OUTAGE' : ($warning > 0 ? 'SYSTEM DEGRADED' : 'ALL SYSTEMS NOMINAL'),
+            'incidents'        => $incidents,
+            'totalIncidents'   => $total,
+            'criticalCount'    => $critical,
+            'warningCount'     => $warning,
+            'infoCount'        => $info,
+            'services'         => $services,
+            'statusComponents' => $this->statusComponents,
+            'kibanaErrorRate'  => Incident::where('status', '!=', 'resolved')->where('source', 'like', '%Kibana%')->count(),
+            'systemHealth'     => $critical > 0 ? 'CRITICAL OUTAGE' : ($warning > 0 ? 'SYSTEM DEGRADED' : 'ALL SYSTEMS NOMINAL'),
         ];
     }
 };
@@ -194,53 +232,38 @@ new class extends Component
         }
     </style>
 
-    <!-- Top Sticky Header -->
-    <header class="sticky top-0 z-40 border-b backdrop-blur-xl transition-colors duration-300"
-            :class="darkMode ? 'bg-[#0f131d]/85 border-[#262a35]' : 'bg-white/95 border-slate-200 shadow-sm'">
-        <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between gap-4">
+    <!-- Header Responsive -->
+    <div class="max-w-7xl mx-auto px-6 pt-6">
+        <header class="flex flex-wrap items-center justify-between gap-3 p-4 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-md rounded-2xl border border-zinc-200/80 dark:border-zinc-800 mb-6 transition-colors"
+                :class="darkMode ? 'bg-[#171b26]/90 border-[#262a35]' : 'bg-white/90 border-slate-200 shadow-sm'">
             
-            <div class="flex items-center gap-4">
-                <div class="flex items-center gap-3">
-                    <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-[#7c3aed] to-[#ee9800] flex items-center justify-center text-white font-bold text-sm shadow-md">
-                        VC
-                    </div>
-                    <div>
-                        <h1 class="font-extrabold text-base tracking-tight flex items-center gap-2"
-                            :class="darkMode ? 'text-white' : 'text-slate-900'">
-                            VigilCore <span class="text-[11px] font-mono font-bold px-2 py-0.5 rounded border"
-                                :class="darkMode ? 'bg-violet-950/40 border-violet-800/60 text-[#d2bbff]' : 'bg-violet-100 border-violet-300 text-violet-800'">OPS-01</span>
-                        </h1>
-                    </div>
+            <!-- Logo & Titre -->
+            <div class="flex items-center gap-2.5">
+                <div class="w-9 h-9 rounded-xl bg-purple-600 flex items-center justify-center font-black text-white text-sm shadow-md shadow-purple-500/20">
+                    VC
                 </div>
-
-                <div class="hidden sm:flex items-center gap-2 px-3 py-1 rounded-full text-xs font-mono font-semibold border"
-                     :class="criticalCount > 0 
-                        ? (darkMode ? 'bg-red-950/40 border-red-900/60 text-red-400' : 'bg-red-100 border-red-300 text-red-700')
-                        : (darkMode ? 'bg-emerald-950/40 border-emerald-900/60 text-[#4edea3]' : 'bg-emerald-100 border-emerald-300 text-emerald-800')">
-                    <span class="w-2 h-2 rounded-full"
-                          :class="criticalCount > 0 ? 'bg-red-500 animate-ping' : 'bg-emerald-500 animate-pulse'"></span>
-                    <span>{{ $systemHealth }}</span>
+                <div class="flex items-center gap-2">
+                    <span class="font-bold text-zinc-900 dark:text-white text-lg tracking-tight" :class="darkMode ? 'text-white' : 'text-zinc-900'">VigilCore</span>
+                    <span class="hidden sm:inline-flex text-[11px] font-mono px-2 py-0.5 rounded-md bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 border border-zinc-200 dark:border-zinc-700"
+                          :class="darkMode ? 'bg-[#1c1f2a] text-slate-400 border-[#262a35]' : 'bg-zinc-100 text-zinc-600 border-zinc-200'">
+                        OPS-01
+                    </span>
                 </div>
             </div>
 
-            <div class="flex items-center gap-4">
+            <!-- Actions / Toggles & Bouton Webhook -->
+            <div class="flex items-center gap-2 sm:gap-3">
                 
-                <!-- Polling Switch -->
-                <div class="hidden md:flex items-center gap-2.5 px-3 py-1.5 rounded-lg border text-xs font-mono font-semibold"
-                     :class="darkMode ? 'bg-[#171b26] border-[#262a35] text-slate-300' : 'bg-slate-100 border-slate-300 text-slate-800'">
+                <!-- Toggle Switch / Live (Compact) -->
+                <div class="hidden sm:flex items-center gap-1.5 text-xs text-zinc-500 dark:text-zinc-400 bg-zinc-100 dark:bg-zinc-800 px-2.5 py-1.5 rounded-xl border border-zinc-200/60 dark:border-zinc-700/60 font-mono"
+                     :class="darkMode ? 'bg-[#1c1f2a] border-[#262a35] text-slate-400' : 'bg-zinc-100 border-zinc-200/60 text-zinc-600'">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
                     <span>Live 5s</span>
-                    <button type="button" 
-                            @click="pollingActive = !pollingActive" 
-                            :class="pollingActive ? 'bg-[#7c3aed] shadow-[0_0_12px_rgba(124,58,237,0.5)]' : 'bg-slate-400'" 
-                            class="relative inline-flex h-5 w-9 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 focus:outline-none">
-                        <span :class="pollingActive ? 'translate-x-4' : 'translate-x-0'" 
-                              class="pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow transition duration-200"></span>
-                    </button>
                 </div>
 
                 <!-- Dark/Light Mode Switch -->
-                <div class="flex items-center gap-2 px-3 py-1.5 rounded-lg border text-xs font-mono font-semibold"
-                     :class="darkMode ? 'bg-[#171b26] border-[#262a35] text-slate-200' : 'bg-slate-100 border-slate-300 text-slate-900'">
+                <div class="flex items-center gap-2 px-2.5 py-1.5 rounded-xl border text-xs font-mono font-semibold"
+                     :class="darkMode ? 'bg-[#1c1f2a] border-[#262a35] text-slate-200' : 'bg-zinc-100 border-zinc-200 text-zinc-800'">
                     <span x-text="darkMode ? 'Dark' : 'Light'"></span>
                     <button type="button" 
                             @click="darkMode = !darkMode" 
@@ -251,37 +274,49 @@ new class extends Component
                     </button>
                 </div>
 
-                <!-- Simulation Trigger -->
-                <div class="relative inline-block" x-data="{ openMenu: false }">
-                    <button @click="openMenu = !openMenu" 
-                            class="btn-liquid-violet rounded-lg px-4 py-2 text-xs font-mono font-bold"
-                            :class="darkMode ? 'bg-[#171b26] text-[#d2bbff]' : 'bg-violet-50 border-violet-300 text-violet-800 hover:text-white'">
-                        <span class="flex items-center gap-1.5">
-                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                            Simuler Webhook
-                        </span>
+                <!-- Menu Déroulant Simuler Webhook avec positionnement Z-INDEX corrigé -->
+                <div class="relative" x-data="{ open: false }" @click.outside="open = false">
+                    <button @click="open = !open" 
+                            type="button"
+                            class="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-purple-700 dark:text-purple-300 bg-purple-50 dark:bg-purple-950/50 hover:bg-purple-100 rounded-xl border border-purple-200 dark:border-purple-800/60 transition shadow-sm font-mono">
+                        <span>⚡ Simuler Webhook</span>
                     </button>
 
-                    <div x-show="openMenu" @click.away="openMenu = false" 
-                         class="absolute right-0 mt-2 w-60 rounded-xl border p-2 shadow-2xl z-50 transition-all font-mono text-xs font-semibold"
-                         :class="darkMode ? 'bg-[#1c1f2a] border-[#262a35] text-slate-200' : 'bg-white border-slate-300 text-slate-800 shadow-xl'">
-                        <button wire:click="triggerSimulation('kibana')" @click="openMenu = false" class="w-full text-left px-3 py-2 rounded-lg hover:bg-red-500/10 hover:text-red-600 flex items-center gap-2">
+                    <!-- Dropdown Menu -->
+                    <div x-show="open" 
+                         x-transition:enter="transition ease-out duration-150"
+                         x-transition:enter-start="opacity-0 scale-95"
+                         x-transition:enter-end="opacity-100 scale-100"
+                         x-transition:leave="transition ease-in duration-100"
+                         x-transition:leave-start="opacity-100 scale-100"
+                         x-transition:leave-end="opacity-0 scale-95"
+                         class="absolute right-0 mt-2 w-64 p-1.5 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl shadow-2xl z-50 font-mono text-xs"
+                         :class="darkMode ? 'bg-[#1c1f2a] border-[#262a35] text-slate-200' : 'bg-white border-zinc-200 text-zinc-800'"
+                         style="display: none;">
+                        
+                        <button wire:click="simulateKibanaIncident" @click="open = false" 
+                                class="w-full text-left px-3 py-2 text-xs font-medium rounded-xl hover:bg-red-50 dark:hover:bg-red-950/30 text-zinc-700 dark:text-zinc-200 hover:text-red-600 dark:hover:text-red-400 flex items-center gap-2 transition">
                             <span class="w-2 h-2 rounded-full bg-red-500"></span>
-                            Crash Kibana (500 S3P)
+                            <span>Crash Kibana (500 S3P)</span>
                         </button>
-                        <button wire:click="triggerSimulation('zabbix')" @click="openMenu = false" class="w-full text-left px-3 py-2 rounded-lg hover:bg-amber-500/10 hover:text-amber-600 flex items-center gap-2">
+
+                        <button wire:click="simulateZabbixAlert" @click="open = false" 
+                                class="w-full text-left px-3 py-2 text-xs font-medium rounded-xl hover:bg-amber-50 dark:hover:bg-amber-950/30 text-zinc-700 dark:text-zinc-200 hover:text-amber-600 dark:hover:text-amber-400 flex items-center gap-2 transition">
                             <span class="w-2 h-2 rounded-full bg-amber-500"></span>
-                            Alerte Zabbix (RAM > 88%)
+                            <span>Alerte Zabbix (RAM > 88%)</span>
                         </button>
-                        <button wire:click="triggerSimulation('n8n')" @click="openMenu = false" class="w-full text-left px-3 py-2 rounded-lg hover:bg-violet-500/10 hover:text-violet-600 flex items-center gap-2">
-                            <span class="w-2 h-2 rounded-full bg-violet-500"></span>
-                            Webhook n8n Dispatch
+
+                        <button wire:click="simulateN8nDispatch" @click="open = false" 
+                                class="w-full text-left px-3 py-2 text-xs font-medium rounded-xl hover:bg-purple-50 dark:hover:bg-purple-950/30 text-zinc-700 dark:text-zinc-200 hover:text-purple-600 dark:hover:text-purple-400 flex items-center gap-2 transition">
+                            <span class="w-2 h-2 rounded-full bg-purple-500"></span>
+                            <span>Webhook n8n Dispatch</span>
                         </button>
                     </div>
                 </div>
+
             </div>
-        </div>
-    </header>
+        </header>
+    </div>
 
     <!-- Main Container -->
     <main class="max-w-7xl mx-auto px-6 py-8">
@@ -397,30 +432,66 @@ new class extends Component
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                    @foreach($services as $svc)
-                        <div class="p-3.5 rounded-lg border flex flex-col justify-between transition-all"
-                             :class="darkMode ? 'bg-[#1c1f2a] border-[#262a35]' : 'bg-slate-50 border-slate-200'">
-                            <div class="flex items-center justify-between mb-2">
-                                <span class="text-xs font-bold" :class="darkMode ? 'text-slate-200' : 'text-slate-900'">{{ $svc['name'] }}</span>
-                                <div class="relative flex h-2.5 w-2.5">
-                                    @if($svc['status'] === 'degraded')
-                                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                                        <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500"></span>
-                                    @elseif($svc['status'] === 'warning')
-                                        <span class="animate-pulse absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
-                                        <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-amber-500"></span>
-                                    @else
-                                        <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
-                                    @endif
+                    @if(!empty($statusComponents))
+                        @foreach($statusComponents as $component)
+                            @if(($component['group'] ?? false) === false && ($component['showcase'] ?? true) === true)
+                                <div class="p-3.5 rounded-lg border flex flex-col justify-between transition-all"
+                                     :class="darkMode ? 'bg-[#1c1f2a] border-[#262a35]' : 'bg-slate-50 border-slate-200'">
+                                    <div class="flex items-center justify-between mb-2">
+                                        <span class="text-xs font-bold truncate pr-2" :class="darkMode ? 'text-slate-200' : 'text-slate-900'" title="{{ $component['name'] }}">
+                                            {{ $component['name'] }}
+                                        </span>
+                                        <div class="relative flex h-2.5 w-2.5 flex-shrink-0">
+                                            @if(($component['status'] ?? '') === 'major_outage')
+                                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                                                <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500"></span>
+                                            @elseif(($component['status'] ?? '') === 'partial_outage' || ($component['status'] ?? '') === 'degraded_performance')
+                                                <span class="animate-pulse absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                                                <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-amber-500"></span>
+                                            @else
+                                                <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center justify-between text-xs font-mono"
+                                         :class="darkMode ? 'text-slate-400' : 'text-slate-700'">
+                                        <span class="uppercase text-[10px] font-semibold" :class="
+                                            ($component['status'] ?? '') === 'major_outage' ? 'text-red-500' :
+                                            (($component['status'] ?? '') === 'partial_outage' || ($component['status'] ?? '') === 'degraded_performance' ? 'text-amber-500' : (darkMode ? 'text-[#4edea3]' : 'text-emerald-600'))
+                                        ">
+                                            {{ str_replace('_', ' ', $component['status'] ?? 'operational') }}
+                                        </span>
+                                        <span class="font-bold text-[10px]" :class="darkMode ? 'text-violet-400' : 'text-violet-700'">Statuspage</span>
+                                    </div>
+                                </div>
+                            @endif
+                        @endforeach
+                    @else
+                        @foreach($services as $svc)
+                            <div class="p-3.5 rounded-lg border flex flex-col justify-between transition-all"
+                                 :class="darkMode ? 'bg-[#1c1f2a] border-[#262a35]' : 'bg-slate-50 border-slate-200'">
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="text-xs font-bold" :class="darkMode ? 'text-slate-200' : 'text-slate-900'">{{ $svc['name'] }}</span>
+                                    <div class="relative flex h-2.5 w-2.5">
+                                        @if($svc['status'] === 'degraded')
+                                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                                            <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500"></span>
+                                        @elseif($svc['status'] === 'warning')
+                                            <span class="animate-pulse absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                                            <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-amber-500"></span>
+                                        @else
+                                            <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+                                        @endif
+                                    </div>
+                                </div>
+                                <div class="flex items-center justify-between text-xs font-mono"
+                                     :class="darkMode ? 'text-slate-400' : 'text-slate-700'">
+                                    <span>Latence: <strong :class="'{{ $svc['status'] }}' === 'degraded' ? 'text-red-600' : (darkMode ? 'text-slate-200' : 'text-slate-900')">{{ $svc['latency'] }}</strong></span>
+                                    <span class="font-bold" :class="darkMode ? 'text-[#7c3aed]' : 'text-violet-700'">SLA {{ $svc['sla'] }}</span>
                                 </div>
                             </div>
-                            <div class="flex items-center justify-between text-xs font-mono"
-                                 :class="darkMode ? 'text-slate-400' : 'text-slate-700'">
-                                <span>Latence: <strong :class="'{{ $svc['status'] }}' === 'degraded' ? 'text-red-600' : (darkMode ? 'text-slate-200' : 'text-slate-900')">{{ $svc['latency'] }}</strong></span>
-                                <span class="font-bold" :class="darkMode ? 'text-[#7c3aed]' : 'text-violet-700'">SLA {{ $svc['sla'] }}</span>
-                            </div>
-                        </div>
-                    @endforeach
+                        @endforeach
+                    @endif
                 </div>
             </div>
 
