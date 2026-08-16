@@ -12,6 +12,7 @@ class Incident extends Model
         'severity',
         'source',
         'status',
+        'statuspage_incident_id',
         'raw_payload'
     ];
 
