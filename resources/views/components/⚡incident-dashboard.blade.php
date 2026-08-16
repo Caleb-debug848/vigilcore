@@ -21,36 +21,51 @@ new class extends Component
         $this->statusComponents = $statuspage->getComponents();
     }
 
-    public function triggerSimulation(string $type = 'kibana')
+    public function triggerSimulation(string $type = 'kibana', ?StatuspageService $statuspage = null)
     {
         if ($type === 'kibana') {
+            $componentId = 'k8g1fr1p2ptp'; // ID du composant S3P
+            $result = null;
+
+            if ($statuspage) {
+                $result = $statuspage->createIncident(
+                    'HTTP 500 Spike // API S3P Gateway',
+                    'investigating',
+                    'Détection de 14 erreurs 500 en 60s sur la route /api/v1/payments/process.',
+                    $componentId,
+                    'major_outage'
+                );
+            }
+
             Incident::create([
-                'source'      => 'Kibana Logs Engine',
-                'title'       => 'HTTP 500 Spike // API S3P Gateway',
-                'description' => 'Détection de 14 erreurs 500 en 60s sur la route /api/v1/payments/process.',
-                'severity'    => 'critical',
-                'status'      => 'firing',
-                'raw_payload' => [
-                    'host' => 'srv901529',
-                    'service' => 's3p-gateway',
-                    'error_code' => 500,
-                    'trace_id' => 'trc_' . bin2hex(random_bytes(6)),
-                    'timestamp' => now()->toISOString(),
+                'source'                 => 'Kibana',
+                'title'                  => 'HTTP 500 Spike // API S3P Gateway',
+                'description'            => 'Détection de 14 erreurs 500 en 60s sur la route /api/v1/payments/process.',
+                'severity'               => 'critical',
+                'status'                 => 'firing',
+                'statuspage_incident_id' => $result['id'] ?? null,
+                'raw_payload'            => [
+                    'host'        => 'srv901529',
+                    'service'     => 's3p-gateway',
+                    'error_code'  => 500,
+                    'statuspage'  => $result ?? null,
+                    'trace_id'    => 'trc_' . bin2hex(random_bytes(6)),
+                    'timestamp'   => now()->toISOString(),
                 ],
             ]);
         } elseif ($type === 'zabbix') {
             Incident::create([
-                'source'      => 'Zabbix Agent 2',
+                'source'      => 'Zabbix',
                 'title'       => 'High Memory Usage Warning (>88%)',
-                'description' => 'Le conteneur Elasticsearch srv901529_es_1 approche du seuil critique de RAM.',
+                'description' => 'La mémoire vive du serveur srv901529 a dépassé 88% d\'occupation.',
                 'severity'    => 'warning',
                 'status'      => 'firing',
                 'raw_payload' => [
-                    'host' => 'srv901529',
-                    'metric' => 'vm.memory.utilization',
+                    'host'          => 'srv901529',
+                    'metric'        => 'vm.memory.utilization',
                     'current_value' => '88.4%',
-                    'threshold' => '85.0%',
-                    'timestamp' => now()->toISOString(),
+                    'threshold'     => '85.0%',
+                    'timestamp'     => now()->toISOString(),
                 ],
             ]);
         } else {
@@ -61,28 +76,33 @@ new class extends Component
                 'severity'    => 'info',
                 'status'      => 'open',
                 'raw_payload' => [
-                    'channels' => ['telegram_bot', 'statuspage_api', 'gmail_smtp'],
+                    'channels'     => ['telegram_bot', 'statuspage_api', 'gmail_smtp'],
                     'execution_id' => 'n8n_exec_' . rand(1000, 9999),
-                    'timestamp' => now()->toISOString(),
+                    'timestamp'    => now()->toISOString(),
                 ],
             ]);
         }
+
+        if ($statuspage) {
+            $this->loadStatusComponents($statuspage);
+        }
     }
 
-    public function simulateKibanaIncident()
+    public function simulateKibanaIncident(StatuspageService $statuspage)
     {
-        $this->triggerSimulation('kibana');
+        $this->triggerSimulation('kibana', $statuspage);
     }
 
-    public function simulateZabbixAlert()
+    public function simulateZabbixAlert(StatuspageService $statuspage)
     {
-        $this->triggerSimulation('zabbix');
+        $this->triggerSimulation('zabbix', $statuspage);
     }
 
-    public function simulateN8nDispatch()
+    public function simulateN8nDispatch(StatuspageService $statuspage)
     {
-        $this->triggerSimulation('n8n');
+        $this->triggerSimulation('n8n', $statuspage);
     }
+
 
     public function resolveIncident($incidentId, StatuspageService $statuspage)
     {
@@ -193,513 +213,474 @@ new class extends Component
 ?>
 
 <div x-data="{ 
-        darkMode: localStorage.getItem('vigilcore_theme') ? localStorage.getItem('vigilcore_theme') === 'dark' : true, 
-        pollingActive: true 
+        darkMode: localStorage.getItem('vigilcore_theme') === 'dark' || (!('vigilcore_theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches),
+        isFlashing: false,
+        triggerFlashToggle() {
+            if (this.isFlashing) return;
+            this.isFlashing = true;
+            setTimeout(() => {
+                this.darkMode = !this.darkMode;
+                localStorage.setItem('vigilcore_theme', this.darkMode ? 'dark' : 'light');
+                if (this.darkMode) {
+                    document.documentElement.classList.add('dark');
+                } else {
+                    document.documentElement.classList.remove('dark');
+                }
+            }, 30);
+            setTimeout(() => {
+                this.isFlashing = false;
+            }, 320);
+        }
      }" 
-     x-init="$watch('darkMode', val => localStorage.setItem('vigilcore_theme', val ? 'dark' : 'light'))"
-     :class="darkMode ? 'bg-[#0f131d] text-[#dfe2f1]' : 'bg-[#f8fafc] text-slate-900'" 
-     class="min-h-screen font-sans selection:bg-[#7c3aed] selection:text-white transition-colors duration-300"
-     x-bind:wire:poll.5s="pollingActive ? true : false">
+     :class="{ 'dark': darkMode }" 
+     class="min-h-screen antialiased relative w-full"
+     wire:poll.5s>
 
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
-        .font-mono { font-family: 'JetBrains Mono', monospace; }
-        .font-sans { font-family: 'Inter', sans-serif; }
+    <!-- ==================================================== -->
+    <!-- OVERLAY FLASH PHOTO (Xenon Strobe Effect)            -->
+    <!-- ==================================================== -->
+    <template x-if="isFlashing">
+        <div class="fixed inset-0 z-[100] pointer-events-none select-none bg-white animate-camera-flash backdrop-blur-[1px]"></div>
+    </template>
 
-        .btn-liquid-violet {
-            position: relative;
-            overflow: hidden;
-            border: 1px solid rgba(124, 58, 237, 0.4);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .btn-liquid-violet::before {
-            content: '';
-            position: absolute;
-            top: 100%;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, #7c3aed 0%, #ee9800 100%);
-            transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-            z-index: 1;
-        }
-        .btn-liquid-violet:hover::before {
-            transform: translateY(-100%);
-        }
-        .btn-liquid-violet span {
-            position: relative;
-            z-index: 2;
-        }
-    </style>
-
-    <!-- Header Responsive -->
-    <div class="max-w-7xl mx-auto px-6 pt-6">
-        <header class="flex flex-wrap items-center justify-between gap-3 p-4 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-md rounded-2xl border border-zinc-200/80 dark:border-zinc-800 mb-6 transition-colors"
-                :class="darkMode ? 'bg-[#171b26]/90 border-[#262a35]' : 'bg-white/90 border-slate-200 shadow-sm'">
-            
-            <!-- Logo & Titre -->
-            <div class="flex items-center gap-2.5">
-                <div class="w-9 h-9 rounded-xl bg-purple-600 flex items-center justify-center font-black text-white text-sm shadow-md shadow-purple-500/20">
-                    VC
-                </div>
-                <div class="flex items-center gap-2">
-                    <span class="font-bold text-zinc-900 dark:text-white text-lg tracking-tight" :class="darkMode ? 'text-white' : 'text-zinc-900'">VigilCore</span>
-                    <span class="hidden sm:inline-flex text-[11px] font-mono px-2 py-0.5 rounded-md bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 border border-zinc-200 dark:border-zinc-700"
-                          :class="darkMode ? 'bg-[#1c1f2a] text-slate-400 border-[#262a35]' : 'bg-zinc-100 text-zinc-600 border-zinc-200'">
-                        OPS-01
-                    </span>
-                </div>
-            </div>
-
-            <!-- Actions / Toggles & Bouton Webhook -->
-            <div class="flex items-center gap-2 sm:gap-3">
-                
-                <!-- Toggle Switch / Live (Compact) -->
-                <div class="hidden sm:flex items-center gap-1.5 text-xs text-zinc-500 dark:text-zinc-400 bg-zinc-100 dark:bg-zinc-800 px-2.5 py-1.5 rounded-xl border border-zinc-200/60 dark:border-zinc-700/60 font-mono"
-                     :class="darkMode ? 'bg-[#1c1f2a] border-[#262a35] text-slate-400' : 'bg-zinc-100 border-zinc-200/60 text-zinc-600'">
-                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                    <span>Live 5s</span>
-                </div>
-
-                <!-- Dark/Light Mode Switch -->
-                <div class="flex items-center gap-2 px-2.5 py-1.5 rounded-xl border text-xs font-mono font-semibold"
-                     :class="darkMode ? 'bg-[#1c1f2a] border-[#262a35] text-slate-200' : 'bg-zinc-100 border-zinc-200 text-zinc-800'">
-                    <span x-text="darkMode ? 'Dark' : 'Light'"></span>
-                    <button type="button" 
-                            @click="darkMode = !darkMode" 
-                            :class="darkMode ? 'bg-[#7c3aed] shadow-[0_0_12px_rgba(124,58,237,0.5)]' : 'bg-amber-500 shadow-[0_0_12px_rgba(238,152,0,0.4)]'" 
-                            class="relative inline-flex h-5 w-9 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 focus:outline-none">
-                        <span :class="darkMode ? 'translate-x-4' : 'translate-x-0'" 
-                              class="pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow transition duration-200"></span>
-                    </button>
-                </div>
-
-                <!-- Menu Déroulant Simuler Webhook avec positionnement Z-INDEX corrigé -->
-                <div class="relative" x-data="{ open: false }" @click.outside="open = false">
-                    <button @click="open = !open" 
-                            type="button"
-                            class="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-purple-700 dark:text-purple-300 bg-purple-50 dark:bg-purple-950/50 hover:bg-purple-100 rounded-xl border border-purple-200 dark:border-purple-800/60 transition shadow-sm font-mono">
-                        <span>⚡ Simuler Webhook</span>
-                    </button>
-
-                    <!-- Dropdown Menu -->
-                    <div x-show="open" 
-                         x-transition:enter="transition ease-out duration-150"
-                         x-transition:enter-start="opacity-0 scale-95"
-                         x-transition:enter-end="opacity-100 scale-100"
-                         x-transition:leave="transition ease-in duration-100"
-                         x-transition:leave-start="opacity-100 scale-100"
-                         x-transition:leave-end="opacity-0 scale-95"
-                         class="absolute right-0 mt-2 w-64 p-1.5 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl shadow-2xl z-50 font-mono text-xs"
-                         :class="darkMode ? 'bg-[#1c1f2a] border-[#262a35] text-slate-200' : 'bg-white border-zinc-200 text-zinc-800'"
-                         style="display: none;">
-                        
-                        <button wire:click="simulateKibanaIncident" @click="open = false" 
-                                class="w-full text-left px-3 py-2 text-xs font-medium rounded-xl hover:bg-red-50 dark:hover:bg-red-950/30 text-zinc-700 dark:text-zinc-200 hover:text-red-600 dark:hover:text-red-400 flex items-center gap-2 transition">
-                            <span class="w-2 h-2 rounded-full bg-red-500"></span>
-                            <span>Crash Kibana (500 S3P)</span>
-                        </button>
-
-                        <button wire:click="simulateZabbixAlert" @click="open = false" 
-                                class="w-full text-left px-3 py-2 text-xs font-medium rounded-xl hover:bg-amber-50 dark:hover:bg-amber-950/30 text-zinc-700 dark:text-zinc-200 hover:text-amber-600 dark:hover:text-amber-400 flex items-center gap-2 transition">
-                            <span class="w-2 h-2 rounded-full bg-amber-500"></span>
-                            <span>Alerte Zabbix (RAM > 88%)</span>
-                        </button>
-
-                        <button wire:click="simulateN8nDispatch" @click="open = false" 
-                                class="w-full text-left px-3 py-2 text-xs font-medium rounded-xl hover:bg-purple-50 dark:hover:bg-purple-950/30 text-zinc-700 dark:text-zinc-200 hover:text-purple-600 dark:hover:text-purple-400 flex items-center gap-2 transition">
-                            <span class="w-2 h-2 rounded-full bg-purple-500"></span>
-                            <span>Webhook n8n Dispatch</span>
-                        </button>
-                    </div>
-                </div>
-
-            </div>
-        </header>
-    </div>
-
-    <!-- Main Container -->
-    <main class="max-w-7xl mx-auto px-6 py-8">
+    <!-- Fond Global Dynamique avec Padding Progressif -->
+    <div class="min-h-screen bg-slate-100 dark:bg-[#0b0f17] text-slate-900 dark:text-slate-100 px-2.5 py-2.5 sm:px-4 sm:py-4 md:px-6 transition-colors duration-200">
         
-        <!-- KPI Metrics Row -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
-            
-            <!-- Total Tracked -->
-            <div class="rounded-xl p-5 border transition-all duration-300"
-                 :class="darkMode ? 'bg-[#171b26] border-[#262a35]' : 'bg-white border-slate-200 shadow-sm'">
-                <div class="flex justify-between items-start">
-                    <div>
-                        <p class="text-[11px] font-bold uppercase tracking-wider font-mono"
-                           :class="darkMode ? 'text-slate-400' : 'text-slate-600'">Total Tracked</p>
-                        <h3 class="text-3xl font-black font-mono mt-1" :class="darkMode ? 'text-white' : 'text-slate-900'">{{ $totalIncidents }}</h3>
-                    </div>
-                    <div class="p-2.5 rounded-lg border"
-                         :class="darkMode ? 'bg-violet-950/40 border-violet-900/50 text-[#d2bbff]' : 'bg-violet-100 border-violet-300 text-violet-700'">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
-                    </div>
-                </div>
-                <div class="mt-4 flex items-center justify-between text-[11px] font-mono border-t pt-3"
-                     :class="darkMode ? 'border-[#262a35] text-slate-400' : 'border-slate-200 text-slate-700'">
-                    <span>Événements analysés</span>
-                    <span class="font-bold" :class="darkMode ? 'text-[#4edea3]' : 'text-emerald-600'">100% Ingest</span>
-                </div>
-            </div>
+        <div class="w-full max-w-7xl mx-auto space-y-3 sm:space-y-4">
 
-            <!-- Critical Breaches -->
-            <div class="rounded-xl p-5 border transition-all duration-300"
-                 :class="darkMode ? 'bg-[#171b26] border-red-900/40' : 'bg-white border-red-200 shadow-sm'">
-                <div class="flex justify-between items-start">
-                    <div>
-                        <p class="text-[11px] font-bold uppercase tracking-wider font-mono flex items-center gap-1.5"
-                           :class="darkMode ? 'text-red-400' : 'text-red-600'">
-                            <span class="w-2 h-2 rounded-full bg-red-500 animate-ping"></span>
-                            Breaches Critiques
-                        </p>
-                        <h3 class="text-3xl font-black font-mono mt-1 text-red-600">{{ $criticalCount }}</h3>
-                    </div>
-                    <div class="p-2.5 rounded-lg border"
-                         :class="darkMode ? 'bg-red-950/40 border-red-900/50 text-red-400' : 'bg-red-100 border-red-300 text-red-600'">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
-                    </div>
-                </div>
-                <div class="mt-4 flex items-center justify-between text-[11px] font-mono border-t pt-3"
-                     :class="darkMode ? 'border-[#262a35] text-slate-400' : 'border-slate-200 text-slate-700'">
-                    <span>Seuil critique (>0)</span>
-                    <span class="font-bold" :class="criticalCount > 0 ? (darkMode ? 'text-red-400' : 'text-red-600') : (darkMode ? 'text-[#4edea3]' : 'text-emerald-600')">
-                        {{ $criticalCount > 0 ? 'Action Requise' : 'Nominal' }}
-                    </span>
-                </div>
-            </div>
-
-            <!-- Kibana Error Rate -->
-            <div class="rounded-xl p-5 border transition-all duration-300"
-                 :class="darkMode ? 'bg-[#171b26] border-[#262a35]' : 'bg-white border-slate-200 shadow-sm'">
-                <div class="flex justify-between items-start">
-                    <div>
-                        <p class="text-[11px] font-bold uppercase tracking-wider font-mono"
-                           :class="darkMode ? 'text-[#ffb95f]' : 'text-amber-700'">Kibana Error Rate</p>
-                        <h3 class="text-3xl font-black font-mono mt-1" :class="darkMode ? 'text-white' : 'text-slate-900'">
-                            {{ $kibanaErrorRate }} <span class="text-xs font-normal" :class="darkMode ? 'text-slate-400' : 'text-slate-600'">/min</span>
-                        </h3>
-                    </div>
-                    <div class="p-2.5 rounded-lg border"
-                         :class="darkMode ? 'bg-amber-950/40 border-amber-900/50 text-[#ffb95f]' : 'bg-amber-100 border-amber-300 text-amber-700'">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
-                    </div>
-                </div>
-                <div class="mt-4 flex items-center justify-between text-[11px] font-mono border-t pt-3"
-                     :class="darkMode ? 'border-[#262a35] text-slate-400' : 'border-slate-200 text-slate-700'">
-                    <span>Pattern: `*500*`</span>
-                    <span class="font-bold" :class="darkMode ? 'text-violet-400' : 'text-violet-700'">srv901529</span>
-                </div>
-            </div>
-
-            <!-- n8n Dispatcher -->
-            <div class="rounded-xl p-5 border transition-all duration-300"
-                 :class="darkMode ? 'bg-[#171b26] border-[#262a35]' : 'bg-white border-slate-200 shadow-sm'">
-                <div class="flex justify-between items-start">
-                    <div>
-                        <p class="text-[11px] font-bold uppercase tracking-wider font-mono"
-                           :class="darkMode ? 'text-[#4edea3]' : 'text-emerald-700'">n8n Dispatcher</p>
-                        <h3 class="text-3xl font-black font-mono mt-1" :class="darkMode ? 'text-[#4edea3]' : 'text-emerald-600'">Active</h3>
-                    </div>
-                    <div class="p-2.5 rounded-lg border"
-                         :class="darkMode ? 'bg-emerald-950/40 border-emerald-900/50 text-[#4edea3]' : 'bg-emerald-100 border-emerald-300 text-emerald-700'">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10l-2 1m0 0l-2-1m2 1v2.5M20 7l-2 1m2-1l-2-1m2 1v2.5M14 4l-2-1-2 1M4 7l2-1M4 7l2 1M4 7v2.5M12 21l-2-1m2 1l2-1m-2 1v-2.5M6 18l-2-1v-2.5M18 18l2-1v-2.5"></path></svg>
-                    </div>
-                </div>
-                <div class="mt-4 flex items-center justify-between text-[11px] font-mono border-t pt-3"
-                     :class="darkMode ? 'border-[#262a35] text-slate-400' : 'border-slate-200 text-slate-700'">
-                    <span>Sync Statuspage</span>
-                    <span class="font-bold" :class="darkMode ? 'text-emerald-400' : 'text-emerald-700'">24/7 Live</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- Service Matrix Grid & Severity Donut -->
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-            
-            <!-- Real-Time Service Health Matrix -->
-            <div class="lg:col-span-2 rounded-xl p-6 border transition-all"
-                 :class="darkMode ? 'bg-[#171b26] border-[#262a35]' : 'bg-white border-slate-200 shadow-sm'">
-                <div class="flex items-center justify-between mb-4 pb-3 border-b"
-                     :class="darkMode ? 'border-[#262a35]' : 'border-slate-200'">
-                    <div>
-                        <h2 class="text-sm font-bold uppercase tracking-wider font-mono" :class="darkMode ? 'text-white' : 'text-slate-900'">Service Health Matrix</h2>
-                        <p class="text-xs font-medium mt-0.5" :class="darkMode ? 'text-slate-400' : 'text-slate-600'">Surveillance granulaire des composants critiques</p>
-                    </div>
-                    <span class="text-xs font-mono font-bold" :class="darkMode ? 'text-violet-400' : 'text-violet-700'">Node: srv901529</span>
-                </div>
-
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                    @if(!empty($statusComponents))
-                        @foreach($statusComponents as $component)
-                            @if(($component['group'] ?? false) === false && ($component['showcase'] ?? true) === true)
-                                <div class="p-3.5 rounded-lg border flex flex-col justify-between transition-all"
-                                     :class="darkMode ? 'bg-[#1c1f2a] border-[#262a35]' : 'bg-slate-50 border-slate-200'">
-                                    <div class="flex items-center justify-between mb-2">
-                                        <span class="text-xs font-bold truncate pr-2" :class="darkMode ? 'text-slate-200' : 'text-slate-900'" title="{{ $component['name'] }}">
-                                            {{ $component['name'] }}
-                                        </span>
-                                        <div class="relative flex h-2.5 w-2.5 flex-shrink-0">
-                                            @if(($component['status'] ?? '') === 'major_outage')
-                                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                                                <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500"></span>
-                                            @elseif(($component['status'] ?? '') === 'partial_outage' || ($component['status'] ?? '') === 'degraded_performance')
-                                                <span class="animate-pulse absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
-                                                <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-amber-500"></span>
-                                            @else
-                                                <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
-                                            @endif
-                                        </div>
-                                    </div>
-                                    <div class="flex items-center justify-between text-xs font-mono"
-                                         :class="darkMode ? 'text-slate-400' : 'text-slate-700'">
-                                        <span class="uppercase text-[10px] font-semibold" :class="
-                                            ($component['status'] ?? '') === 'major_outage' ? 'text-red-500' :
-                                            (($component['status'] ?? '') === 'partial_outage' || ($component['status'] ?? '') === 'degraded_performance' ? 'text-amber-500' : (darkMode ? 'text-[#4edea3]' : 'text-emerald-600'))
-                                        ">
-                                            {{ str_replace('_', ' ', $component['status'] ?? 'operational') }}
-                                        </span>
-                                        <span class="font-bold text-[10px]" :class="darkMode ? 'text-violet-400' : 'text-violet-700'">Statuspage</span>
-                                    </div>
-                                </div>
-                            @endif
-                        @endforeach
-                    @else
-                        @foreach($services as $svc)
-                            <div class="p-3.5 rounded-lg border flex flex-col justify-between transition-all"
-                                 :class="darkMode ? 'bg-[#1c1f2a] border-[#262a35]' : 'bg-slate-50 border-slate-200'">
-                                <div class="flex items-center justify-between mb-2">
-                                    <span class="text-xs font-bold" :class="darkMode ? 'text-slate-200' : 'text-slate-900'">{{ $svc['name'] }}</span>
-                                    <div class="relative flex h-2.5 w-2.5">
-                                        @if($svc['status'] === 'degraded')
-                                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                                            <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500"></span>
-                                        @elseif($svc['status'] === 'warning')
-                                            <span class="animate-pulse absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
-                                            <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-amber-500"></span>
-                                        @else
-                                            <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
-                                        @endif
-                                    </div>
-                                </div>
-                                <div class="flex items-center justify-between text-xs font-mono"
-                                     :class="darkMode ? 'text-slate-400' : 'text-slate-700'">
-                                    <span>Latence: <strong :class="'{{ $svc['status'] }}' === 'degraded' ? 'text-red-600' : (darkMode ? 'text-slate-200' : 'text-slate-900')">{{ $svc['latency'] }}</strong></span>
-                                    <span class="font-bold" :class="darkMode ? 'text-[#7c3aed]' : 'text-violet-700'">SLA {{ $svc['sla'] }}</span>
-                                </div>
-                            </div>
-                        @endforeach
-                    @endif
-                </div>
-            </div>
-
-            <!-- Severity Distribution Card -->
-            <div class="rounded-xl p-6 border flex flex-col justify-between"
-                 :class="darkMode ? 'bg-[#171b26] border-[#262a35]' : 'bg-white border-slate-200 shadow-sm'">
-                <div class="flex items-center justify-between mb-4 pb-3 border-b"
-                     :class="darkMode ? 'border-[#262a35]' : 'border-slate-200'">
-                    <h2 class="text-sm font-bold uppercase tracking-wider font-mono" :class="darkMode ? 'text-white' : 'text-slate-900'">Severity Breakdown</h2>
-                    <span class="text-xs font-mono font-semibold" :class="darkMode ? 'text-slate-400' : 'text-slate-600'">Ratio Actif</span>
-                </div>
-
-                <div class="space-y-4 font-mono text-xs">
-                    <!-- Critical Bar -->
-                    <div>
-                        <div class="flex justify-between mb-1">
-                            <span class="font-bold text-red-600">Critique</span>
-                            <span class="font-bold" :class="darkMode ? 'text-white' : 'text-slate-900'">{{ $criticalCount }}</span>
-                        </div>
-                        <div class="w-full rounded-full h-2.5 overflow-hidden" :class="darkMode ? 'bg-slate-800' : 'bg-slate-200'">
-                            <div class="bg-red-500 h-2.5 rounded-full transition-all duration-500" style="width: {{ $totalIncidents > 0 ? ($criticalCount / $totalIncidents) * 100 : 0 }}%"></div>
-                        </div>
-                    </div>
-
-                    <!-- Warning Bar -->
-                    <div>
-                        <div class="flex justify-between mb-1">
-                            <span class="font-bold" :class="darkMode ? 'text-amber-400' : 'text-amber-700'">Warning</span>
-                            <span class="font-bold" :class="darkMode ? 'text-white' : 'text-slate-900'">{{ $warningCount }}</span>
-                        </div>
-                        <div class="w-full rounded-full h-2.5 overflow-hidden" :class="darkMode ? 'bg-slate-800' : 'bg-slate-200'">
-                            <div class="bg-[#ee9800] h-2.5 rounded-full transition-all duration-500" style="width: {{ $totalIncidents > 0 ? ($warningCount / $totalIncidents) * 100 : 0 }}%"></div>
-                        </div>
-                    </div>
-
-                    <!-- Info Bar -->
-                    <div>
-                        <div class="flex justify-between mb-1">
-                            <span class="font-bold" :class="darkMode ? 'text-[#d2bbff]' : 'text-violet-700'">Info</span>
-                            <span class="font-bold" :class="darkMode ? 'text-white' : 'text-slate-900'">{{ $infoCount }}</span>
-                        </div>
-                        <div class="w-full rounded-full h-2.5 overflow-hidden" :class="darkMode ? 'bg-slate-800' : 'bg-slate-200'">
-                            <div class="bg-[#7c3aed] h-2.5 rounded-full transition-all duration-500" style="width: {{ $totalIncidents > 0 ? ($infoCount / $totalIncidents) * 100 : 0 }}%"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="mt-4 p-3 rounded-lg border text-center font-mono text-[11px] font-semibold"
-                     :class="darkMode ? 'bg-[#1c1f2a] border-[#262a35] text-slate-300' : 'bg-slate-100 border-slate-200 text-slate-800'">
-                    Synchronisation active avec <strong class="text-violet-600">Atlassian Statuspage</strong>
-                </div>
-            </div>
-        </div>
-
-        <!-- Live Incident Stream Section -->
-        <div class="rounded-xl border p-6 shadow-2xl backdrop-blur-md transition-colors"
-             :class="darkMode ? 'bg-[#171b26]/90 border-[#262a35]' : 'bg-white border-slate-200 shadow-sm'">
-            
-            <!-- Stream Header & Filters -->
-            <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-6 pb-4 border-b gap-4"
-                 :class="darkMode ? 'border-[#262a35]' : 'border-slate-200'">
-                <div>
-                    <h2 class="text-lg font-bold tracking-tight" :class="darkMode ? 'text-white' : 'text-slate-900'">Flux des Incidents & Triage Direct</h2>
-                    <p class="text-xs font-mono mt-0.5" :class="darkMode ? 'text-slate-400' : 'text-slate-600'">Payloads JSON routés en temps réel depuis Kibana, Zabbix et n8n</p>
-                </div>
+            <!-- ========================================== -->
+            <!-- 1. HEADER STICKY RESPONSIVE                -->
+            <!-- ========================================== -->
+            <header class="sticky top-1 sm:top-2 z-40 flex items-center justify-between gap-2 p-2.5 sm:p-3 md:px-4 bg-white/90 dark:bg-[#111622]/90 backdrop-blur-md border border-slate-200 dark:border-slate-800 rounded-xl sm:rounded-2xl shadow-sm dark:shadow-2xl transition-all duration-200">
                 
-                <!-- Filters Bar -->
-                <div class="flex flex-wrap items-center gap-2">
-                    <button wire:click="$set('filter', 'all')" 
-                        class="px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition-all border"
-                        :class="darkMode 
-                            ? '{{ $filter === 'all' ? 'bg-[#7c3aed]/20 border-[#7c3aed] text-[#d2bbff]' : 'border-slate-700/50 text-slate-300 hover:text-white' }}'
-                            : '{{ $filter === 'all' ? 'bg-violet-600 text-white shadow-sm border-violet-600' : 'bg-slate-100 border-slate-300 text-slate-800 hover:bg-slate-200' }}'">
-                        Tous ({{ $totalIncidents }})
-                    </button>
-                    <button wire:click="$set('filter', 'critical')" 
-                        class="px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition-all border"
-                        :class="darkMode 
-                            ? '{{ $filter === 'critical' ? 'bg-red-500/20 border-red-500 text-red-400' : 'border-slate-700/50 text-slate-300 hover:text-white' }}'
-                            : '{{ $filter === 'critical' ? 'bg-red-600 text-white shadow-sm border-red-600' : 'bg-slate-100 border-slate-300 text-slate-800 hover:bg-slate-200' }}'">
-                        Critiques ({{ $criticalCount }})
-                    </button>
-                    <button wire:click="$set('filter', 'warning')" 
-                        class="px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition-all border"
-                        :class="darkMode 
-                            ? '{{ $filter === 'warning' ? 'bg-amber-500/20 border-amber-500 text-amber-400' : 'border-slate-700/50 text-slate-300 hover:text-white' }}'
-                            : '{{ $filter === 'warning' ? 'bg-amber-600 text-white shadow-sm border-amber-600' : 'bg-slate-100 border-slate-300 text-slate-800 hover:bg-slate-200' }}'">
-                        Warnings ({{ $warningCount }})
-                    </button>
-                    <button wire:click="$set('filter', 'info')" 
-                        class="px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition-all border"
-                        :class="darkMode 
-                            ? '{{ $filter === 'info' ? 'bg-violet-500/20 border-violet-500 text-[#d2bbff]' : 'border-slate-700/50 text-slate-300 hover:text-white' }}'
-                            : '{{ $filter === 'info' ? 'bg-violet-700 text-white shadow-sm border-violet-700' : 'bg-slate-100 border-slate-300 text-slate-800 hover:bg-slate-200' }}'">
-                        Infos ({{ $infoCount }})
-                    </button>
+                <!-- Logo & Titre -->
+                <div class="flex items-center gap-2 sm:gap-2.5 min-w-0">
+                    <div class="w-8 h-8 sm:w-9 sm:h-9 flex-shrink-0 rounded-lg sm:rounded-xl bg-purple-50 dark:bg-[#161c2e] border border-purple-200/80 dark:border-purple-900/40 p-1 flex items-center justify-center shadow-sm">
+                        <svg class="w-full h-full" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M50 15L78 28V52C78 69 66 83 50 88C34 83 22 69 22 52V28L50 15Z" 
+                                  class="stroke-purple-600 dark:stroke-purple-400 fill-purple-600/10 dark:fill-purple-500/15" 
+                                  stroke-width="6" stroke-linejoin="round"/>
+                            <path d="M26 50C33 39 41 33 50 33C59 33 67 39 74 50C67 61 59 67 50 67C41 67 33 61 26 50Z" 
+                                  class="stroke-cyan-600 dark:stroke-cyan-400" 
+                                  stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            <circle cx="50" cy="50" r="8" class="stroke-cyan-600 dark:stroke-cyan-400" stroke-width="4"/>
+                            <path d="M12 50H36L42 41L48 59L54 44L60 54L64 50H88" 
+                                  class="stroke-cyan-600 dark:stroke-cyan-400" 
+                                  stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <div class="flex items-center gap-1.5 min-w-0">
+                        <span class="font-extrabold text-sm sm:text-base tracking-tight truncate text-slate-900 dark:text-white">VigilCore</span>
+                        <span class="text-[9px] sm:text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-purple-100 dark:bg-purple-950/80 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-800/60">
+                            OPS-01
+                        </span>
+                    </div>
                 </div>
+
+                <!-- Contrôles & Actions -->
+                <div class="flex items-center gap-1.5 sm:gap-2.5 flex-shrink-0">
+                    
+                    <!-- Badge Live 5s -->
+                    <div class="hidden md:flex items-center gap-1.5 text-xs font-mono text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-[#161c2e] px-2.5 py-1.5 rounded-xl border border-slate-200 dark:border-slate-800">
+                        <span class="relative flex h-2 w-2">
+                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-2 w-2 bg-cyan-500"></span>
+                        </span>
+                        <span>Live 5s</span>
+                    </div>
+
+                    <!-- Bouton Thème Flash -->
+                    <button type="button" 
+                            @click="triggerFlashToggle()" 
+                            class="flex items-center justify-center p-2 sm:px-2.5 sm:py-1.5 text-xs font-semibold rounded-lg sm:rounded-xl bg-slate-100 dark:bg-[#161c2e] text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-800 hover:bg-slate-200 dark:hover:bg-slate-800 transition active:scale-95 cursor-pointer">
+                        <svg x-show="!darkMode" class="w-4 h-4 sm:w-3.5 sm:h-3.5 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                        </svg>
+                        <svg x-show="darkMode" class="w-4 h-4 sm:w-3.5 sm:h-3.5 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                        </svg>
+                        <span class="hidden sm:inline ml-1 font-mono font-semibold" x-text="darkMode ? 'Dark' : 'Light'"></span>
+                    </button>
+
+                    <!-- Menu Simuler Webhook -->
+                    <div class="relative" x-data="{ open: false }" @click.outside="open = false">
+                        <button @click="open = !open" 
+                                type="button"
+                                class="relative group overflow-hidden px-2.5 py-1.5 sm:px-3 sm:py-1.5 rounded-lg sm:rounded-xl text-xs font-bold text-white shadow-md active:scale-95 transition flex items-center gap-1 cursor-pointer">
+                            <span class="absolute inset-0 bg-gradient-to-r from-purple-600 via-indigo-600 to-cyan-600"></span>
+                            <span class="absolute inset-0 bg-white/15 opacity-0 group-hover:opacity-100 transition"></span>
+                            <span class="relative z-10 flex items-center gap-1 font-mono">
+                                <svg class="w-3.5 h-3.5 sm:w-3 sm:h-3 text-cyan-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                                </svg>
+                                <span class="hidden xs:inline">Simuler</span>
+                                <span class="hidden sm:inline">Webhook</span>
+                            </span>
+                        </button>
+
+                        <!-- Menu déroulant responsive -->
+                        <div x-show="open" 
+                             x-transition:enter="transition ease-out duration-150"
+                             x-transition:enter-start="opacity-0 scale-95 -translate-y-1"
+                             x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+                             x-transition:leave="transition ease-in duration-100"
+                             x-transition:leave-start="opacity-100 scale-100"
+                             x-transition:leave-end="opacity-0 scale-95"
+                             class="absolute right-0 mt-2 w-56 sm:w-64 p-1.5 bg-white dark:bg-[#111622] border border-slate-200 dark:border-slate-800 rounded-xl sm:rounded-2xl shadow-2xl z-50 divide-y divide-slate-100 dark:divide-slate-800 font-mono text-xs"
+                             style="display: none;">
+                            <div class="py-1 space-y-1">
+                                <button wire:click="simulateKibanaIncident" @click="open = false" 
+                                        class="w-full text-left px-2.5 py-2 text-xs font-medium rounded-lg sm:rounded-xl text-slate-700 dark:text-slate-300 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30 flex items-center gap-2 transition cursor-pointer">
+                                    <span class="w-2 h-2 rounded-full bg-red-500 flex-shrink-0"></span>
+                                    <span class="truncate">Crash Kibana (500 S3P)</span>
+                                </button>
+                                <button wire:click="simulateZabbixAlert" @click="open = false" 
+                                        class="w-full text-left px-2.5 py-2 text-xs font-medium rounded-lg sm:rounded-xl text-slate-700 dark:text-slate-300 hover:text-amber-600 dark:hover:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-950/30 flex items-center gap-2 transition cursor-pointer">
+                                    <span class="w-2 h-2 rounded-full bg-amber-500 flex-shrink-0"></span>
+                                    <span class="truncate">Alerte Zabbix (RAM > 88%)</span>
+                                </button>
+                                <button wire:click="simulateN8nDispatch" @click="open = false" 
+                                        class="w-full text-left px-2.5 py-2 text-xs font-medium rounded-lg sm:rounded-xl text-slate-700 dark:text-slate-300 hover:text-purple-600 dark:hover:text-purple-400 hover:bg-purple-50 dark:hover:bg-purple-950/30 flex items-center gap-2 transition cursor-pointer">
+                                    <span class="w-2 h-2 rounded-full bg-purple-500 flex-shrink-0"></span>
+                                    <span class="truncate">Webhook n8n Dispatch</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </header>
+
+            <!-- ========================================== -->
+            <!-- 2. KPI TOP METRICS (1 col -> 2 col -> 4 col) -->
+            <!-- ========================================== -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3">
+                
+                <!-- KPI 1 -->
+                <div class="dash-card p-3 sm:p-3.5 bg-white dark:bg-[#111622] border border-slate-200 dark:border-slate-800 rounded-xl sm:rounded-2xl shadow-sm flex flex-col justify-between">
+                    <div class="flex items-center justify-between text-slate-500 dark:text-slate-400">
+                        <span class="text-[10px] sm:text-[11px] font-mono font-bold uppercase">Total Tracked</span>
+                        <svg class="w-4 h-4 text-purple-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+                    </div>
+                    <div class="mt-2 flex items-baseline justify-between">
+                        <span class="text-xl sm:text-2xl font-black font-mono text-slate-900 dark:text-white">{{ $totalIncidents }}</span>
+                        <span class="text-[9px] sm:text-[10px] font-mono text-emerald-600 dark:text-emerald-400 font-semibold">100% Ingest</span>
+                    </div>
+                </div>
+
+                <!-- KPI 2 -->
+                <div class="dash-card p-3 sm:p-3.5 bg-white dark:bg-[#111622] border border-slate-200 dark:border-slate-800 rounded-xl sm:rounded-2xl shadow-sm flex flex-col justify-between">
+                    <div class="flex items-center justify-between">
+                        <span class="text-[10px] sm:text-[11px] font-mono font-bold uppercase text-red-600 dark:text-red-400 flex items-center gap-1.5 truncate">
+                            <span class="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse flex-shrink-0"></span>
+                            Brèches Critiques
+                        </span>
+                        <svg class="w-4 h-4 text-red-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                    </div>
+                    <div class="mt-2 flex items-baseline justify-between">
+                        <span class="text-xl sm:text-2xl font-black font-mono text-red-600 dark:text-red-500">{{ $criticalCount }}</span>
+                        <span class="text-[9px] sm:text-[10px] font-mono font-semibold {{ $criticalCount > 0 ? 'text-red-600 dark:text-red-400' : 'text-emerald-600 dark:text-emerald-400' }}">
+                            {{ $criticalCount > 0 ? 'Action Requise' : 'Nominal' }}
+                        </span>
+                    </div>
+                </div>
+
+                <!-- KPI 3 -->
+                <div class="dash-card p-3 sm:p-3.5 bg-white dark:bg-[#111622] border border-slate-200 dark:border-slate-800 rounded-xl sm:rounded-2xl shadow-sm flex flex-col justify-between">
+                    <div class="flex items-center justify-between text-slate-500 dark:text-slate-400">
+                        <span class="text-[10px] sm:text-[11px] font-mono font-bold uppercase">Kibana Errors</span>
+                        <svg class="w-4 h-4 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+                    </div>
+                    <div class="mt-2 flex items-baseline justify-between">
+                        <span class="text-xl sm:text-2xl font-black font-mono text-slate-900 dark:text-white">{{ $kibanaErrorRate }}<span class="text-xs font-normal text-slate-400">/min</span></span>
+                        <span class="text-[9px] sm:text-[10px] font-mono text-slate-500 dark:text-slate-400 font-semibold">srv901529</span>
+                    </div>
+                </div>
+
+                <!-- KPI 4 -->
+                <div class="dash-card p-3 sm:p-3.5 bg-white dark:bg-[#111622] border border-slate-200 dark:border-slate-800 rounded-xl sm:rounded-2xl shadow-sm flex flex-col justify-between">
+                    <div class="flex items-center justify-between text-slate-500 dark:text-slate-400">
+                        <span class="text-[10px] sm:text-[11px] font-mono font-bold uppercase">n8n Dispatcher</span>
+                        <svg class="w-4 h-4 text-cyan-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                    </div>
+                    <div class="mt-2 flex items-baseline justify-between">
+                        <span class="text-lg sm:text-xl font-black font-mono text-cyan-600 dark:text-cyan-400">Active</span>
+                        <span class="text-[9px] sm:text-[10px] font-mono text-emerald-600 dark:text-emerald-400 font-semibold">24/7 Live</span>
+                    </div>
+                </div>
+
             </div>
 
-            <!-- Incident Cards Feed -->
-            @if($incidents->isEmpty())
-                <div class="py-16 text-center">
-                    <div class="inline-flex p-4 rounded-full border mb-4"
-                         :class="darkMode ? 'bg-[#1c1f2a] border-[#262a35]' : 'bg-emerald-50 border-emerald-200'">
-                        <svg class="w-8 h-8 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                    </div>
-                    <p class="font-bold text-sm" :class="darkMode ? 'text-slate-200' : 'text-slate-900'">Aucun incident détecté</p>
-                    <p class="text-xs font-mono mt-1 font-semibold" :class="darkMode ? 'text-slate-400' : 'text-slate-600'">Toutes les sondes Zabbix et Kibana confirment le statut nominal.</p>
-                </div>
-            @else
-                <div class="space-y-3">
-                    @foreach($incidents as $incident)
-                        @php
-                            $severity = strtolower($incident->severity ?? 'info');
-                            $badgeColor = match($severity) {
-                                'critical' => 'bg-red-500/10 border-red-500/40 text-red-600 font-bold',
-                                'warning' => 'bg-amber-500/10 border-amber-500/40 text-amber-700 font-bold',
-                                default => 'bg-violet-500/10 border-violet-500/40 text-violet-700 font-bold'
-                            };
-                        @endphp
-                        <div class="group border rounded-xl p-4 transition-all duration-200 hover:translate-x-1"
-                             :class="darkMode ? 'bg-[#1c1f2a]/70 border-[#262a35] hover:border-slate-600' : 'bg-slate-50 border-slate-200 hover:border-slate-300'">
-                            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                                
-                                <div class="flex items-start gap-3.5">
-                                    <div class="mt-0.5 px-2.5 py-1 rounded-md text-[10px] font-mono uppercase tracking-wider border {{ $badgeColor }}">
-                                        {{ $incident->severity ?? 'INFO' }}
-                                    </div>
-                                    <div>
-                                        <div class="flex flex-wrap items-center gap-2">
-                                            <h3 class="text-sm font-bold transition-colors"
-                                                :class="darkMode ? 'text-white group-hover:text-violet-400' : 'text-slate-950 group-hover:text-violet-700'">
-                                                {{ $incident->title }}
-                                            </h3>
-                                            <span class="text-[10px] font-mono font-semibold px-2 py-0.5 rounded border"
-                                                  :class="darkMode ? 'bg-[#171b26] border-[#262a35] text-slate-300' : 'bg-white border-slate-300 text-slate-800'">
-                                                {{ $incident->source }}
+            <!-- ========================================== -->
+            <!-- 3. SERVICE MATRIX & SEVERITY (Stack -> Grid) -->
+            <!-- ========================================== -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-3 sm:gap-4 items-stretch">
+                
+                <!-- Service Health Matrix (2 colonnes sur Desktop) -->
+                <div class="dash-card lg:col-span-2 p-3 sm:p-4 bg-white dark:bg-[#111622] border border-slate-200 dark:border-slate-800 rounded-xl sm:rounded-2xl shadow-sm flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between pb-2.5 border-b border-slate-100 dark:border-slate-800/80">
+                            <div class="min-w-0 pr-2">
+                                <h3 class="text-xs font-mono font-bold uppercase text-slate-800 dark:text-slate-200 truncate">Service Health Matrix</h3>
+                                <p class="text-[10px] sm:text-[11px] text-slate-500 dark:text-slate-400 truncate">Surveillance temps réel des composants</p>
+                            </div>
+                            <span class="text-[9px] sm:text-[10px] font-mono px-2 py-0.5 rounded-md bg-slate-100 dark:bg-[#161c2e] text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800 flex-shrink-0 font-semibold">
+                                srv901529
+                            </span>
+                        </div>
+
+                        <!-- Grille responsive des cartes composants avec scrollbar fluide -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-2 sm:gap-2.5 mt-3 max-h-[300px] overflow-y-auto custom-scrollbar pr-1">
+                            @if(!empty($statusComponents))
+                                @foreach($statusComponents as $component)
+                                    @if(($component['group'] ?? false) === false && ($component['showcase'] ?? true) === true)
+                                        <div class="p-2 sm:p-2.5 bg-slate-50 dark:bg-[#0d111a] border border-slate-200 dark:border-slate-800/80 rounded-lg sm:rounded-xl flex items-center justify-between hover:border-purple-300 dark:hover:border-purple-800/60 transition min-w-0 shadow-xs">
+                                            <div class="min-w-0 pr-2">
+                                                <h4 class="text-xs font-bold text-slate-800 dark:text-slate-200 truncate" title="{{ $component['name'] }}">
+                                                    {{ $component['name'] }}
+                                                </h4>
+                                                <span class="text-[9px] font-mono uppercase {{ ($component['status'] ?? '') === 'major_outage' ? 'text-red-500' : (($component['status'] ?? '') === 'operational' ? 'text-slate-500 dark:text-slate-400' : 'text-amber-500') }}">
+                                                    {{ str_replace('_', ' ', $component['status'] ?? 'operational') }}
+                                                </span>
+                                            </div>
+                                            <span class="w-2 h-2 rounded-full flex-shrink-0 
+                                                @if(($component['status'] ?? '') === 'operational') bg-emerald-500 shadow-sm shadow-emerald-500/50
+                                                @elseif(($component['status'] ?? '') === 'major_outage') bg-red-500 shadow-sm shadow-red-500/50 animate-pulse
+                                                @elseif(($component['status'] ?? '') === 'partial_outage') bg-orange-500 shadow-sm
+                                                @else bg-amber-500 shadow-sm @endif">
                                             </span>
                                         </div>
-                                        <p class="text-xs font-medium mt-1 leading-relaxed"
-                                           :class="darkMode ? 'text-slate-300' : 'text-slate-800'">
-                                            {{ $incident->description }}
-                                        </p>
+                                    @endif
+                                @endforeach
+                            @else
+                                @foreach($services as $svc)
+                                    <div class="p-2 sm:p-2.5 bg-slate-50 dark:bg-[#0d111a] border border-slate-200 dark:border-slate-800/80 rounded-lg sm:rounded-xl flex items-center justify-between hover:border-purple-300 dark:hover:border-purple-800/60 transition min-w-0 shadow-xs">
+                                        <div class="min-w-0 pr-2">
+                                            <h4 class="text-xs font-bold text-slate-800 dark:text-slate-200 truncate">
+                                                {{ $svc['name'] }}
+                                            </h4>
+                                            <span class="text-[9px] font-mono uppercase {{ $svc['status'] === 'degraded' ? 'text-red-500' : 'text-slate-500 dark:text-slate-400' }}">
+                                                {{ $svc['status'] }} • {{ $svc['latency'] }}
+                                            </span>
+                                        </div>
+                                        <span class="w-2 h-2 rounded-full flex-shrink-0 
+                                            @if($svc['status'] === 'operational') bg-emerald-500 shadow-sm shadow-emerald-500/50
+                                            @elseif($svc['status'] === 'degraded') bg-red-500 shadow-sm shadow-red-500/50 animate-pulse
+                                            @else bg-amber-500 shadow-sm @endif">
+                                        </span>
                                     </div>
-                                </div>
+                                @endforeach
+                            @endif
+                        </div>
+                    </div>
 
-                                <div class="flex items-center gap-3 self-end md:self-center font-mono">
-                                    <span class="text-[11px] font-semibold" :class="darkMode ? 'text-slate-400' : 'text-slate-600'"
-                                          x-data="{ 
-                                              created: new Date('{{ $incident->created_at->toIso8601String() }}'),
-                                              timeAgo: '',
-                                              update() {
-                                                  const diff = Math.max(0, Math.floor((new Date() - this.created) / 1000));
-                                                  if (diff < 60) {
-                                                      this.timeAgo = 'il y a ' + diff + ' seconde' + (diff > 1 ? 's' : '');
-                                                  } else if (diff < 3600) {
-                                                      const mins = Math.floor(diff / 60);
-                                                      this.timeAgo = 'il y a ' + mins + ' min';
-                                                  } else {
-                                                      const hours = Math.floor(diff / 3600);
-                                                      this.timeAgo = 'il y a ' + hours + ' h';
-                                                  }
+                    <div class="mt-2.5 pt-2 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-[10px] font-mono text-slate-500">
+                        <span>Sonde Statuspage Atlassian active</span>
+                        <span class="text-purple-600 dark:text-purple-400 font-semibold">{{ !empty($statusComponents) ? count($statusComponents) . ' Composants' : '5 Nœuds Locaux' }}</span>
+                    </div>
+                </div>
+
+                <!-- Severity Breakdown -->
+                <div class="dash-card p-3 sm:p-4 bg-white dark:bg-[#111622] border border-slate-200 dark:border-slate-800 rounded-xl sm:rounded-2xl shadow-sm flex flex-col justify-between">
+                    <div class="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800/80">
+                        <span class="text-xs font-mono font-bold uppercase text-slate-800 dark:text-slate-200">Severity Breakdown</span>
+                        <span class="text-[9px] sm:text-[10px] font-mono px-2 py-0.5 rounded-md bg-purple-100 dark:bg-purple-950/70 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-800/60 font-semibold">
+                            Ratio Actif
+                        </span>
+                    </div>
+
+                    @php
+                        $circ = 289.02;
+                        $critLen = $totalIncidents > 0 ? ($criticalCount / $totalIncidents) * $circ : 0;
+                        $warnLen = $totalIncidents > 0 ? ($warningCount / $totalIncidents) * $circ : 0;
+                        $infoLen = $totalIncidents > 0 ? ($infoCount / $totalIncidents) * $circ : 0;
+                        $critPct = $totalIncidents > 0 ? round(($criticalCount / $totalIncidents) * 100) : 0;
+                        $warnPct = $totalIncidents > 0 ? round(($warningCount / $totalIncidents) * 100) : 0;
+                        $infoPct = $totalIncidents > 0 ? round(($infoCount / $totalIncidents) * 100) : 0;
+                    @endphp
+
+                    <!-- Donut Chart -->
+                    <div class="relative flex items-center justify-center my-3">
+                        <svg class="w-24 h-24 transform -rotate-90" viewBox="0 0 120 120">
+                            <circle cx="60" cy="60" r="46" stroke="currentColor" stroke-width="10" fill="transparent" class="text-slate-100 dark:text-[#182030]" />
+                            @if($criticalCount > 0)
+                                <circle cx="60" cy="60" r="46" stroke="#ef4444" stroke-width="10" fill="transparent" stroke-dasharray="{{ $critLen }} {{ $circ }}" stroke-dashoffset="0" stroke-linecap="round" class="drop-shadow-[0_0_6px_rgba(239,68,68,0.35)] transition-all duration-500" />
+                            @endif
+                            @if($warningCount > 0)
+                                <circle cx="60" cy="60" r="46" stroke="#f59e0b" stroke-width="10" fill="transparent" stroke-dasharray="{{ $warnLen }} {{ $circ }}" stroke-dashoffset="-{{ $critLen }}" stroke-linecap="round" class="drop-shadow-[0_0_6px_rgba(245,158,11,0.35)] transition-all duration-500" />
+                            @endif
+                            @if($infoCount > 0)
+                                <circle cx="60" cy="60" r="46" stroke="#8b5cf6" stroke-width="10" fill="transparent" stroke-dasharray="{{ $infoLen }} {{ $circ }}" stroke-dashoffset="-{{ $critLen + $warnLen }}" stroke-linecap="round" class="drop-shadow-[0_0_6px_rgba(139,92,246,0.35)] transition-all duration-500" />
+                            @endif
+                        </svg>
+                        <div class="absolute flex flex-col items-center justify-center pointer-events-none">
+                            <span class="text-xl font-black font-mono text-slate-900 dark:text-white">{{ $totalIncidents }}</span>
+                            <span class="text-[8px] font-mono uppercase text-slate-400 dark:text-slate-500 font-bold">Actifs</span>
+                        </div>
+                    </div>
+
+                    <!-- Pills -->
+                    <div class="space-y-1.5 mb-2 font-mono">
+                        <div class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-900/40">
+                            <div class="flex items-center gap-1.5 min-w-0">
+                                <span class="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse flex-shrink-0"></span>
+                                <span class="text-xs font-semibold text-red-950 dark:text-slate-200 truncate">Critique</span>
+                            </div>
+                            <span class="text-xs font-mono font-bold text-red-600 dark:text-red-400 flex-shrink-0">{{ $criticalCount }} <span class="text-[9px] text-slate-400 font-normal">({{ $critPct }}%)</span></span>
+                        </div>
+                        <div class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900/40">
+                            <div class="flex items-center gap-1.5 min-w-0">
+                                <span class="w-1.5 h-1.5 rounded-full bg-amber-500 flex-shrink-0"></span>
+                                <span class="text-xs font-semibold text-amber-950 dark:text-slate-200 truncate">Warning</span>
+                            </div>
+                            <span class="text-xs font-mono font-bold text-amber-600 dark:text-amber-400 flex-shrink-0">{{ $warningCount }} <span class="text-[9px] text-slate-400 font-normal">({{ $warnPct }}%)</span></span>
+                        </div>
+                        <div class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-slate-50 dark:bg-[#0d111a] border border-slate-200 dark:border-slate-800">
+                            <div class="flex items-center gap-1.5 min-w-0">
+                                <span class="w-1.5 h-1.5 rounded-full bg-purple-500 flex-shrink-0"></span>
+                                <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 truncate">Info</span>
+                            </div>
+                            <span class="text-xs font-mono font-bold text-slate-400 flex-shrink-0">{{ $infoCount }} <span class="text-[9px] text-slate-400 font-normal">({{ $infoPct }}%)</span></span>
+                        </div>
+                    </div>
+
+                    <!-- Footer Statuspage -->
+                    <div class="py-1.5 px-2 bg-slate-50 dark:bg-[#0d111a] border border-slate-200 dark:border-slate-800 rounded-lg flex items-center justify-center gap-1.5 text-[10px] text-slate-500 dark:text-slate-400 font-mono">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-sm shadow-emerald-500/50 flex-shrink-0"></span>
+                        <span class="truncate">Sync <a href="https://opsca.statuspage.io" target="_blank" class="text-purple-600 dark:text-purple-400 hover:underline font-semibold">Statuspage</a></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- 4. FLUX DES INCIDENTS (Mobile First Stack) -->
+            <!-- ========================================== -->
+            <div class="dash-card p-3 sm:p-4 bg-white dark:bg-[#111622] border border-slate-200 dark:border-slate-800 rounded-xl sm:rounded-2xl shadow-sm">
+                
+                <!-- En-tête & Filtres horizontaux sans débordement -->
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pb-3 border-b border-slate-100 dark:border-slate-800/80">
+                    <div class="min-w-0">
+                        <h3 class="text-xs font-mono font-bold uppercase text-slate-800 dark:text-slate-200 truncate">Flux des Incidents & Triage Direct</h3>
+                        <p class="text-[10px] sm:text-[11px] text-slate-500 dark:text-slate-400 truncate">Payloads JSON routés depuis Kibana, Zabbix et n8n</p>
+                    </div>
+                    
+                    <!-- Boutons filtres -->
+                    <div class="flex items-center gap-1 text-xs font-mono overflow-x-auto pb-1 sm:pb-0">
+                        <button wire:click="$set('filter', 'all')" 
+                                class="px-2.5 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition cursor-pointer {{ $filter === 'all' ? 'bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 shadow-sm' : 'bg-slate-100 dark:bg-[#161c2e] text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800' }}">
+                            Tous ({{ $totalIncidents }})
+                        </button>
+                        <button wire:click="$set('filter', 'critical')" 
+                                class="px-2.5 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition cursor-pointer {{ $filter === 'critical' ? 'bg-red-600 text-white shadow-sm' : 'bg-slate-100 dark:bg-[#161c2e] text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800' }}">
+                            Critiques ({{ $criticalCount }})
+                        </button>
+                        <button wire:click="$set('filter', 'warning')" 
+                                class="px-2.5 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition cursor-pointer {{ $filter === 'warning' ? 'bg-amber-600 text-white shadow-sm' : 'bg-slate-100 dark:bg-[#161c2e] text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800' }}">
+                            Warnings ({{ $warningCount }})
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Liste des Incidents (Disposition fluide adaptée aux mobiles) -->
+                <div class="divide-y divide-slate-100 dark:divide-slate-800/80 mt-1">
+                    @forelse($incidents as $incident)
+                        @php
+                            $severity = strtolower($incident->severity ?? 'info');
+                            $badgeClass = match($severity) {
+                                'critical' => 'bg-red-100 dark:bg-red-950/80 text-red-700 dark:text-red-300 border-red-200 dark:border-red-900/60',
+                                'warning'  => 'bg-amber-100 dark:bg-amber-950/80 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-900/60',
+                                default    => 'bg-purple-100 dark:bg-purple-950/80 text-purple-700 dark:text-purple-300 border-purple-200 dark:border-purple-900/60',
+                            };
+                        @endphp
+                        <div class="py-3 flex flex-col md:flex-row md:items-center justify-between gap-2.5 hover:bg-slate-50/60 dark:hover:bg-[#0e131d]/60 px-2 rounded-xl transition">
+                            <div class="flex items-start gap-2.5 min-w-0">
+                                <span class="text-[9px] sm:text-[10px] font-mono font-bold px-2 py-0.5 rounded border flex-shrink-0 mt-0.5 {{ $badgeClass }}">
+                                    {{ strtoupper($incident->severity ?? 'INFO') }}
+                                </span>
+                                <div class="min-w-0 flex-1">
+                                    <div class="flex flex-wrap items-center gap-1.5">
+                                        <span class="text-xs font-bold text-slate-800 dark:text-slate-100 break-words">
+                                            {{ $incident->title }}
+                                        </span>
+                                        <span class="text-[9px] font-mono px-1.5 py-0.2 rounded bg-slate-100 dark:bg-[#161c2e] text-slate-500 dark:text-slate-400">
+                                            {{ $incident->source }}
+                                        </span>
+                                    </div>
+                                    <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5 break-words">
+                                        {{ $incident->description }}
+                                    </p>
+                                </div>
+                            </div>
+                            
+                            <!-- Actions & Timing -->
+                            <div class="flex items-center justify-between md:justify-end gap-2 text-xs font-mono pt-1 md:pt-0 border-t border-slate-50 dark:border-slate-800/40 md:border-0">
+                                <span class="text-slate-400 text-[10px] sm:text-[11px] whitespace-nowrap"
+                                      x-data="{ 
+                                          created: new Date('{{ $incident->created_at->toIso8601String() }}'),
+                                          timeAgo: '',
+                                          update() {
+                                              const diff = Math.max(0, Math.floor((new Date() - this.created) / 1000));
+                                              if (diff < 60) {
+                                                  this.timeAgo = 'il y a ' + diff + ' seconde' + (diff > 1 ? 's' : '');
+                                              } else if (diff < 3600) {
+                                                  const mins = Math.floor(diff / 60);
+                                                  this.timeAgo = 'il y a ' + mins + ' min';
+                                              } else {
+                                                  const hours = Math.floor(diff / 3600);
+                                                  this.timeAgo = 'il y a ' + hours + ' h';
                                               }
-                                          }" x-init="update(); setInterval(() => update(), 1000)" x-text="timeAgo">
-                                        {{ $incident->created_at->diffForHumans() }}
-                                    </span>
-                                    
+                                          }
+                                      }" 
+                                      x-init="update(); setInterval(() => update(), 1000)" 
+                                      x-text="timeAgo">
+                                    {{ $incident->created_at->diffForHumans() }}
+                                </span>
+                                <div class="flex items-center gap-1.5">
                                     <button wire:click="inspectPayload({{ $incident->id }})" 
-                                        class="px-2.5 py-1.5 rounded-lg text-xs font-bold border transition-all"
-                                        :class="darkMode ? 'bg-[#171b26] border-[#262a35] text-slate-200 hover:border-violet-500' : 'bg-white border-slate-300 text-slate-900 hover:border-violet-600 shadow-sm'">
+                                            class="px-2.5 py-1.5 rounded-lg bg-slate-100 dark:bg-[#161c2e] hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 text-xs font-semibold cursor-pointer transition">
                                         JSON
                                     </button>
-
                                     <button wire:click="resolveIncident({{ $incident->id }})" 
-                                        class="px-3 py-1.5 rounded-lg text-xs font-bold border transition-all shadow-sm"
-                                        :class="darkMode ? 'text-[#4edea3] bg-emerald-500/10 border-emerald-500/30 hover:bg-emerald-500 hover:text-slate-950' : 'text-white bg-emerald-600 border-emerald-700 hover:bg-emerald-700'">
+                                            class="px-3 py-1.5 rounded-lg bg-purple-50 dark:bg-purple-950/50 text-purple-700 dark:text-purple-300 hover:bg-purple-100 dark:hover:bg-purple-900/60 border border-purple-200 dark:border-purple-800 text-xs font-semibold cursor-pointer transition">
                                         Résoudre
                                     </button>
                                 </div>
                             </div>
                         </div>
-                    @endforeach
+                    @empty
+                        <div class="py-8 text-center text-xs font-mono text-slate-500">
+                            <div class="w-7 h-7 rounded-full bg-emerald-100 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mx-auto mb-1.5 font-bold">
+                                ✓
+                            </div>
+                            Aucun incident actif
+                        </div>
+                    @endforelse
                 </div>
-            @endif
+            </div>
+
         </div>
-    </main>
+    </div>
 
     <!-- Modal Visualiseur JSON -->
     @if($selectedIncidentId && $activePayload)
-        <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm"
+        <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm"
              wire:click.self="closePayloadModal">
-            <div class="w-full max-w-2xl rounded-2xl border p-6 shadow-2xl transition-all font-mono"
-                 :class="darkMode ? 'bg-[#171b26] border-[#262a35] text-slate-200' : 'bg-white border-slate-300 text-slate-900'">
-                <div class="flex justify-between items-center pb-3 border-b mb-4"
-                     :class="darkMode ? 'border-[#262a35]' : 'border-slate-200'">
-                    <h3 class="text-sm font-bold flex items-center gap-2" :class="darkMode ? 'text-[#d2bbff]' : 'text-violet-800'">
+            <div class="w-full max-w-2xl rounded-2xl border p-5 shadow-2xl transition-all font-mono bg-white dark:bg-[#111622] border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-100">
+                <div class="flex justify-between items-center pb-3 border-b border-slate-100 dark:border-slate-800 mb-3">
+                    <h3 class="text-xs font-bold flex items-center gap-2 text-purple-600 dark:text-purple-400">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
                         Telemetry Raw Payload (ID #{{ $selectedIncidentId }})
                     </h3>
-                    <button wire:click="closePayloadModal" class="text-slate-400 hover:text-slate-700 text-lg font-bold">&times;</button>
+                    <button wire:click="closePayloadModal" class="text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 text-base font-bold cursor-pointer">&times;</button>
                 </div>
-                <pre class="p-4 rounded-xl text-xs overflow-x-auto border leading-relaxed bg-[#0f131d] border-[#262a35] text-[#4edea3]">{{ json_encode($activePayload, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) }}</pre>
-                <div class="mt-4 flex justify-end">
-                    <button wire:click="closePayloadModal" class="px-4 py-1.5 rounded-lg text-xs font-bold bg-[#7c3aed] text-white hover:bg-violet-600 transition-all">
+                <pre class="p-4 rounded-xl text-xs overflow-x-auto border leading-relaxed bg-[#0b0f17] border-slate-800 text-emerald-400 max-h-96">{{ json_encode($activePayload, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) }}</pre>
+                <div class="mt-3 flex justify-end">
+                    <button wire:click="closePayloadModal" class="px-4 py-1.5 rounded-lg text-xs font-bold bg-purple-600 hover:bg-purple-700 text-white transition-all cursor-pointer">
                         Fermer
                     </button>
                 </div>
             </div>
         </div>
     @endif
+
 </div>
