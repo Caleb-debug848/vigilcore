@@ -568,7 +568,23 @@ new class extends Component
                                 </div>
 
                                 <div class="flex items-center gap-3 self-end md:self-center font-mono">
-                                    <span class="text-[11px] font-semibold" :class="darkMode ? 'text-slate-400' : 'text-slate-600'">
+                                    <span class="text-[11px] font-semibold" :class="darkMode ? 'text-slate-400' : 'text-slate-600'"
+                                          x-data="{ 
+                                              created: new Date('{{ $incident->created_at->toIso8601String() }}'),
+                                              timeAgo: '',
+                                              update() {
+                                                  const diff = Math.max(0, Math.floor((new Date() - this.created) / 1000));
+                                                  if (diff < 60) {
+                                                      this.timeAgo = 'il y a ' + diff + ' seconde' + (diff > 1 ? 's' : '');
+                                                  } else if (diff < 3600) {
+                                                      const mins = Math.floor(diff / 60);
+                                                      this.timeAgo = 'il y a ' + mins + ' min';
+                                                  } else {
+                                                      const hours = Math.floor(diff / 3600);
+                                                      this.timeAgo = 'il y a ' + hours + ' h';
+                                                  }
+                                              }
+                                          }" x-init="update(); setInterval(() => update(), 1000)" x-text="timeAgo">
                                         {{ $incident->created_at->diffForHumans() }}
                                     </span>
                                     
