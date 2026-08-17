@@ -39,15 +39,11 @@
                 
                 <!-- Logo & Titre -->
                 <div class="flex items-center gap-2 sm:gap-2.5 min-w-0">
-                    <div class="w-8 h-8 sm:w-9 sm:h-9 flex-shrink-0 rounded-lg sm:rounded-xl bg-purple-50 dark:bg-[#161c2e] border border-purple-200/80 dark:border-purple-900/40 p-1 flex items-center justify-center shadow-xs transition-transform duration-200 hover:scale-105">
-                        <svg class="w-full h-full" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M50 15L78 28V52C78 69 66 83 50 88C34 83 22 69 22 52V28L50 15Z" class="stroke-purple-600 dark:stroke-purple-400 fill-purple-600/10 dark:fill-purple-500/15" stroke-width="6" stroke-linejoin="round"/>
-                            <path d="M26 50C33 39 41 33 50 33C59 33 67 39 74 50C67 61 59 67 50 67C41 67 33 61 26 50Z" class="stroke-cyan-600 dark:stroke-cyan-400" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
-                            <circle cx="50" cy="50" r="8" class="stroke-cyan-600 dark:stroke-cyan-400" stroke-width="4"/>
-                            <path d="M12 50H36L42 41L48 59L54 44L60 54L64 50H88" class="stroke-cyan-600 dark:stroke-cyan-400" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
+                    <div class="h-8 w-8 sm:h-9 sm:w-9 flex-shrink-0 rounded-lg sm:rounded-xl overflow-hidden shadow-xs transition-transform duration-200 hover:scale-105 border border-purple-500/30">
+                        <img src="{{ asset('images/logo.png') }}" alt="VigilCore Logo" class="h-full w-full object-cover">
                     </div>
                     <div class="flex items-center gap-1.5 min-w-0">
+
                         <span class="font-extrabold text-sm sm:text-base tracking-tight truncate text-slate-900 dark:text-white">VigilCore</span>
                         <span class="text-[9px] sm:text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-purple-100 dark:bg-purple-950/80 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-800/60">
                             OPS-01
@@ -80,11 +76,20 @@
                         <span class="hidden sm:inline ml-1 font-mono" x-text="darkMode ? 'Dark' : 'Light'"></span>
                     </button>
 
+                    <!-- Bouton Rapports & SLA -->
+                    <a href="/reports" class="btn-interactive px-2.5 py-1.5 sm:px-3 sm:py-1.5 rounded-lg sm:rounded-xl bg-slate-100 dark:bg-[#161c2e] hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-800 text-xs font-mono font-bold transition flex items-center gap-1.5 shadow-2xs cursor-pointer">
+                        <svg class="w-3.5 h-3.5 text-indigo-500 dark:text-indigo-400" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
+                        </svg>
+                        <span class="hidden xs:inline">Rapports & SLA</span>
+                    </a>
+
                     <!-- Menu Simuler Webhook -->
                     <div class="relative" x-data="{ open: false }" @click.outside="open = false">
                         <button @click="open = !open" 
                                 type="button" 
                                 class="btn-interactive relative group overflow-hidden px-2.5 py-1.5 sm:px-3 sm:py-1.5 rounded-lg sm:rounded-xl text-xs font-bold text-white shadow-sm hover:shadow-md cursor-pointer flex items-center gap-1">
+
                             <span class="absolute inset-0 bg-gradient-to-r from-purple-600 via-indigo-600 to-cyan-600 transition-opacity group-hover:opacity-90"></span>
                             <span class="absolute inset-0 bg-white/15 opacity-0 group-hover:opacity-100 transition duration-150"></span>
                             <span class="relative z-10 flex items-center gap-1 font-mono">
@@ -338,8 +343,8 @@
                     </div>
                 </div>
 
-                <!-- Boucle dynamique sur les incidents avec micro-interaction au survol -->
-                <div class="divide-y divide-slate-100 dark:divide-slate-800/80 mt-1">
+                <!-- Boucle dynamique sur les incidents avec barre de défilement verticale et thumb stylisé -->
+                <div class="divide-y divide-slate-100 dark:divide-slate-800/80 mt-1 max-h-[420px] overflow-y-auto custom-scrollbar pr-1.5">
                     @forelse($incidents as $incident)
                         <div class="incident-row py-3 flex flex-col md:flex-row md:items-center justify-between gap-2.5 px-2 rounded-xl">
                             <div class="flex items-start gap-2.5 min-w-0">
