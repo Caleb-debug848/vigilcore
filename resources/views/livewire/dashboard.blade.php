@@ -130,8 +130,22 @@
                             </div>
                         </div>
                     </div>
+
+                    @auth
+                    <!-- Bouton Déconnexion Authentifié -->
+                    <form method="POST" action="{{ route('logout') }}" class="inline">
+                        @csrf
+                        <button type="submit" title="Se déconnecter ({{ auth()->user()->name }})" class="btn-interactive p-2 sm:px-2.5 sm:py-1.5 text-xs font-semibold rounded-lg sm:rounded-xl bg-slate-100 dark:bg-[#161c2e] text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 border border-slate-200 dark:border-slate-800 transition flex items-center gap-1 cursor-pointer">
+                            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
+                            </svg>
+                            <span class="hidden md:inline font-mono">Quitter</span>
+                        </button>
+                    </form>
+                    @endauth
                 </div>
             </header>
+
 
             <!-- ========================================== -->
             <!-- 2. KPI TOP METRICS (Dynamiques)            -->
