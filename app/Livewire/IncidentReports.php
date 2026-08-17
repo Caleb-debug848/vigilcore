@@ -203,85 +203,93 @@ class IncidentReports extends Component
 
     public function render()
     {
-        // Requête globale pour les KPIs de la période sélectionnée
-        $baseQuery = Incident::query();
-        $totalPeriodMinutes = 1440;
+        $cacheKey = "vigilcore_reports_kpis_{$this->period}";
 
-        if ($this->period === 'today') {
-            $baseQuery->where('created_at', '>=', Carbon::today());
+        // Calculs analytiques mémorisés en cache (10s) pour éviter les requêtes lourdes répétées
+        $analytics = \Illuminate\Support\Facades\Cache::remember($cacheKey, 10, function () {
+            $baseQuery = Incident::query();
             $totalPeriodMinutes = 1440;
-        } elseif ($this->period === 'week') {
-            $baseQuery->where('created_at', '>=', Carbon::now()->subDays(7));
-            $totalPeriodMinutes = 10080;
-        } elseif ($this->period === 'month') {
-            $baseQuery->where('created_at', '>=', Carbon::now()->subDays(30));
-            $totalPeriodMinutes = 43200;
-        } else {
-            $totalPeriodMinutes = 43200 * 3;
-        }
 
-        $allPeriodIncidents = $baseQuery->get();
-        $totalCount     = $allPeriodIncidents->count();
-        $resolvedCount  = $allPeriodIncidents->where('status', 'resolved')->count();
-        $criticalCount  = $allPeriodIncidents->where('severity', 'CRITICAL')->count();
-        $warningCount   = $allPeriodIncidents->where('severity', 'WARNING')->count();
-        $infoCount      = $allPeriodIncidents->where('severity', 'INFO')->count();
+            if ($this->period === 'today') {
+                $baseQuery->where('created_at', '>=', Carbon::today());
+                $totalPeriodMinutes = 1440;
+            } elseif ($this->period === 'week') {
+                $baseQuery->where('created_at', '>=', Carbon::now()->subDays(7));
+                $totalPeriodMinutes = 10080;
+            } elseif ($this->period === 'month') {
+                $baseQuery->where('created_at', '>=', Carbon::now()->subDays(30));
+                $totalPeriodMinutes = 43200;
+            } else {
+                $totalPeriodMinutes = 43200 * 3;
+            }
 
-        // Calcul du MTTR Moyen
-        $totalDurationSec = 0;
-        $resolvedWithTime = 0;
-        foreach ($allPeriodIncidents as $inc) {
-            if ($inc->status === 'resolved' && $inc->created_at && $inc->updated_at) {
-                $diff = $inc->created_at->diffInSeconds($inc->updated_at);
-                if ($diff > 0) {
-                    $totalDurationSec += $diff;
-                    $resolvedWithTime++;
+            $allPeriodIncidents = $baseQuery->get();
+            $totalCount     = $allPeriodIncidents->count();
+            $resolvedCount  = $allPeriodIncidents->where('status', 'resolved')->count();
+            $criticalCount  = $allPeriodIncidents->where('severity', 'CRITICAL')->count();
+            $warningCount   = $allPeriodIncidents->where('severity', 'WARNING')->count();
+            $infoCount      = $allPeriodIncidents->where('severity', 'INFO')->count();
+
+            // Calcul du MTTR Moyen
+            $totalDurationSec = 0;
+            $resolvedWithTime = 0;
+            foreach ($allPeriodIncidents as $inc) {
+                if ($inc->status === 'resolved' && $inc->created_at && $inc->updated_at) {
+                    $diff = $inc->created_at->diffInSeconds($inc->updated_at);
+                    if ($diff > 0) {
+                        $totalDurationSec += $diff;
+                        $resolvedWithTime++;
+                    }
                 }
             }
-        }
 
-        $avgMttrSec = $resolvedWithTime > 0 ? round($totalDurationSec / $resolvedWithTime) : 120;
-        $mttrFormatted = ($avgMttrSec >= 60) ? (floor($avgMttrSec / 60) . 'm ' . ($avgMttrSec % 60) . 's') : ($avgMttrSec . 's');
+            $avgMttrSec = $resolvedWithTime > 0 ? round($totalDurationSec / $resolvedWithTime) : 120;
+            $mttrFormatted = ($avgMttrSec >= 60) ? (floor($avgMttrSec / 60) . 'm ' . ($avgMttrSec % 60) . 's') : ($avgMttrSec . 's');
 
-        // Disponibilité Uptime SLA %
-        $downtimeMinutes = round($totalDurationSec / 60);
-        $uptimePct = 100;
-        if ($totalPeriodMinutes > 0 && $totalCount > 0) {
-            $calculatedUptime = 100 - (($downtimeMinutes / $totalPeriodMinutes) * 100);
-            $uptimePct = max(98.50, min(99.99, round($calculatedUptime, 2)));
-        }
+            // Disponibilité Uptime SLA %
+            $downtimeMinutes = round($totalDurationSec / 60);
+            $uptimePct = 100;
+            if ($totalPeriodMinutes > 0 && $totalCount > 0) {
+                $calculatedUptime = 100 - (($downtimeMinutes / $totalPeriodMinutes) * 100);
+                $uptimePct = max(98.50, min(99.99, round($calculatedUptime, 2)));
+            }
 
-        // Taux d'auto-résolution
-        $resolutionRate = $totalCount > 0 ? round(($resolvedCount / $totalCount) * 100) : 100;
+            // Taux d'auto-résolution
+            $resolutionRate = $totalCount > 0 ? round(($resolvedCount / $totalCount) * 100) : 100;
 
-        // Top 5 Services impactés
-        $topServices = $allPeriodIncidents->groupBy('title')
-            ->map(function ($items, $key) use ($totalCount) {
-                $count = $items->count();
-                return [
-                    'name'     => $key,
-                    'count'    => $count,
-                    'pct'      => $totalCount > 0 ? round(($count / $totalCount) * 100) : 0,
-                    'resolved' => $items->where('status', 'resolved')->count(),
-                ];
-            })
-            ->sortByDesc('count')
-            ->take(5);
+            // Top 5 Services impactés
+            $topServices = $allPeriodIncidents->groupBy('title')
+                ->map(function ($items, $key) use ($totalCount) {
+                    $count = $items->count();
+                    return [
+                        'name'     => $key,
+                        'count'    => $count,
+                        'pct'      => $totalCount > 0 ? round(($count / $totalCount) * 100) : 0,
+                        'resolved' => $items->where('status', 'resolved')->count(),
+                    ];
+                })
+                ->sortByDesc('count')
+                ->take(5);
+
+            return compact(
+                'totalCount',
+                'resolvedCount',
+                'criticalCount',
+                'warningCount',
+                'infoCount',
+                'uptimePct',
+                'mttrFormatted',
+                'resolutionRate',
+                'topServices'
+            );
+        });
 
         // Liste paginée pour le tableau de registre
         $incidents = $this->getFilteredQuery()->paginate(15);
 
-        return view('livewire.incident-reports', [
-            'incidents'      => $incidents,
-            'totalCount'     => $totalCount,
-            'resolvedCount'  => $resolvedCount,
-            'criticalCount'  => $criticalCount,
-            'warningCount'   => $warningCount,
-            'infoCount'      => $infoCount,
-            'uptimePct'      => $uptimePct,
-            'mttrFormatted'  => $mttrFormatted,
-            'resolutionRate' => $resolutionRate,
-            'topServices'    => $topServices,
-        ])->layout('layouts.app');
+        return view('livewire.incident-reports', array_merge($analytics, [
+            'incidents' => $incidents,
+        ]))->layout('layouts.app');
     }
+
 }
