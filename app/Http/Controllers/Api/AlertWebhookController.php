@@ -3,118 +3,95 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use App\Models\Incident;
 use App\Services\StatuspageService;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 
 class AlertWebhookController extends Controller
 {
-    /**
-     * Reçoit et traite les alertes entrantes depuis n8n, Zabbix ou Kibana
-     */
-    public function handle(Request $request, StatuspageService $statuspage)
+    public function handle(Request $request)
     {
-        return $this->handleAlert($request, $statuspage);
+        return $this->handleWebhook($request);
     }
 
-    /**
-     * Méthode principale de traitement des alertes et résolutions
-     */
-    public function handleAlert(Request $request, ?StatuspageService $statuspage = null)
+    public function handleAlert(Request $request)
     {
-        $statuspage = $statuspage ?? app(StatuspageService::class);
+        return $this->handleWebhook($request);
+    }
 
-        try {
-            $data = $request->all();
+    public function handleWebhook(Request $request)
+    {
+        $data = $request->all();
+        $rawStatus = strtolower($data['status'] ?? $data['event_status'] ?? 'firing');
+        $alertName = $data['alert_name'] ?? $data['event_name'] ?? $data['title'] ?? null;
+        $component = $data['component'] ?? $data['service'] ?? null;
 
-            $component   = $data['component'] ?? null;
-            $title       = $data['alert_name'] ?? $data['title'] ?? ($component ? "Alerte Composant [{$component}]" : 'Alerte Système VigilCore');
-            $source      = $data['source'] ?? 'Monitoring';
-            $severity    = strtoupper($data['severity'] ?? 'INFO');
-            $status      = strtolower($data['status'] ?? 'investigating');
-            $description = $data['message'] ?? $data['description'] ?? 'Anomalie détectée par les sondes.';
-            $server      = $data['server'] ?? $data['host'] ?? 'srv901529';
-            $statuspageId= $data['statuspage_incident_id'] ?? null;
-
-            // 1. Si le webhook annonce une résolution (RESOLVED / OK)
-            if (in_array($status, ['resolved', 'ok'])) {
-                // Recherche de l'incident actif correspondant
-                $query = Incident::where('status', '!=', 'resolved');
-
-                if ($statuspageId) {
-                    $query->where('statuspage_incident_id', $statuspageId);
-                } elseif ($component) {
-                    $query->where(function ($q) use ($component, $title) {
-                        $q->where('title', 'like', "%{$component}%")
-                          ->orWhere('description', 'like', "%{$component}%")
-                          ->orWhere('raw_payload->component', $component)
-                          ->orWhere('raw_payload->service', $component)
-                          ->orWhere('title', $title);
-                    });
-                } else {
-                    $query->where('title', $title);
-                }
-
-                $incident = $query->latest()->first();
-
-                if ($incident) {
-                    $incident->update([
-                        'status' => 'resolved',
-                        'raw_payload' => array_merge($incident->raw_payload ?? [], [
-                            'resolved_payload' => $data,
-                            'resolved_at' => now()->toISOString()
-                        ]),
-                    ]);
-
-                    // Clôture automatique sur Atlassian Statuspage si relié
-                    $targetStatuspageId = $incident->statuspage_incident_id ?? $statuspageId;
-                    if ($targetStatuspageId) {
-                        $statuspage->resolveIncident(
-                            $targetStatuspageId,
-                            'Rétablissement validé et synchronisé par sonde automatique.'
-                        );
+        // 1. CAS DE RÉSOLUTION (fermeture automatique)
+        if (in_array($rawStatus, ['resolved', 'ok'])) {
+            $incident = Incident::where(function ($query) use ($alertName, $component) {
+                    if ($alertName) {
+                        $query->where('alert_name', $alertName)
+                              ->orWhere('title', $alertName);
                     }
+                    if ($component) {
+                        $query->orWhere('component', $component);
+                    }
+                })
+                ->where(function ($q) {
+                    $q->where('status', '!=', 'resolved')
+                      ->orWhereNull('resolved_at');
+                })
+                ->latest()
+                ->first();
 
-                    return response()->json([
-                        'success'     => true,
-                        'message'     => 'Incident résolu avec succès dans le dashboard.',
-                        'incident_id' => $incident->id
-                    ], 200);
+            if ($incident) {
+                $incident->update([
+                    'status'      => 'resolved',
+                    'is_resolved' => true,
+                    'resolved_at' => now(),
+                    'raw_payload' => array_merge($incident->raw_payload ?? [], ['resolved_payload' => $data]),
+                ]);
+
+                if ($incident->statuspage_incident_id) {
+                    app(StatuspageService::class)->resolveIncident(
+                        $incident->statuspage_incident_id,
+                        'Rétablissement confirmé et clôturé automatiquement.'
+                    );
                 }
 
                 return response()->json([
-                    'success' => true,
-                    'message' => 'Aucun incident actif trouvé pour cette alerte (déjà résolu ou inexistant).'
-                ], 200);
+                    'status'      => 'success',
+                    'message'     => 'Incident résolu dans le Dashboard.',
+                    'incident_id' => $incident->id
+                ]);
             }
 
-            // 2. Sinon, création d'une nouvelle alerte / panne en base locale
-            $newIncident = Incident::create([
-                'title'                  => $title,
-                'source'                 => $source,
-                'severity'               => in_array(strtolower($severity), ['critical', 'warning', 'info']) ? strtolower($severity) : 'info',
-                'status'                 => in_array($status, ['resolved', 'identified', 'monitoring']) ? $status : 'investigating',
-                'description'            => $description,
-                'statuspage_incident_id' => $statuspageId,
-                'raw_payload'            => array_merge($data, [
-                    'component' => $component,
-                    'server'    => $server,
-                ]),
+            return response()->json([
+                'status'  => 'success',
+                'message' => 'Aucun incident actif trouvé pour cette alerte.'
             ]);
-
-            return response()->json([
-                'success'     => true,
-                'message'     => 'Alerte enregistrée.',
-                'incident_id' => $newIncident->id
-            ], 201);
-
-        } catch (\Exception $e) {
-            Log::error('Erreur Ingestion Webhook VigilCore : ' . $e->getMessage());
-            return response()->json([
-                'success' => false,
-                'error'   => $e->getMessage()
-            ], 500);
         }
+
+        // 2. CAS D'OUVERTURE D'INCIDENT (création)
+        $newIncident = Incident::create([
+            'component'              => $component ?? 'Système',
+            'alert_name'             => $alertName ?? 'Alerte Détectée',
+            'title'                  => $alertName ?? ($component ? "Alerte Composant [{$component}]" : 'Alerte Détectée'),
+            'severity'               => strtoupper($data['severity'] ?? 'INFO'),
+            'status'                 => 'open',
+            'is_resolved'            => false,
+            'message'                => $data['message'] ?? $data['description'] ?? '',
+            'description'            => $data['message'] ?? $data['description'] ?? 'Anomalie détectée par les sondes.',
+            'source'                 => $data['source'] ?? 'Kibana Logs Engine',
+            'server'                 => $data['server'] ?? $data['host'] ?? 'srv901529',
+            'statuspage_incident_id' => $data['statuspage_incident_id'] ?? null,
+            'raw_payload'            => $data,
+        ]);
+
+        return response()->json([
+            'status'      => 'success',
+            'message'     => 'Incident créé.',
+            'incident_id' => $newIncident->id
+        ]);
     }
 }
