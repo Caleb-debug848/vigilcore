@@ -30,30 +30,33 @@ class StatuspageService
     }
 
     /**
-     * Récupérer tous les composants de opsca.statuspage.io (ou composants par défaut)
+     * Récupérer tous les composants de opsca.statuspage.io (avec mise en cache 15s)
      */
     public function getComponents(): array
     {
-        try {
-            if (empty($this->apiKey) || empty($this->pageId)) {
+        return \Illuminate\Support\Facades\Cache::remember('statuspage_components_cache', 15, function () {
+            try {
+                if (empty($this->apiKey) || empty($this->pageId)) {
+                    return $this->getDefaultComponents();
+                }
+
+                $response = $this->client()->get('components');
+                if ($response->successful()) {
+                    $data = $response->json();
+                    if (is_array($data) && !isset($data['error'])) {
+                        return array_values(array_filter($data, fn($item) => is_array($item) && isset($item['name'])));
+                    }
+                }
+
+                Log::warning('Statuspage Get Components non-OK: ' . $response->body());
+                return $this->getDefaultComponents();
+            } catch (\Exception $e) {
+                Log::error('Statuspage Get Components Error: ' . $e->getMessage());
                 return $this->getDefaultComponents();
             }
-
-            $response = $this->client()->get('components');
-            if ($response->successful()) {
-                $data = $response->json();
-                if (is_array($data) && !isset($data['error'])) {
-                    return array_values(array_filter($data, fn($item) => is_array($item) && isset($item['name'])));
-                }
-            }
-
-            Log::warning('Statuspage Get Components non-OK: ' . $response->body());
-            return $this->getDefaultComponents();
-        } catch (\Exception $e) {
-            Log::error('Statuspage Get Components Error: ' . $e->getMessage());
-            return $this->getDefaultComponents();
-        }
+        });
     }
+
 
     /**
      * Composants par défaut si l'API Statuspage n'est pas encore configurée dans .env
@@ -102,6 +105,7 @@ class StatuspageService
             }
 
             $response = $this->client()->post('incidents', $payload);
+            \Illuminate\Support\Facades\Cache::forget('statuspage_components_cache');
             return $response->json();
         } catch (\Exception $e) {
             Log::error('Statuspage Create Incident Error: ' . $e->getMessage());
@@ -125,7 +129,9 @@ class StatuspageService
                     'body'   => $message,
                 ]
             ]);
+            \Illuminate\Support\Facades\Cache::forget('statuspage_components_cache');
             return $response->json();
+
         } catch (\Exception $e) {
             Log::error('Statuspage Resolve Incident Error: ' . $e->getMessage());
             return null;

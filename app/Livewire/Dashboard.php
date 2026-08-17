@@ -63,6 +63,7 @@ class Dashboard extends Component
             }
 
             $incident->update(['status' => 'resolved']);
+            \Illuminate\Support\Facades\Cache::forget('vigilcore_active_counts');
             $this->refreshData($statuspage);
         }
     }
@@ -95,6 +96,7 @@ class Dashboard extends Component
             ]
         ]);
 
+        \Illuminate\Support\Facades\Cache::forget('vigilcore_active_counts');
         $this->refreshData($statuspage);
     }
 
@@ -113,6 +115,8 @@ class Dashboard extends Component
                 'host' => 'srv901529'
             ]
         ]);
+
+        \Illuminate\Support\Facades\Cache::forget('vigilcore_active_counts');
     }
 
     public function simulateN8nDispatch()
@@ -129,6 +133,8 @@ class Dashboard extends Component
                 'queue_delay_ms' => 450
             ]
         ]);
+
+        \Illuminate\Support\Facades\Cache::forget('vigilcore_active_counts');
     }
 
     public function render()
@@ -140,17 +146,27 @@ class Dashboard extends Component
 
         $incidents = $query->latest()->get();
 
-        $activeCrit = Incident::where('status', '!=', 'resolved')->where('severity', 'critical')->count();
-        $activeWarn = Incident::where('status', '!=', 'resolved')->where('severity', 'warning')->count();
-        $activeInfo = Incident::where('status', '!=', 'resolved')->where('severity', 'info')->count();
+        // Récupération des compteurs actifs avec mise en cache ultra-courte (5s)
+        $counts = \Illuminate\Support\Facades\Cache::remember('vigilcore_active_counts', 5, function () {
+            return [
+                'activeCrit' => Incident::where('status', '!=', 'resolved')->where('severity', 'critical')->count(),
+                'activeWarn' => Incident::where('status', '!=', 'resolved')->where('severity', 'warning')->count(),
+                'activeInfo' => Incident::where('status', '!=', 'resolved')->where('severity', 'info')->count(),
+            ];
+        });
+
+        $activeCrit = $counts['activeCrit'];
+        $activeWarn = $counts['activeWarn'];
+        $activeInfo = $counts['activeInfo'];
         $totalActive = $activeCrit + $activeWarn + $activeInfo;
 
         return view('livewire.dashboard', [
-            'incidents' => $incidents,
-            'activeCrit' => $activeCrit,
-            'activeWarn' => $activeWarn,
-            'activeInfo' => $activeInfo,
+            'incidents'   => $incidents,
+            'activeCrit'  => $activeCrit,
+            'activeWarn'  => $activeWarn,
+            'activeInfo'  => $activeInfo,
             'totalActive' => $totalActive,
         ]);
     }
+
 }
