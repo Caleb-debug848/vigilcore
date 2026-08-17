@@ -22,36 +22,32 @@ class AlertWebhookController extends Controller
     public function handleWebhook(Request $request)
     {
         $data = $request->all();
-        $rawStatus = strtolower($data['status'] ?? $data['event_status'] ?? 'firing');
-        $alertName = $data['alert_name'] ?? $data['event_name'] ?? $data['title'] ?? null;
-        $component = $data['component'] ?? $data['service'] ?? null;
 
-        // 1. CAS DE RÉSOLUTION (fermeture automatique)
+        if (empty($data)) {
+            return response()->json(['status' => 'ignored', 'message' => 'Payload vide.']);
+        }
+
+        $rawStatus = strtolower($data['status'] ?? $data['event_status'] ?? 'firing');
+        $alertName = $data['alert_name'] ?? $data['event_name'] ?? 'Alerte Système';
+        $component = $data['component'] ?? $data['service'] ?? 'Système';
+
+        // 1. CAS DE RÉSOLUTION AUTOMATIQUE (status = resolved)
         if (in_array($rawStatus, ['resolved', 'ok'])) {
             $incident = Incident::where(function ($query) use ($alertName, $component) {
-                    if ($alertName) {
-                        $query->where('alert_name', $alertName)
-                              ->orWhere('title', $alertName);
-                    }
-                    if ($component) {
-                        $query->orWhere('component', $component);
-                    }
+                    $query->where('alert_name', $alertName)
+                          ->orWhere('component', $component)
+                          ->orWhere('title', $alertName);
                 })
-                ->where(function ($q) {
-                    $q->where('status', '!=', 'resolved')
-                      ->orWhereNull('resolved_at');
-                })
+                ->where('status', '!=', 'resolved')
                 ->latest()
                 ->first();
 
             if ($incident) {
                 $incident->update([
-                    'status'      => 'resolved',
-                    'is_resolved' => true,
-                    'resolved_at' => now(),
-                    'raw_payload' => array_merge($incident->raw_payload ?? [], ['resolved_payload' => $data]),
+                    'status' => 'resolved'
                 ]);
 
+                // Synchronisation Statuspage si ID présent
                 if ($incident->statuspage_incident_id) {
                     app(StatuspageService::class)->resolveIncident(
                         $incident->statuspage_incident_id,
@@ -60,38 +56,34 @@ class AlertWebhookController extends Controller
                 }
 
                 return response()->json([
-                    'status'      => 'success',
-                    'message'     => 'Incident résolu dans le Dashboard.',
+                    'success'     => true,
+                    'message'     => 'Incident résolu avec succès dans le dashboard.',
                     'incident_id' => $incident->id
                 ]);
             }
 
-            return response()->json([
-                'status'  => 'success',
-                'message' => 'Aucun incident actif trouvé pour cette alerte.'
-            ]);
+            return response()->json(['success' => true, 'message' => 'Aucun incident actif à clôturer.']);
         }
 
-        // 2. CAS D'OUVERTURE D'INCIDENT (création)
-        $newIncident = Incident::create([
-            'component'              => $component ?? 'Système',
-            'alert_name'             => $alertName ?? 'Alerte Détectée',
-            'title'                  => $alertName ?? ($component ? "Alerte Composant [{$component}]" : 'Alerte Détectée'),
+        // 2. CAS D'OUVERTURE D'INCIDENT (status = open)
+        $incident = Incident::create([
+            'component'              => $component,
+            'alert_name'             => $alertName,
+            'title'                  => $alertName,
             'severity'               => strtoupper($data['severity'] ?? 'INFO'),
             'status'                 => 'open',
-            'is_resolved'            => false,
-            'message'                => $data['message'] ?? $data['description'] ?? '',
-            'description'            => $data['message'] ?? $data['description'] ?? 'Anomalie détectée par les sondes.',
+            'message'                => $data['message'] ?? ($data['message_investigating'] ?? ''),
+            'description'            => $data['message'] ?? ($data['message_investigating'] ?? 'Anomalie détectée par les sondes.'),
             'source'                 => $data['source'] ?? 'Kibana Logs Engine',
-            'server'                 => $data['server'] ?? $data['host'] ?? 'srv901529',
+            'server'                 => $data['server'] ?? 'srv901529',
             'statuspage_incident_id' => $data['statuspage_incident_id'] ?? null,
             'raw_payload'            => $data,
         ]);
 
         return response()->json([
-            'status'      => 'success',
-            'message'     => 'Incident créé.',
-            'incident_id' => $newIncident->id
+            'success'     => true,
+            'message'     => 'Incident enregistré avec succès dans le dashboard.',
+            'incident_id' => $incident->id
         ]);
     }
 }
