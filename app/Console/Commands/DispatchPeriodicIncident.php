@@ -74,7 +74,7 @@ class DispatchPeriodicIncident extends Command
         $this->line("🔹 Criticité     : <fg=red>{$severity}</>");
         $this->line("🔹 Horodatage WAT: <fg=green>" . now()->timezone('Africa/Douala')->format('d/m/Y H:i:s') . " (Douala)</>");
 
-        // 1. Déclenchement via le service VigilCore (création incident DB + envoi n8n)
+        // 1. Déclenchement via le service VigilCore (création incident DB + envoi webhook n8n)
         $incident = IncidentScenarioService::trigger($key, $sendToN8n, $severity);
 
         if (!$incident) {
@@ -83,20 +83,9 @@ class DispatchPeriodicIncident extends Command
         }
 
         $this->info("✅ Incident VigilCore #{$incident->id} créé avec succès !");
+        $this->info("✅ Webhook n8n transmis avec succès (n8n pilote Statuspage, WhatsApp et les 4 étapes).");
 
-        // 2. Synchronisation optionnelle Atlassian Statuspage
-        try {
-            $statuspage->createIncident(
-                $selectedScenario['alert_title'],
-                'investigating',
-                $selectedScenario['messages']['investigating'] ?? 'Incident en cours d\'investigation.'
-            );
-            $this->info("✅ Atlassian Statuspage synchronisée (Investigating).");
-        } catch (\Exception $e) {
-            $this->warn("⚠️  Statuspage sync ignorée : " . $e->getMessage());
-        }
-
-        // 3. Purge des caches de métriques
+        // 2. Purge des caches de métriques
         Cache::forget('vigilcore_dashboard_counts');
         Cache::forget('vigilcore_active_counts');
         Cache::forget('vigilcore_reports_kpis_today');
