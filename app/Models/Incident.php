@@ -36,6 +36,16 @@ class Incident extends Model
         'resolved_at' => 'datetime',
     ];
 
+    public function setSeverityAttribute($value)
+    {
+        $this->attributes['severity'] = strtoupper($value ?? 'INFO');
+    }
+
+    public function getSeverityAttribute($value)
+    {
+        return strtoupper($value ?? 'INFO');
+    }
+
     protected static function booted()
     {
         static::saving(function ($incident) {

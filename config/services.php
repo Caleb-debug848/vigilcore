@@ -41,4 +41,9 @@ return [
         'base_url' => 'https://api.statuspage.io/v1/pages/',
     ],
 
+    'n8n' => [
+        'webhook_url' => env('N8N_ALERT_WEBHOOK_URL', 'https://n8n.srv901529.hstgr.cloud/webhook/vigilcore-alert'),
+    ],
+
 ];
+

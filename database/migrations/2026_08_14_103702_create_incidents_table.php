@@ -22,10 +22,8 @@ return new class extends Migration
             $table->json('raw_payload')->nullable();                 // Données brutes reçues du webhook
             $table->timestamps();
         });
-    }
-
-
-    /**
+    } 
+  /**
      * Reverse the migrations.
      */
     public function down(): void

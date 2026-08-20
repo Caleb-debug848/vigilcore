@@ -4,7 +4,9 @@
     "type": "module",
     "scripts": {
         "build": "vite build",
-        "dev": "vite"
+        "dev": "vite",
+        "watch": "vite-plugin-laravel-multiplex-watch",
+        "dev:all": "concurrently \"php artisan serve\" \"npm run watch\""
     },
     "devDependencies": {
         "@tailwindcss/vite": "^4.0.0",
