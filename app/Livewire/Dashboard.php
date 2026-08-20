@@ -140,10 +140,14 @@ class Dashboard extends Component
                     $incident->statuspage_incident_id,
                     'Incident résolu et validé par les équipes opérationnelles VigilCore.'
                 );
+            } else {
+                $statuspage->resolveMatchingIncident($incident->title);
             }
 
             $incident->update(['status' => 'resolved']);
+            \Illuminate\Support\Facades\Cache::forget('vigilcore_dashboard_counts');
             \Illuminate\Support\Facades\Cache::forget('vigilcore_active_counts');
+            \Illuminate\Support\Facades\Cache::forget('statuspage_components_cache');
             $this->refreshData($statuspage);
         }
     }
