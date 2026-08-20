@@ -201,22 +201,29 @@ class Dashboard extends Component
         $activeInfo  = $counts['activeInfo'];
         $totalActive = $activeCrit + $activeWarn + $activeInfo;
 
-        // Calcul dynamique du SLA Uptime en temps réel (rolling window 7j)
-        $totalDurationSec = 0;
-        foreach ($incidents as $inc) {
+        // Calcul dynamique du SLA Uptime en temps réel (rolling window 7j = 10080 min)
+        $downtimeMinutes = 0;
+        $allIncidents = Incident::where('created_at', '>=', now()->subDays(7))->get();
+        foreach ($allIncidents as $inc) {
+            $sev = strtoupper($inc->severity ?? 'INFO');
+            if (!in_array($sev, ['CRITICAL', 'WARNING'])) {
+                continue;
+            }
+            $weight = ($sev === 'CRITICAL') ? 1.0 : 0.3;
+
             if ($inc->status === 'resolved' && $inc->created_at && $inc->updated_at) {
-                $diff = $inc->created_at->diffInSeconds($inc->updated_at);
-                if ($diff > 0) $totalDurationSec += $diff;
+                $diffMin = min(120, $inc->created_at->diffInMinutes($inc->updated_at));
+                $downtimeMinutes += ($diffMin * $weight);
             } elseif ($inc->status !== 'resolved' && $inc->created_at) {
-                $diff = $inc->created_at->diffInSeconds(now());
-                if ($diff > 0) $totalDurationSec += $diff;
+                $diffMin = min(180, $inc->created_at->diffInMinutes(now()));
+                $downtimeMinutes += ($diffMin * $weight);
             }
         }
-        $downtimeMinutes = round($totalDurationSec / 60);
+
         $uptimePct = 100.00;
-        if ($totalAll > 0) {
-            $calculatedUptime = 100 - (($downtimeMinutes / 10080) * 100);
-            $uptimePct = max(98.50, min(99.99, round($calculatedUptime, 2)));
+        if ($downtimeMinutes > 0) {
+            $calculatedUptime = 100.0 - (($downtimeMinutes / 10080) * 100);
+            $uptimePct = round(max(95.00, min(99.99, $calculatedUptime)), 2);
         }
 
         // Scénarios filtrés pour le modal de simulation
