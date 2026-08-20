@@ -7,9 +7,11 @@
 
     <title>Connexion — VigilCore OPS-01</title>
 
-    <!-- Favicon Officiel -->
-    <link rel="icon" type="image/svg+xml" href="{{ asset('images/logo.svg') }}">
-    <link rel="alternate icon" type="image/png" href="{{ asset('favicon-32x32.png') }}">
+    <!-- Favicon Officiel VigilCore -->
+    <link rel="icon" type="image/svg+xml" href="{{ asset('images/logo.svg') }}?v=3">
+    <link rel="alternate icon" type="image/png" href="{{ asset('images/logo.png') }}?v=3">
+    <link rel="apple-touch-icon" href="{{ asset('images/logo.png') }}?v=3">
+    <link rel="shortcut icon" type="image/svg+xml" href="{{ asset('images/logo.svg') }}?v=3">
 
     <!-- Styles & Scripts Vite -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
