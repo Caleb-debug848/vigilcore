@@ -97,29 +97,76 @@ class Dashboard extends Component
     {
         $incident = Incident::find($incidentId);
         if ($incident) {
-            $payload = $incident->raw_payload;
+            $raw = $incident->raw_payload;
 
-            if (is_string($payload)) {
-                $decoded = json_decode($payload, true);
-                $payload = (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) ? $decoded : ['raw' => $payload];
+            if (is_string($raw)) {
+                $decoded = json_decode($raw, true);
+                $raw = (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) ? $decoded : ['raw' => $raw];
             }
 
-            if (empty($payload)) {
-                $payload = [
-                    'id'          => $incident->id,
-                    'title'       => $incident->title ?? $incident->alert_name ?? 'Incident #' . $incident->id,
-                    'source'      => $incident->source ?? 'Monitoring',
-                    'severity'    => strtoupper($incident->severity ?? 'INFO'),
-                    'status'      => $incident->status ?? 'open',
-                    'server'      => $incident->server ?? 'srv901529',
-                    'description' => $incident->description ?? $incident->message ?? 'Aucune description fournie',
-                    'created_at'  => $incident->created_at?->toISOString() ?? now()->toISOString(),
-                    'updated_at'  => $incident->updated_at?->toISOString() ?? now()->toISOString(),
-                ];
+            if (!is_array($raw)) {
+                $raw = [];
             }
+
+            $createdAtDouala = $incident->created_at 
+                ? $incident->created_at->timezone('Africa/Douala')->format('Y-m-d\TH:i:sP') 
+                : now()->timezone('Africa/Douala')->format('Y-m-d\TH:i:sP');
+            $createdAtHuman = $incident->created_at 
+                ? $incident->created_at->timezone('Africa/Douala')->format('d/m/Y H:i:s') . ' (WAT - Douala)'
+                : now()->timezone('Africa/Douala')->format('d/m/Y H:i:s') . ' (WAT - Douala)';
+
+            $updatedAtDouala = $incident->updated_at 
+                ? $incident->updated_at->timezone('Africa/Douala')->format('Y-m-d\TH:i:sP') 
+                : null;
+            $updatedAtHuman = ($incident->status === 'resolved' && $incident->updated_at)
+                ? $incident->updated_at->timezone('Africa/Douala')->format('d/m/Y H:i:s') . ' (WAT - Douala)'
+                : 'En cours (Non résolu)';
+
+            $mttrSec = null;
+            $mttrHuman = 'En cours (Non résolu)';
+            if ($incident->status === 'resolved' && $incident->created_at && $incident->updated_at) {
+                $mttrSec = $incident->created_at->diffInSeconds($incident->updated_at);
+                $mttrHuman = ($mttrSec >= 60) 
+                    ? (floor($mttrSec / 60) . 'm ' . ($mttrSec % 60) . 's') 
+                    : ($mttrSec . 's');
+            }
+
+            // Construction du JSON d'audit exhaustif
+            $payload = array_merge([
+                'id'                    => $incident->id,
+                'title'                 => $incident->title ?? 'Alerte Système',
+                'alert_name'            => $raw['alert_name'] ?? $incident->title,
+                'service_name'          => $raw['service_name'] ?? $incident->title,
+                'component'             => $raw['component'] ?? 'Infrastructure',
+                'severity'              => strtoupper($incident->severity ?? 'INFO'),
+                'status'                => $incident->status ?? 'open',
+                'server'                => $raw['server'] ?? $raw['host'] ?? 'srv901529',
+                'source'                => $incident->source ?? $raw['source'] ?? 'Kibana Logs Engine',
+                'timezone'              => 'Africa/Douala (UTC+1 / WAT - Cameroun)',
+                'triggered_at_wat'      => $createdAtHuman,
+                'resolved_at_wat'       => $updatedAtHuman,
+                'duration_mttr'         => $mttrHuman,
+                'started_at_iso'        => $createdAtDouala,
+                'ended_at_iso'          => ($incident->status === 'resolved') ? $updatedAtDouala : null,
+                'message'               => $incident->description ?? $raw['message'] ?? 'Aucun détail fourni',
+                'description'           => $incident->description ?? $raw['description'] ?? $raw['message'] ?? '',
+                'message_investigating' => $raw['message_investigating'] ?? ($incident->description ?? ''),
+                'message_identified'    => $raw['message_identified'] ?? 'Analyse de cause racine effectuée par les équipes.',
+                'message_monitoring'    => $raw['message_monitoring'] ?? 'Rétablissement en cours de surveillance active.',
+                'message_resolved'      => $raw['message_resolved'] ?? 'Le service est entièrement rétabli et opérationnel.',
+            ], $raw);
+
+            // Garantir la cohérence des indicateurs critiques
+            $payload['id']               = $incident->id;
+            $payload['status']           = $incident->status;
+            $payload['severity']         = strtoupper($incident->severity ?? 'INFO');
+            $payload['timezone']         = 'Africa/Douala (UTC+1 / WAT - Cameroun)';
+            $payload['triggered_at_wat'] = $createdAtHuman;
+            $payload['resolved_at_wat']  = $updatedAtHuman;
+            $payload['duration_mttr']    = $mttrHuman;
 
             $this->activeJsonPayload = $payload;
-            $this->selectedIncidentTitle = $incident->title ?? $incident->alert_name ?? 'Incident #' . $incident->id;
+            $this->selectedIncidentTitle = $incident->title ?? 'Incident #' . $incident->id;
             $this->showJsonModal = true;
         }
     }
