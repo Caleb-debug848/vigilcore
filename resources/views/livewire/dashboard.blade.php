@@ -89,14 +89,14 @@
                          x-transition
                          class="absolute right-0 mt-1.5 w-32 bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 rounded-xl shadow-xl z-50 p-1 space-y-0.5 text-xs font-mono"
                          style="display: none;">
-                        <a href="{{ route('lang.switch', 'fr') }}" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg {{ app()->getLocale() === 'fr' ? 'bg-blue-50 dark:bg-blue-950/60 text-[#0020B2] font-bold' : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800' }}">
+                        <button type="button" wire:click="switchLocale('fr')" @click="langOpen = false" class="w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg {{ app()->getLocale() === 'fr' ? 'bg-blue-50 dark:bg-blue-950/60 text-[#0020B2] font-bold' : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800' }}">
                             <span>🇫🇷 FR</span>
                             @if(app()->getLocale() === 'fr') <span class="text-xs">✓</span> @endif
-                        </a>
-                        <a href="{{ route('lang.switch', 'en') }}" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg {{ app()->getLocale() === 'en' ? 'bg-blue-50 dark:bg-blue-950/60 text-[#0020B2] font-bold' : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800' }}">
+                        </button>
+                        <button type="button" wire:click="switchLocale('en')" @click="langOpen = false" class="w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg {{ app()->getLocale() === 'en' ? 'bg-blue-50 dark:bg-blue-950/60 text-[#0020B2] font-bold' : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800' }}">
                             <span>🇬🇧 EN</span>
                             @if(app()->getLocale() === 'en') <span class="text-xs">✓</span> @endif
-                        </a>
+                        </button>
                     </div>
                 </div>
 
@@ -108,13 +108,13 @@
                     <svg x-show="!darkMode" class="w-4 h-4 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
                     </svg>
-                    <svg x-show="darkMode" class="w-4 h-4 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="display: none;">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                    <svg x-show="darkMode" class="w-4 h-4 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="display: none;">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
                     </svg>
                 </button>
 
                 <!-- Bouton Rapports & SLA -->
-                <a href="{{ route('reports') }}" class="px-3 py-1.5 rounded-xl bg-[#0020B2] hover:bg-[#001ca0] text-white text-xs font-semibold shadow-sm transition flex items-center gap-1.5 cursor-pointer">
+                <a href="{{ route('reports') }}" wire:navigate class="px-3 py-1.5 rounded-xl bg-[#0020B2] hover:bg-[#001ca0] text-white text-xs font-semibold shadow-sm transition flex items-center gap-1.5 cursor-pointer">
                     <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
                     </svg>
@@ -233,7 +233,7 @@
 
                     <!-- Navigation Rapide -->
                     <div class="space-y-1">
-                        <a href="{{ route('reports') }}" class="flex items-center justify-between p-2 rounded-xl bg-blue-50/70 dark:bg-blue-950/40 text-[#0020B2] dark:text-blue-300 font-bold">
+                        <a href="{{ route('reports') }}" wire:navigate class="flex items-center justify-between p-2 rounded-xl bg-blue-50/70 dark:bg-blue-950/40 text-[#0020B2] dark:text-blue-300 font-bold">
                             <span class="flex items-center gap-2">
                                 <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
@@ -259,9 +259,9 @@
                     <!-- Options Système (Langue & Thème) -->
                     <div class="pt-2 border-t border-slate-100 dark:border-slate-800 grid grid-cols-2 gap-2">
                         <!-- Langue Toggle -->
-                        <a href="{{ route('lang.switch', app()->getLocale() === 'fr' ? 'en' : 'fr') }}" class="p-2 rounded-xl bg-slate-50 dark:bg-[#0c101a] border border-slate-200 dark:border-slate-800 text-center font-bold text-slate-700 dark:text-slate-300">
+                        <button type="button" wire:click="switchLocale('{{ app()->getLocale() === 'fr' ? 'en' : 'fr' }}')" @click="mobileMenu = false" class="p-2 rounded-xl bg-slate-50 dark:bg-[#0c101a] border border-slate-200 dark:border-slate-800 text-center font-bold text-slate-700 dark:text-slate-300">
                             {{ app()->getLocale() === 'fr' ? '🇬🇧 English' : '🇫🇷 Français' }}
-                        </a>
+                        </button>
 
                         <!-- Thème Toggle -->
                         <button @click="toggleTheme()" type="button" class="p-2 rounded-xl bg-slate-50 dark:bg-[#0c101a] border border-slate-200 dark:border-slate-800 text-center font-bold text-slate-700 dark:text-slate-300 flex items-center justify-center gap-1">
