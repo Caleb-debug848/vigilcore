@@ -41,8 +41,21 @@ class AlertWebhookController extends Controller
                 ->first();
 
             if ($incident) {
+                $raw = $incident->raw_payload;
+                if (is_string($raw)) {
+                    $raw = json_decode($raw, true) ?? [];
+                }
+                if (!is_array($raw)) {
+                    $raw = [];
+                }
+
+                $raw['resolved_at_iso'] = now()->timezone('Africa/Douala')->toIso8601String();
+                $raw['resolved_at_wat'] = now()->timezone('Africa/Douala')->format('d/m/Y H:i:s') . ' (WAT - Douala)';
+                $raw['resolution_note'] = $data['message_resolved'] ?? $data['message'] ?? 'Service rétabli et opérationnel.';
+
                 $incident->update([
-                    'status' => 'resolved',
+                    'status'      => 'resolved',
+                    'raw_payload' => $raw,
                 ]);
 
                 // Clôture Statuspage si ID associé
@@ -52,6 +65,10 @@ class AlertWebhookController extends Controller
                         'Rétablissement confirmé et clôturé automatiquement.'
                     );
                 }
+
+                \Illuminate\Support\Facades\Cache::forget('vigilcore_active_counts');
+                \Illuminate\Support\Facades\Cache::forget('vigilcore_dashboard_counts');
+                \Illuminate\Support\Facades\Cache::forget('statuspage_components_cache');
 
                 return response()->json([
                     'success'     => true,
