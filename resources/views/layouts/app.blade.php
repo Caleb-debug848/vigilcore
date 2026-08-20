@@ -19,11 +19,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ $title ?? 'VigilCore Dashboard' }}</title>
 
-    <!-- Favicon -->
-    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon-32x32.png') }}">
-    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('favicon-16x16.png') }}">
-    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('apple-touch-icon.png') }}">
-    <link rel="shortcut icon" href="{{ asset('favicon.ico') }}">
+    <!-- Favicon Officiel VigilCore -->
+    <link rel="icon" type="image/svg+xml" href="{{ asset('images/logo.svg') }}?v=3">
+    <link rel="alternate icon" type="image/png" href="{{ asset('images/logo.png') }}?v=3">
+    <link rel="apple-touch-icon" href="{{ asset('images/logo.png') }}?v=3">
+    <link rel="shortcut icon" type="image/svg+xml" href="{{ asset('images/logo.svg') }}?v=3">
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @livewireStyles
