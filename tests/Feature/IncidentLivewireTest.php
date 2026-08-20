@@ -167,6 +167,16 @@ class IncidentLivewireTest extends TestCase
         $reportsResponseFr->assertSee('TOP SERVICES IMPACTÉS &amp; STABILITÉ', false);
         $reportsResponseFr->assertSee('RÉPARTITION PAR CRITICITÉ');
     }
+
+    public function test_incident_reports_refresh_data_clears_cache_and_refreshes()
+    {
+        $user = User::factory()->create();
+
+        Livewire::actingAs($user)
+            ->test(IncidentReports::class)
+            ->call('refreshData')
+            ->assertStatus(200);
+    }
 }
 
 

@@ -38,6 +38,15 @@ class IncidentReports extends Component
         $this->resetPage();
     }
 
+    public function refreshData()
+    {
+        \Illuminate\Support\Facades\Cache::forget('vigilcore_reports_kpis_today');
+        \Illuminate\Support\Facades\Cache::forget('vigilcore_reports_kpis_week');
+        \Illuminate\Support\Facades\Cache::forget('vigilcore_reports_kpis_month');
+        \Illuminate\Support\Facades\Cache::forget('vigilcore_reports_kpis_all');
+        $this->resetPage();
+    }
+
     public function switchLocale(string $locale)
     {
         if (in_array($locale, ['fr', 'en'])) {

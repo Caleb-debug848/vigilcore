@@ -84,6 +84,18 @@
             <!-- ============================================== -->
             <div class="hidden md:flex items-center gap-2">
 
+                <!-- Bouton Actualiser Rapport -->
+                <button wire:click="refreshData" 
+                        wire:loading.attr="disabled"
+                        type="button"
+                        title="{{ __('Actualiser les données du rapport') }}"
+                        class="btn-interactive px-3 py-1.5 rounded-xl bg-slate-50 dark:bg-[#0c101a] hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-800 text-xs font-mono font-bold transition flex items-center gap-1.5 cursor-pointer">
+                    <svg wire:loading.class="animate-spin text-[#0020B2]" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
+                    </svg>
+                    <span>{{ __('Actualiser') }}</span>
+                </button>
+
                 <!-- Sélecteur de Langue -->
                 <div class="relative" x-data="{ langOpen: false }" @click.outside="langOpen = false">
                     <button @click="langOpen = !langOpen" 
@@ -221,12 +233,24 @@
             </div>
 
             <!-- ============================================== -->
-            <!-- DROITE (MOBILE) : 2 BOUTONS ÉPURÉS MAXIMUM     -->
+            <!-- DROITE (MOBILE) : CONTRÔLES ÉPURÉS             -->
             <!-- ============================================== -->
             <div class="flex md:hidden items-center gap-1.5" x-data="{ mobileMenu: false }">
                 
+                <!-- 0. Bouton Actualiser Mobile -->
+                <button wire:click="refreshData" 
+                        wire:loading.attr="disabled"
+                        type="button"
+                        title="{{ __('Actualiser') }}"
+                        class="p-2 text-xs rounded-xl bg-slate-50 dark:bg-[#0c101a] text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-800 active:bg-slate-200 cursor-pointer">
+                    <svg wire:loading.class="animate-spin text-[#0020B2]" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
+                    </svg>
+                </button>
+
                 <!-- 1. Bouton Retour Live Direct -->
                 <a href="{{ route('dashboard') }}" 
+                   wire:navigate
                    title="{{ __('Monitoring Live') }}"
                    class="p-2 text-xs rounded-xl bg-slate-50 dark:bg-[#0c101a] text-[#0020B2] dark:text-blue-400 border border-slate-200 dark:border-slate-800 active:bg-slate-200 cursor-pointer">
                     <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
