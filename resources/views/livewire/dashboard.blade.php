@@ -449,18 +449,11 @@
                                 <td class="py-2.5 px-3 text-[11px] text-slate-500 dark:text-slate-400">
                                     {{ $incident->source ?? 'Kibana Logs' }}
                                 </td>
-                                <td class="py-2.5 px-3 text-right whitespace-nowrap space-x-1">
+                                <td class="py-2.5 px-3 text-right whitespace-nowrap">
                                     <button wire:click="viewJson({{ $incident->id }})" 
-                                            class="px-2 py-1 rounded bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 text-[11px] font-bold cursor-pointer transition">
+                                            class="px-2.5 py-1 rounded bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 text-[11px] font-bold cursor-pointer transition">
                                         JSON
                                     </button>
-                                    @if($incident->status !== 'resolved')
-                                    <button wire:click="resolveIncident({{ $incident->id }})" 
-                                            title="Forcer la clôture de l'incident"
-                                            class="px-2 py-1 rounded bg-emerald-50 dark:bg-emerald-950/50 hover:bg-emerald-100 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 text-[11px] font-bold cursor-pointer transition">
-                                        {{ __('Fermer') }}
-                                    </button>
-                                    @endif
                                 </td>
                             </tr>
                         @empty
@@ -536,17 +529,11 @@
                         </div>
 
                         <!-- Actions Mobiles -->
-                        <div class="flex items-center gap-2 pt-1">
+                        <div class="pt-1">
                             <button wire:click="viewJson({{ $incident->id }})" 
-                                    class="flex-1 py-1.5 rounded-lg bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 text-center font-bold text-xs cursor-pointer">
+                                    class="w-full py-1.5 rounded-lg bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 text-center font-bold text-xs cursor-pointer">
                                 📄 Payload JSON
                             </button>
-                            @if($incident->status !== 'resolved')
-                            <button wire:click="resolveIncident({{ $incident->id }})" 
-                                    class="flex-1 py-1.5 rounded-lg bg-emerald-600 text-white font-bold text-xs text-center cursor-pointer">
-                                ✓ {{ __('Clôturer') }}
-                            </button>
-                            @endif
                         </div>
 
                     </div>
