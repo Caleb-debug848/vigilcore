@@ -372,14 +372,21 @@ class IncidentScenarioService
         $hostName = 'srv901529';
         $n8nUrl   = config('services.n8n.webhook_url', 'https://n8n.srv901529.hstgr.cloud/webhook/vigilcore-alert');
         $severity = strtoupper($customSeverity ?? $scenario['severity'] ?? 'CRITICAL');
+        $nowDouala = now()->timezone('Africa/Douala');
 
         $payload = [
-            'source'                => 'Kibana Logs Engine',
-            'component'             => $scenario['key'],
             'alert_name'            => $scenario['alert_title'],
+            'component'             => $scenario['key'],
+            'service_name'          => $scenario['name'],
             'title'                 => $scenario['alert_title'],
             'severity'              => $severity,
             'status'                => 'firing',
+            'root_cause'            => 'Délai d\'attente dépassé (Timeout 504) ou anomalie de passerelle réseau détectée par les sondes Kibana / Zabbix.',
+            'error_code'            => 'ERR_GATEWAY_TIMEOUT_504',
+            'http_status'           => 504,
+            'business_impact'       => 'Ralentissement ou échec temporaire des validations de transactions pour les usagers et marchands.',
+            'recommended_action'    => 'Vérifier la connectivité de la passerelle partenaire et relancer le microservice de synchronisation.',
+            'affected_endpoints'    => ['/api/v2/' . $scenario['key'] . '/validate', '/api/v2/' . $scenario['key'] . '/status'],
             'message'               => $scenario['messages']['investigating'],
             'description'           => $scenario['messages']['investigating'],
             'message_investigating' => $scenario['messages']['investigating'],
@@ -387,8 +394,11 @@ class IncidentScenarioService
             'message_monitoring'    => $scenario['messages']['monitoring'],
             'message_resolved'      => $scenario['messages']['resolved'],
             'server'                => $hostName,
-            'simulated_at'          => now()->toISOString(),
-            'service_name'          => $scenario['name'],
+            'environment'           => 'Production (' . $hostName . ')',
+            'datacenter'            => 'Douala Datacenter (Cameroun) • Cloudflare Edge',
+            'timezone'              => 'Africa/Douala (UTC+1 / WAT - Cameroun)',
+            'triggered_at_wat'      => $nowDouala->format('d/m/Y H:i:s') . ' (WAT - Douala)',
+            'simulated_at'          => $nowDouala->toIso8601String(),
         ];
 
         // 1. Envoi HTTP au Webhook n8n

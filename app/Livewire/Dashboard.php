@@ -42,6 +42,15 @@ class Dashboard extends Component
         $this->resetPage();
     }
 
+    public function switchLocale(string $locale)
+    {
+        if (in_array($locale, ['fr', 'en'])) {
+            session(['locale' => $locale]);
+            session()->save();
+            app()->setLocale($locale);
+        }
+    }
+
     public function openSimulationHub()
     {
         $this->showSimulationHub = true;
@@ -135,7 +144,7 @@ class Dashboard extends Component
                     : ($mttrSec . 's');
             }
 
-            // Construction du JSON d'audit exhaustif
+            // Construction du JSON d'audit exhaustif avec diagnostic technique
             $payload = array_merge([
                 'id'                    => $incident->id,
                 'title'                 => $incident->title ?? 'Alerte Système',
@@ -144,8 +153,16 @@ class Dashboard extends Component
                 'component'             => $raw['component'] ?? 'Infrastructure',
                 'severity'              => strtoupper($incident->severity ?? 'INFO'),
                 'status'                => $incident->status ?? 'open',
+                'root_cause'            => $raw['root_cause'] ?? 'Délai d\'attente ou anomalie de flux réseau détecté par les sondes de surveillance.',
+                'error_code'            => $raw['error_code'] ?? 'ERR_GATEWAY_TIMEOUT_504',
+                'http_status'           => $raw['http_status'] ?? 504,
+                'business_impact'       => $raw['business_impact'] ?? 'Ralentissement ou échec temporaire des validations de transactions usagers.',
+                'recommended_action'    => $raw['recommended_action'] ?? 'Vérifier la liaison API partenaire et relancer le microservice de synchronisation.',
+                'affected_endpoints'    => $raw['affected_endpoints'] ?? ['/api/v2/payment/validate', '/api/v2/status'],
                 'server'                => $raw['server'] ?? $raw['host'] ?? 'srv901529',
                 'source'                => $incident->source ?? $raw['source'] ?? 'Kibana Logs Engine',
+                'environment'           => 'Production (srv901529)',
+                'datacenter'            => 'Douala Datacenter (Cameroun) • Cloudflare Edge',
                 'timezone'              => 'Africa/Douala (UTC+1 / WAT - Cameroun)',
                 'triggered_at_wat'      => $createdAtHuman,
                 'resolved_at_wat'       => $updatedAtHuman,
