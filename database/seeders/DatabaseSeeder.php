@@ -23,5 +23,13 @@ class DatabaseSeeder extends Seeder
                 'password' => Hash::make('password123'),
             ]
         );
+
+        User::updateOrCreate(
+            ['email' => 'admin@vigilcore.internal'],
+            [
+                'name' => 'Admin VigilCore',
+                'password' => Hash::make('password123'),
+            ]
+        );
     }
 }

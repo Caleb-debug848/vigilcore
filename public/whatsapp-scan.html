@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WhatsApp QR Code - VigilCore</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: #0c1317;
+            color: #e9edef;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            background: #111b21;
+            padding: 32px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+            text-align: center;
+            max-width: 480px;
+            width: 100%;
+            border: 1px solid #222e35;
+        }
+        h1 {
+            margin: 0 0 8px 0;
+            color: #00a884;
+            font-size: 22px;
+            font-weight: 600;
+        }
+        p.subtitle {
+            color: #8696a0;
+            font-size: 14px;
+            margin-bottom: 24px;
+        }
+        .qr-box {
+            background: #ffffff;
+            padding: 16px;
+            border-radius: 12px;
+            display: inline-block;
+            margin-bottom: 24px;
+        }
+        #qr-canvas {
+            display: block;
+            margin: 0 auto;
+        }
+        .instructions {
+            background: #202c33;
+            border-radius: 10px;
+            padding: 16px 20px;
+            text-align: left;
+            font-size: 14px;
+            color: #d1d7db;
+            line-height: 1.6;
+        }
+        .instructions ol {
+            margin: 0;
+            padding-left: 20px;
+        }
+        .instructions li {
+            margin-bottom: 8px;
+        }
+        .instructions li:last-child {
+            margin-bottom: 0;
+        }
+        .badge {
+            background: #00a884;
+            color: #111b21;
+            font-weight: bold;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+        .input-group {
+            margin-top: 20px;
+            display: flex;
+            gap: 8px;
+        }
+        input[type="text"] {
+            flex: 1;
+            background: #2a3942;
+            border: 1px solid #3b4a54;
+            border-radius: 8px;
+            padding: 10px;
+            color: #fff;
+            font-size: 13px;
+        }
+        button {
+            background: #00a884;
+            color: #111b21;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 16px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #06cf9c;
+        }
+    </style>
+    <!-- Qrious pure standalone QR code generator -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Connecter VigilCore WhatsApp</h1>
+        <p class="subtitle">Scannez ce QR code avec votre téléphone</p>
+
+        <div class="qr-box">
+            <canvas id="qr-canvas"></canvas>
+        </div>
+
+        <div class="instructions">
+            <ol>
+                <li>Ouvrez <strong>WhatsApp</strong> sur votre téléphone.</li>
+                <li>Appuyez sur <span class="badge">⋮</span> (Android) ou <strong>Réglages</strong> (iPhone).</li>
+                <li>Sélectionnez <strong>Appareils connectés</strong> puis <strong>Connecter un appareil</strong>.</li>
+                <li>Scannez le QR Code affiché ci-dessus.</li>
+            </ol>
+        </div>
+
+        <div class="input-group">
+            <input type="text" id="custom-code" placeholder="Si expiré, collez le nouveau code 2@... ici">
+            <button onclick="updateQR()">Actualiser</button>
+        </div>
+    </div>
+
+    <script>
+        const initialCode = "2@Lxs4jqWEZ06PTEiLZaTqR3WTxt0PhMTYpsJy7EAOpGXUcC8nfjAFKoCDczYZk1UNZkqRsjfsd7mxxYajLBAGYZEbDSA15yJKg9M=,HIUIHQA5nsrm/6KVOQtB+1RRC3QTdMBD3pUiife3Byo=,tmmJrwGLmPu+g8gRtKG1VpnutFWuPQlx37xlYK+8gBI=,yaSMaatbc5Cufpboydv+Cuw+9Ggl+YfbKZ7S1CTda5M=";
+
+        function renderQR(text) {
+            if (typeof QRious !== 'undefined') {
+                new QRious({
+                    element: document.getElementById('qr-canvas'),
+                    value: text,
+                    size: 260,
+                    level: 'M'
+                });
+            } else {
+                // Fallback image via public generator if CDN blocked
+                const canvas = document.getElementById('qr-canvas');
+                const img = new Image();
+                img.crossOrigin = "anonymous";
+                img.onload = () => {
+                    const ctx = canvas.getContext('2d');
+                    canvas.width = 260;
+                    canvas.height = 260;
+                    ctx.drawImage(img, 0, 0, 260, 260);
+                };
+                img.src = `https://api.qrserver.com/v1/create-qr-code/?size=260x260&data=${encodeURIComponent(text)}`;
+            }
+        }
+
+        function updateQR() {
+            const val = document.getElementById('custom-code').value.trim();
+            if (val) {
+                renderQR(val);
+            }
+        }
+
+        renderQR(initialCode);
+    </script>
+</body>
+</html>

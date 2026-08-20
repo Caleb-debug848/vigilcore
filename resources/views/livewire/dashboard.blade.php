@@ -1,464 +1,721 @@
-<div wire:poll.5s="refreshData"
-     x-data="{ 
+<div x-data="{ 
         darkMode: localStorage.getItem('vigilcore_theme') === 'dark' || (!('vigilcore_theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches),
-        isFlashing: false,
-        triggerFlashToggle() {
-            if (this.isFlashing) return;
-            this.isFlashing = true;
-            setTimeout(() => {
-                this.darkMode = !this.darkMode;
-                localStorage.setItem('vigilcore_theme', this.darkMode ? 'dark' : 'light');
-                if (this.darkMode) {
-                    document.documentElement.classList.add('dark');
-                } else {
-                    document.documentElement.classList.remove('dark');
-                }
-            }, 30);
-            setTimeout(() => {
-                this.isFlashing = false;
-            }, 320);
+        toggleTheme() {
+            this.darkMode = !this.darkMode;
+            localStorage.setItem('vigilcore_theme', this.darkMode ? 'dark' : 'light');
+            if (this.darkMode) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
         }
      }" 
      :class="{ 'dark': darkMode }" 
-     class="min-h-screen antialiased relative w-full">
+     class="min-h-screen antialiased relative w-full bg-[#f8fafc] dark:bg-[#090d16] text-slate-900 dark:text-slate-100 transition-colors duration-200">
 
-    <!-- ==================================================== -->
-    <!-- OVERLAY FLASH PHOTO (Xenon Strobe Effect)            -->
-    <!-- ==================================================== -->
-    <template x-if="isFlashing">
-        <div class="fixed inset-0 z-[100] pointer-events-none select-none bg-white animate-camera-flash backdrop-blur-[1px]"></div>
-    </template>
+    <div class="min-h-screen px-3 py-3 sm:px-6 sm:py-5 max-w-7xl mx-auto space-y-4 sm:space-y-5">
 
-    <div class="min-h-screen bg-slate-100 dark:bg-[#0b0f17] text-slate-900 dark:text-slate-100 px-2.5 py-2.5 sm:px-4 sm:py-4 md:px-6 transition-colors duration-200">
-        <div class="w-full max-w-7xl mx-auto space-y-3 sm:space-y-4">
-
-            <!-- ========================================== -->
-            <!-- 1. HEADER STICKY RESPONSIVE                -->
-            <!-- ========================================== -->
-            <header class="animate-entrance sticky top-2 sm:top-3 z-40 flex items-center justify-between gap-2 p-2.5 sm:p-3 md:px-4 bg-white/85 dark:bg-[#111622]/85 backdrop-blur-xl border border-slate-200/90 dark:border-slate-800 rounded-xl sm:rounded-2xl shadow-sm dark:shadow-2xl transition-all duration-200">
-                
-                <!-- Logo & Titre -->
-                <div class="flex items-center gap-2 sm:gap-2.5 min-w-0">
-                    <div class="h-8 w-8 sm:h-9 sm:w-9 flex-shrink-0 rounded-lg sm:rounded-xl overflow-hidden shadow-xs transition-transform duration-200 hover:scale-105 border border-purple-500/30">
-                        <img src="{{ asset('images/logo.png') }}" alt="VigilCore Logo" class="h-full w-full object-cover">
-                    </div>
-                    <div class="flex items-center gap-1.5 min-w-0">
-
-                        <span class="font-extrabold text-sm sm:text-base tracking-tight truncate text-slate-900 dark:text-white">VigilCore</span>
-                        <span class="text-[9px] sm:text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-purple-100 dark:bg-purple-950/80 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-800/60">
+        <!-- ==================================================== -->
+        <!-- 1. EN-TÊTE DE NAVIGATION (STREAMLINED & MOBILE-FIRST)-->
+        <!-- ==================================================== -->        <!-- ==================================================== -->
+        <!-- 1. EN-TÊTE DE NAVIGATION (100% MOBILE-FIRST ADAPTATIF)-->
+        <!-- ==================================================== -->
+        <header class="flex items-center justify-between gap-2 sm:gap-4 p-2.5 sm:px-4 bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800/80 rounded-2xl shadow-xs transition-colors">
+            
+            <!-- Gauche : Logo & Badge OPS-01 -->
+            <div class="flex items-center gap-2 sm:gap-3 min-w-0 flex-shrink-0">
+                <a href="{{ route('dashboard') }}" class="flex items-center gap-2 group">
+                    <img src="{{ asset('images/logo.svg') }}" alt="VigilCore Logo" class="h-8 w-8 sm:h-9 sm:w-9 object-contain group-hover:scale-105 transition-transform">
+                    <div class="flex items-center gap-1.5 sm:gap-2">
+                        <span class="font-extrabold text-base sm:text-lg tracking-tight text-slate-900 dark:text-white">VigilCore</span>
+                        <span class="px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-blue-50 dark:bg-blue-950/80 text-[#0020B2] dark:text-blue-300 border border-blue-200 dark:border-blue-800">
                             OPS-01
                         </span>
+                        <span class="relative flex h-2 w-2">
+                            <span class="radar-live absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                        </span>
+                    </div>
+                </a>
+
+                <!-- Horloge Dynamique Desktop -->
+                <div x-data="{
+                        time: '',
+                        updateTime() {
+                            const d = new Date();
+                            this.time = d.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+                        }
+                     }"
+                     x-init="updateTime(); setInterval(() => updateTime(), 1000)"
+                     class="hidden lg:flex items-center gap-1.5 text-xs font-mono text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-[#0c101a] px-2.5 py-1 rounded-xl border border-slate-200 dark:border-slate-800"
+                     title="Fuseau Horaire : Africa/Douala (WAT UTC+1)">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                    <span class="font-semibold text-slate-800 dark:text-slate-200" x-text="time"></span>
+                    <span class="text-[10px] text-slate-400">WAT</span>
+                </div>
+            </div>
+
+            <!-- ============================================== -->
+            <!-- DROITE (DESKTOP) : TOUS LES CONTRÔLES EN LIGNE -->
+            <!-- ============================================== -->
+            <div class="hidden md:flex items-center gap-2">
+                
+                <!-- Bouton Actualiser Manuel -->
+                <button wire:click="refreshData" 
+                        type="button" 
+                        title="{{ __('Actualiser les incidents (Manuel)') }}"
+                        class="p-2 text-xs font-semibold rounded-xl bg-slate-50 dark:bg-[#0c101a] text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800/60 cursor-pointer transition flex items-center gap-1.5 group">
+                    <svg class="w-4 h-4 text-slate-500 group-hover:text-[#0020B2] dark:group-hover:text-blue-400 transition" 
+                         wire:loading.class="animate-spin text-[#0020B2]"
+                         wire:target="refreshData"
+                         fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
+                    </svg>
+                    <span class="font-mono">{{ __('Actualiser') }}</span>
+                </button>
+
+                <!-- Sélecteur de Langue -->
+                <div class="relative" x-data="{ langOpen: false }" @click.outside="langOpen = false">
+                    <button @click="langOpen = !langOpen" 
+                            type="button" 
+                            title="{{ __('Changer de langue') }}"
+                            class="px-2.5 py-1.5 text-xs font-mono font-bold rounded-xl bg-slate-50 dark:bg-[#0c101a] text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800/60 cursor-pointer transition flex items-center gap-1">
+                        <span>{{ app()->getLocale() === 'en' ? '🇬🇧 EN' : '🇫🇷 FR' }}</span>
+                        <svg class="w-3 h-3 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </button>
+                    <div x-show="langOpen" 
+                         x-transition
+                         class="absolute right-0 mt-1.5 w-32 bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 rounded-xl shadow-xl z-50 p-1 space-y-0.5 text-xs font-mono"
+                         style="display: none;">
+                        <a href="{{ route('lang.switch', 'fr') }}" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg {{ app()->getLocale() === 'fr' ? 'bg-blue-50 dark:bg-blue-950/60 text-[#0020B2] font-bold' : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800' }}">
+                            <span>🇫🇷 FR</span>
+                            @if(app()->getLocale() === 'fr') <span class="text-xs">✓</span> @endif
+                        </a>
+                        <a href="{{ route('lang.switch', 'en') }}" class="flex items-center justify-between px-2.5 py-1.5 rounded-lg {{ app()->getLocale() === 'en' ? 'bg-blue-50 dark:bg-blue-950/60 text-[#0020B2] font-bold' : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800' }}">
+                            <span>🇬🇧 EN</span>
+                            @if(app()->getLocale() === 'en') <span class="text-xs">✓</span> @endif
+                        </a>
                     </div>
                 </div>
 
-                <!-- Contrôles & Actions -->
-                <div class="flex items-center gap-1.5 sm:gap-2.5 flex-shrink-0">
-                    
-                    <!-- Badge Live 5s avec pulsation radar -->
-                    <div class="hidden md:flex items-center gap-1.5 text-xs font-mono text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-[#161c2e] px-2.5 py-1.5 rounded-xl border border-slate-200 dark:border-slate-800 transition-colors duration-150">
-                        <span class="relative flex h-2 w-2">
-                            <span class="radar-live absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
-                            <span class="relative inline-flex rounded-full h-2 w-2 bg-cyan-500"></span>
-                        </span>
-                        <span class="font-medium">Live 5s</span>
-                    </div>
+                <!-- Toggle Thème Clair / Sombre -->
+                <button type="button" 
+                        @click="toggleTheme()" 
+                        title="{{ __('Basculer le thème') }}"
+                        class="p-2 text-xs font-semibold rounded-xl bg-slate-50 dark:bg-[#0c101a] text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800/60 cursor-pointer transition flex items-center">
+                    <svg x-show="!darkMode" class="w-4 h-4 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                    </svg>
+                    <svg x-show="darkMode" class="w-4 h-4 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="display: none;">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                    </svg>
+                </button>
 
-                    <!-- Bouton Thème Flash -->
-                    <button type="button" 
-                            @click="triggerFlashToggle()" 
-                            class="btn-interactive flex items-center justify-center p-2 sm:px-2.5 sm:py-1.5 text-xs font-semibold rounded-lg sm:rounded-xl bg-slate-100 dark:bg-[#161c2e] text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-800 hover:bg-slate-200 dark:hover:bg-slate-800 cursor-pointer">
-                        <svg x-show="!darkMode" class="w-4 h-4 sm:w-3.5 sm:h-3.5 text-amber-500 transition-transform duration-200 hover:rotate-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                <!-- Bouton Rapports & SLA -->
+                <a href="{{ route('reports') }}" class="px-3 py-1.5 rounded-xl bg-[#0020B2] hover:bg-[#001ca0] text-white text-xs font-semibold shadow-sm transition flex items-center gap-1.5 cursor-pointer">
+                    <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
+                    </svg>
+                    <span>{{ __('Rapports') }}</span>
+                </a>
+
+                @if(app()->environment('local', 'staging') || config('app.debug'))
+                <!-- Bouton Simulateur Ops -->
+                <button wire:click="openSimulationHub" 
+                        type="button" 
+                        title="{{ __('Simulateur d\'Incidents') }}"
+                        class="px-2.5 py-1.5 rounded-xl bg-amber-50 dark:bg-amber-950/40 hover:bg-amber-100 dark:hover:bg-amber-900/60 text-amber-800 dark:text-amber-300 border border-amber-200 dark:border-amber-800/60 text-xs font-mono font-bold transition flex items-center gap-1 cursor-pointer">
+                    <svg class="w-3.5 h-3.5 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                    </svg>
+                    <span>20 Ops</span>
+                </button>
+                @endif
+
+                @auth
+                <!-- Menu Profil Déroulant Desktop -->
+                <div class="relative pl-1 border-l border-slate-200 dark:border-slate-800" x-data="{ userMenu: false }" @click.outside="userMenu = false">
+                    <button @click="userMenu = !userMenu" 
+                            type="button" 
+                            class="flex items-center gap-2 bg-slate-50 dark:bg-[#0c101a] px-2.5 py-1 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 cursor-pointer transition">
+                        <div class="w-6 h-6 rounded-full bg-[#0020B2] text-white flex items-center justify-center text-[11px] font-bold font-mono">
+                            {{ strtoupper(substr(auth()->user()->name ?? 'C', 0, 1)) }}
+                        </div>
+                        <span class="text-xs font-semibold text-slate-800 dark:text-slate-200 font-mono">
+                            {{ auth()->user()->name ?? 'Caleb' }}
+                        </span>
+                        <svg class="w-3 h-3 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
                         </svg>
-                        <svg x-show="darkMode" class="w-4 h-4 sm:w-3.5 sm:h-3.5 text-purple-400 transition-transform duration-200 hover:-rotate-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-                        </svg>
-                        <span class="hidden sm:inline ml-1 font-mono" x-text="darkMode ? 'Dark' : 'Light'"></span>
                     </button>
 
-                    <!-- Bouton Rapports & SLA -->
-                    <a href="/reports" class="btn-interactive px-2.5 py-1.5 sm:px-3 sm:py-1.5 rounded-lg sm:rounded-xl bg-slate-100 dark:bg-[#161c2e] hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-800 text-xs font-mono font-bold transition flex items-center gap-1.5 shadow-2xs cursor-pointer">
-                        <svg class="w-3.5 h-3.5 text-indigo-500 dark:text-indigo-400" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
-                        </svg>
-                        <span class="hidden xs:inline">Rapports & SLA</span>
-                    </a>
+                    <div x-show="userMenu" 
+                         x-transition
+                         class="absolute right-0 mt-1.5 w-52 bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 rounded-xl shadow-xl z-50 p-2 space-y-2 text-xs font-mono"
+                         style="display: none;">
+                        <div class="px-2 py-1.5 border-b border-slate-100 dark:border-slate-800">
+                            <p class="font-bold text-slate-900 dark:text-white truncate">{{ auth()->user()->name ?? 'Opérateur' }}</p>
+                            <p class="text-[10px] text-slate-400 truncate">{{ auth()->user()->email ?? 'calebdassi@gmail.com' }}</p>
+                            <div class="mt-1 flex items-center gap-1 text-[10px] text-emerald-600 dark:text-emerald-400">
+                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                                <span>{{ __('Opérateur Connecté') }}</span>
+                            </div>
+                        </div>
 
-                    <!-- Menu Simuler Webhook -->
-                    <div class="relative" x-data="{ open: false }" @click.outside="open = false">
-                        <button @click="open = !open" 
-                                type="button" 
-                                class="btn-interactive relative group overflow-hidden px-2.5 py-1.5 sm:px-3 sm:py-1.5 rounded-lg sm:rounded-xl text-xs font-bold text-white shadow-sm hover:shadow-md cursor-pointer flex items-center gap-1">
-
-                            <span class="absolute inset-0 bg-gradient-to-r from-purple-600 via-indigo-600 to-cyan-600 transition-opacity group-hover:opacity-90"></span>
-                            <span class="absolute inset-0 bg-white/15 opacity-0 group-hover:opacity-100 transition duration-150"></span>
-                            <span class="relative z-10 flex items-center gap-1 font-mono">
-                                <svg class="w-3.5 h-3.5 sm:w-3 sm:h-3 text-cyan-200 transition-transform duration-200 group-hover:scale-110" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="submit" class="w-full px-2.5 py-1.5 rounded-lg text-left text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/40 transition flex items-center gap-2 cursor-pointer">
+                                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
                                 </svg>
-                                <span class="hidden xs:inline">Simuler</span>
-                                <span class="hidden sm:inline">Webhook</span>
-                            </span>
-                        </button>
-
-                        <!-- Menu déroulant avec micro-animation d'apparition -->
-                        <div x-show="open" 
-                             x-transition:enter="transition ease-out duration-150"
-                             x-transition:enter-start="opacity-0 scale-95 -translate-y-1"
-                             x-transition:enter-end="opacity-100 scale-100 translate-y-0"
-                             x-transition:leave="transition ease-in duration-100"
-                             x-transition:leave-start="opacity-100 scale-100"
-                             x-transition:leave-end="opacity-0 scale-95"
-                             class="absolute right-0 mt-2 w-56 sm:w-64 p-1.5 bg-white dark:bg-[#111622] border border-slate-200 dark:border-slate-800 rounded-xl sm:rounded-2xl shadow-2xl z-50 divide-y divide-slate-100 dark:divide-slate-800 font-mono text-xs"
-                             style="display: none;">
-                            <div class="py-1 space-y-1">
-                                <button wire:click="simulateKibanaIncident" @click="open = false" 
-                                        class="btn-interactive w-full text-left px-2.5 py-2 text-xs font-medium rounded-lg sm:rounded-xl text-slate-700 dark:text-slate-300 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30 flex items-center gap-2 cursor-pointer">
-                                    <span class="w-2 h-2 rounded-full bg-red-500 flex-shrink-0 animate-pulse"></span>
-                                    <span class="truncate">Crash Kibana (500 S3P)</span>
-                                </button>
-                                <button wire:click="simulateZabbixAlert" @click="open = false" 
-                                        class="btn-interactive w-full text-left px-2.5 py-2 text-xs font-medium rounded-lg sm:rounded-xl text-slate-700 dark:text-slate-300 hover:text-amber-600 dark:hover:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-950/30 flex items-center gap-2 cursor-pointer">
-                                    <span class="w-2 h-2 rounded-full bg-amber-500 flex-shrink-0"></span>
-                                    <span class="truncate">Alerte Zabbix (RAM > 88%)</span>
-                                </button>
-                                <button wire:click="simulateN8nDispatch" @click="open = false" 
-                                        class="btn-interactive w-full text-left px-2.5 py-2 text-xs font-medium rounded-lg sm:rounded-xl text-slate-700 dark:text-slate-300 hover:text-purple-600 dark:hover:text-purple-400 hover:bg-purple-50 dark:hover:bg-purple-950/30 flex items-center gap-2 cursor-pointer">
-                                    <span class="w-2 h-2 rounded-full bg-purple-500 flex-shrink-0"></span>
-                                    <span class="truncate">Webhook n8n Dispatch</span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    @auth
-                    <!-- Bouton Déconnexion Authentifié -->
-                    <form method="POST" action="{{ route('logout') }}" class="inline">
-                        @csrf
-                        <button type="submit" title="Se déconnecter ({{ auth()->user()->name }})" class="btn-interactive p-2 sm:px-2.5 sm:py-1.5 text-xs font-semibold rounded-lg sm:rounded-xl bg-slate-100 dark:bg-[#161c2e] text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 border border-slate-200 dark:border-slate-800 transition flex items-center gap-1 cursor-pointer">
-                            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
-                            </svg>
-                            <span class="hidden md:inline font-mono">Quitter</span>
-                        </button>
-                    </form>
-                    @endauth
-                </div>
-            </header>
-
-
-            <!-- ========================================== -->
-            <!-- 2. KPI TOP METRICS (Dynamiques)            -->
-            <!-- ========================================== -->
-            <div class="animate-entrance stagger-1 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3">
-                
-                <!-- KPI 1: Total Tracked -->
-                <div class="dash-card p-3 sm:p-3.5 bg-white dark:bg-[#111622] border border-slate-200 dark:border-slate-800 rounded-xl sm:rounded-2xl shadow-sm flex flex-col justify-between hover:border-purple-300 dark:hover:border-purple-800/60">
-                    <div class="flex items-center justify-between text-slate-500 dark:text-slate-400">
-                        <span class="text-[10px] sm:text-[11px] font-mono font-bold uppercase tracking-wider">Total Tracked</span>
-                        <div class="p-1 rounded-md bg-purple-50 dark:bg-purple-950/50 text-purple-600 dark:text-purple-400 transition-transform duration-200 hover:scale-110">
-                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
-                        </div>
-                    </div>
-                    <div class="mt-2 flex items-baseline justify-between">
-                        <span class="text-xl sm:text-2xl font-black font-mono text-slate-900 dark:text-white tracking-tight">{{ $incidents->count() }}</span>
-                        <span class="text-[9px] sm:text-[10px] font-mono text-emerald-600 dark:text-emerald-400 font-semibold bg-emerald-50 dark:bg-emerald-950/40 px-1.5 py-0.5 rounded border border-emerald-200/60 dark:border-emerald-900/40">100% Ingest</span>
+                                <span>{{ __('Se déconnecter') }}</span>
+                            </button>
+                        </form>
                     </div>
                 </div>
-
-                <!-- KPI 2: Brèches Critiques -->
-                <div class="dash-card p-3 sm:p-3.5 bg-white dark:bg-[#111622] border border-slate-200 dark:border-slate-800 rounded-xl sm:rounded-2xl shadow-sm flex flex-col justify-between hover:border-red-300 dark:hover:border-red-800/60">
-                    <div class="flex items-center justify-between">
-                        <span class="text-[10px] sm:text-[11px] font-mono font-bold uppercase tracking-wider text-red-600 dark:text-red-400 flex items-center gap-1.5 truncate">
-                            <span class="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse flex-shrink-0"></span>
-                            Brèches Critiques
-                        </span>
-                        <div class="p-1 rounded-md bg-red-50 dark:bg-red-950/50 text-red-600 dark:text-red-400 transition-transform duration-200 hover:scale-110">
-                            <svg class="w-4 h-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
-                        </div>
-                    </div>
-                    <div class="mt-2 flex items-baseline justify-between">
-                        <span class="text-xl sm:text-2xl font-black font-mono text-red-600 dark:text-red-500 tracking-tight">{{ $activeCrit }}</span>
-                        <span class="text-[9px] sm:text-[10px] font-mono font-semibold px-1.5 py-0.5 rounded border {{ $activeCrit > 0 ? 'text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-950/40 border-red-200/60 dark:border-red-900/40' : 'text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 border-emerald-200/60 dark:border-emerald-900/40' }}">
-                            {{ $activeCrit > 0 ? 'Action Requise' : 'Nominal' }}
-                        </span>
-                    </div>
-                </div>
-
-                <!-- KPI 3: Kibana Errors -->
-                <div class="dash-card p-3 sm:p-3.5 bg-white dark:bg-[#111622] border border-slate-200 dark:border-slate-800 rounded-xl sm:rounded-2xl shadow-sm flex flex-col justify-between hover:border-amber-300 dark:hover:border-amber-800/60">
-                    <div class="flex items-center justify-between text-slate-500 dark:text-slate-400">
-                        <span class="text-[10px] sm:text-[11px] font-mono font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400">Kibana Errors</span>
-                        <div class="p-1 rounded-md bg-amber-50 dark:bg-amber-950/50 text-amber-600 dark:text-amber-400 transition-transform duration-200 hover:scale-110">
-                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
-                        </div>
-                    </div>
-                    <div class="mt-2 flex items-baseline justify-between">
-                        <span class="text-xl sm:text-2xl font-black font-mono text-slate-900 dark:text-white tracking-tight">
-                            {{ $activeCrit }}<span class="text-xs font-normal text-slate-400">/min</span>
-                        </span>
-                        <span class="text-[9px] sm:text-[10px] font-mono text-slate-500 dark:text-slate-400 font-semibold">srv901529</span>
-                    </div>
-                </div>
-
-                <!-- KPI 4: n8n Dispatcher -->
-                <div class="dash-card p-3 sm:p-3.5 bg-white dark:bg-[#111622] border border-slate-200 dark:border-slate-800 rounded-xl sm:rounded-2xl shadow-sm flex flex-col justify-between hover:border-cyan-300 dark:hover:border-cyan-800/60">
-                    <div class="flex items-center justify-between text-slate-500 dark:text-slate-400">
-                        <span class="text-[10px] sm:text-[11px] font-mono font-bold uppercase tracking-wider text-cyan-600 dark:text-cyan-400">n8n Dispatcher</span>
-                        <div class="p-1 rounded-md bg-cyan-50 dark:bg-cyan-950/50 text-cyan-600 dark:text-cyan-400 transition-transform duration-200 hover:scale-110">
-                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-                        </div>
-                    </div>
-                    <div class="mt-2 flex items-baseline justify-between">
-                        <span class="text-lg sm:text-xl font-black font-mono text-cyan-600 dark:text-cyan-400 tracking-tight">Active</span>
-                        <span class="text-[9px] sm:text-[10px] font-mono text-emerald-600 dark:text-emerald-400 font-semibold">24/7 Live</span>
-                    </div>
-                </div>
+                @endauth
             </div>
 
-            <!-- ========================================== -->
-            <!-- 3. SERVICE MATRIX & SEVERITY               -->
-            <!-- ========================================== -->
-            <div class="animate-entrance stagger-2 grid grid-cols-1 lg:grid-cols-3 gap-3 sm:gap-4 items-stretch">
+            <!-- ============================================== -->
+            <!-- DROITE (MOBILE) : 2 BOUTONS ÉPURÉS MAXIMUM     -->
+            <!-- ============================================== -->
+            <div class="flex md:hidden items-center gap-1.5" x-data="{ mobileMenu: false }">
                 
-                <!-- Service Matrix -->
-                <div class="dash-card lg:col-span-2 p-3 sm:p-4 bg-white dark:bg-[#111622] border border-slate-200 dark:border-slate-800 rounded-xl sm:rounded-2xl shadow-sm flex flex-col justify-between">
-                    <div>
-                        <div class="flex items-center justify-between pb-2.5 border-b border-slate-100 dark:border-slate-800/80">
-                            <div class="min-w-0 pr-2">
-                                <h3 class="text-xs font-mono font-bold uppercase text-slate-800 dark:text-slate-200 truncate">Service Health Matrix</h3>
-                                <p class="text-[10px] sm:text-[11px] text-slate-500 dark:text-slate-400 truncate">Surveillance en direct via Statuspage API</p>
-                            </div>
-                            <span class="text-[9px] sm:text-[10px] font-mono px-2 py-0.5 rounded-md bg-slate-100 dark:bg-[#161c2e] text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800 flex-shrink-0 font-semibold">
-                                srv901529
-                            </span>
-                        </div>
+                <!-- 1. Bouton Actualiser Manuel Rapide -->
+                <button wire:click="refreshData" 
+                        type="button" 
+                        title="{{ __('Actualiser') }}"
+                        class="p-2 text-xs rounded-xl bg-slate-50 dark:bg-[#0c101a] text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-800 active:bg-slate-200 cursor-pointer">
+                    <svg class="w-4 h-4 text-slate-600 dark:text-slate-300" 
+                         wire:loading.class="animate-spin text-[#0020B2]"
+                         wire:target="refreshData"
+                         fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
+                    </svg>
+                </button>
 
-                        <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-2 sm:gap-2.5 mt-3 max-h-[300px] overflow-y-auto custom-scrollbar pr-1">
-                            @forelse($statusComponents as $component)
-                                @if(is_array($component) && ($component['group'] ?? false) === false && ($component['showcase'] ?? true) === true)
-                                    <div class="p-2 sm:p-2.5 bg-slate-50 dark:bg-[#0d111a] border border-slate-200/80 dark:border-slate-800/80 rounded-lg sm:rounded-xl flex items-center justify-between hover:border-purple-300 dark:hover:border-purple-800/60 hover:bg-slate-100/70 dark:hover:bg-[#131926] transition-all duration-150 min-w-0 shadow-2xs">
-                                        <div class="min-w-0 pr-2">
-                                            <h4 class="text-xs font-bold text-slate-800 dark:text-slate-200 truncate" title="{{ $component['name'] ?? '' }}">
-                                                {{ $component['name'] ?? 'Composant' }}
-                                            </h4>
-                                            <span class="text-[9px] font-mono uppercase font-medium {{ ($component['status'] ?? '') === 'major_outage' ? 'text-red-500' : (($component['status'] ?? '') === 'operational' ? 'text-slate-500 dark:text-slate-400' : 'text-amber-500') }}">
-                                                {{ str_replace('_', ' ', $component['status'] ?? 'operational') }}
-                                            </span>
-                                        </div>
-                                        <span class="w-2.5 h-2.5 rounded-full flex-shrink-0 transition-transform duration-200 hover:scale-125 
-                                            @if(($component['status'] ?? '') === 'operational') bg-emerald-500 shadow-xs shadow-emerald-500/50
-                                            @elseif(($component['status'] ?? '') === 'major_outage') bg-red-500 shadow-xs shadow-red-500/50 animate-pulse
-                                            @elseif(($component['status'] ?? '') === 'partial_outage') bg-orange-500 shadow-xs
-                                            @else bg-amber-500 shadow-xs @endif">
-                                        </span>
-                                    </div>
-                                @endif
-                            @empty
-                                <div class="col-span-full py-6 text-center text-xs text-slate-500 font-mono">
-                                    Connexion à Statuspage...
-                                </div>
-                            @endforelse
-                        </div>
+                <!-- 2. Bouton Menu Complet Mobile (Avatar / Hamburger) -->
+                <button @click="mobileMenu = !mobileMenu" 
+                        type="button" 
+                        class="flex items-center gap-1 bg-[#0020B2] text-white p-1.5 px-2 rounded-xl text-xs font-mono font-bold shadow-xs cursor-pointer">
+                    <div class="w-5 h-5 rounded-full bg-white/20 flex items-center justify-center text-[10px]">
+                        {{ strtoupper(substr(auth()->user()->name ?? 'C', 0, 1)) }}
                     </div>
+                    <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                    </svg>
+                </button>
 
-                    <div class="mt-2.5 pt-2 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-[10px] font-mono text-slate-500">
-                        <span>Sonde Statuspage Atlassian active</span>
-                        <span class="text-purple-600 dark:text-purple-400 font-semibold">{{ !empty($statusComponents) ? count($statusComponents) . ' Composants' : '5 Nœuds' }}</span>
-                    </div>
-                </div>
-
-                <!-- Severity Breakdown Dynamique -->
-                <div class="dash-card p-3 sm:p-4 bg-white dark:bg-[#111622] border border-slate-200 dark:border-slate-800 rounded-xl sm:rounded-2xl shadow-sm flex flex-col justify-between">
-                    <div class="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800/80">
-                        <span class="text-xs font-mono font-bold uppercase text-slate-800 dark:text-slate-200">Severity Breakdown</span>
-                        <span class="text-[9px] sm:text-[10px] font-mono px-2 py-0.5 rounded-md bg-purple-100 dark:bg-purple-950/70 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-800/60 font-semibold">
-                            Ratio Actif
-                        </span>
-                    </div>
-
-                    <!-- Donut Chart avec transitions fluides -->
-                    <div class="relative flex items-center justify-center my-3">
-                        <svg class="w-24 h-24 transform -rotate-90" viewBox="0 0 120 120">
-                            <circle cx="60" cy="60" r="46" stroke="currentColor" stroke-width="10" fill="transparent" class="text-slate-100 dark:text-[#182030]" />
-                            @if($totalActive > 0)
-                                <circle cx="60" cy="60" r="46" stroke="#ef4444" stroke-width="10" fill="transparent"
-                                        stroke-dasharray="289" 
-                                        stroke-dashoffset="{{ 289 - (289 * ($activeCrit / $totalActive)) }}" 
-                                        stroke-linecap="round" class="drop-shadow-[0_0_6px_rgba(239,68,68,0.35)] transition-all duration-500 ease-out" />
-                                <circle cx="60" cy="60" r="46" stroke="#f59e0b" stroke-width="10" fill="transparent"
-                                        stroke-dasharray="289" 
-                                        stroke-dashoffset="{{ 289 - (289 * (($activeCrit + $activeWarn) / $totalActive)) }}" 
-                                        stroke-linecap="round" class="drop-shadow-[0_0_6px_rgba(245,158,11,0.35)] transition-all duration-500 ease-out" />
-                            @endif
-                        </svg>
-                        <div class="absolute flex flex-col items-center justify-center pointer-events-none text-center">
-                            <span class="text-xl font-black font-mono text-slate-900 dark:text-white leading-none">{{ $totalActive }}</span>
-                            <span class="text-[8px] font-mono uppercase text-slate-400 dark:text-slate-500 font-bold tracking-wider mt-0.5">Actifs</span>
-                        </div>
-                    </div>
-
-                    <!-- Pills interactives -->
-                    <div class="space-y-1.5 mb-2 font-mono">
-                        <div class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-red-50 dark:bg-red-950/30 border border-red-200/70 dark:border-red-900/40 transition-colors duration-150 hover:bg-red-100/60 dark:hover:bg-red-950/50">
-                            <div class="flex items-center gap-1.5 min-w-0">
-                                <span class="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse flex-shrink-0"></span>
-                                <span class="text-xs font-semibold text-red-950 dark:text-slate-200 truncate">Critique</span>
-                            </div>
-                            <span class="text-xs font-mono font-bold text-red-600 dark:text-red-400 flex-shrink-0">{{ $activeCrit }} <span class="text-[9px] text-slate-400 font-normal">({{ $totalActive > 0 ? round(($activeCrit / $totalActive) * 100) : 0 }}%)</span></span>
-                        </div>
-                        <div class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-amber-50 dark:bg-amber-950/30 border border-amber-200/70 dark:border-amber-900/40 transition-colors duration-150 hover:bg-amber-100/60 dark:hover:bg-amber-950/50">
-                            <div class="flex items-center gap-1.5 min-w-0">
-                                <span class="w-1.5 h-1.5 rounded-full bg-amber-500 flex-shrink-0"></span>
-                                <span class="text-xs font-semibold text-amber-950 dark:text-slate-200 truncate">Warning</span>
-                            </div>
-                            <span class="text-xs font-mono font-bold text-amber-600 dark:text-amber-400 flex-shrink-0">{{ $activeWarn }} <span class="text-[9px] text-slate-400 font-normal">({{ $totalActive > 0 ? round(($activeWarn / $totalActive) * 100) : 0 }}%)</span></span>
-                        </div>
-                        <div class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-slate-50 dark:bg-[#0d111a] border border-slate-200 dark:border-slate-800 transition-colors duration-150 hover:bg-slate-100/60 dark:hover:bg-[#131926]">
-                            <div class="flex items-center gap-1.5 min-w-0">
-                                <span class="w-1.5 h-1.5 rounded-full bg-purple-500 flex-shrink-0"></span>
-                                <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 truncate">Info</span>
-                            </div>
-                            <span class="text-xs font-mono font-bold text-slate-400 flex-shrink-0">{{ $activeInfo }}</span>
-                        </div>
-                    </div>
-
-                    <div class="py-1.5 px-2 bg-slate-50 dark:bg-[#0d111a] border border-slate-200 dark:border-slate-800 rounded-lg flex items-center justify-center gap-1.5 text-[10px] text-slate-500 dark:text-slate-400 font-mono">
-                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-xs shadow-emerald-500/50 flex-shrink-0"></span>
-                        <span class="truncate">Sync <a href="https://opsca.statuspage.io" target="_blank" class="text-purple-600 dark:text-purple-400 hover:underline font-semibold">Statuspage</a></span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ========================================== -->
-            <!-- 4. FLUX DES INCIDENTS (Connecté à MySQL)   -->
-            <!-- ========================================== -->
-            <div class="animate-entrance stagger-3 dash-card p-3 sm:p-4 bg-white dark:bg-[#111622] border border-slate-200 dark:border-slate-800 rounded-xl sm:rounded-2xl shadow-sm">
-                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pb-3 border-b border-slate-100 dark:border-slate-800/80">
-                    <div class="min-w-0">
-                        <h3 class="text-xs font-mono font-bold uppercase text-slate-800 dark:text-slate-200 truncate">Flux des Incidents & Triage Direct</h3>
-                        <p class="text-[10px] sm:text-[11px] text-slate-500 dark:text-slate-400 truncate">Payloads JSON routés depuis Kibana, Zabbix et n8n</p>
-                    </div>
+                <!-- Tiroir Mobile Flottant Élégant -->
+                <div x-show="mobileMenu" 
+                     @click.outside="mobileMenu = false"
+                     x-transition:enter="transition ease-out duration-150"
+                     x-transition:enter-start="transform opacity-0 scale-95"
+                     x-transition:enter-end="transform opacity-100 scale-100"
+                     x-transition:leave="transition ease-in duration-100"
+                     x-transition:leave-start="transform opacity-100 scale-100"
+                     x-transition:leave-end="transform opacity-0 scale-95"
+                     class="absolute right-3 top-16 w-72 bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl z-50 p-3 space-y-3 font-mono text-xs"
+                     style="display: none;">
                     
-                    <!-- Boutons filtres avec micro-transition active -->
-                    <div class="flex items-center gap-1.5 text-xs font-mono overflow-x-auto pb-1 sm:pb-0">
-                        <button wire:click="setFilter('all')" 
-                                class="btn-interactive px-3 py-1.5 rounded-lg {{ $filter === 'all' ? 'bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 font-bold shadow-xs' : 'bg-slate-100 dark:bg-[#161c2e] text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800' }} text-xs whitespace-nowrap cursor-pointer">
-                            Tous ({{ $incidents->count() }})
+                    <!-- En-tête Profil Utilisateur -->
+                    <div class="pb-2 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
+                        <div>
+                            <p class="font-bold text-slate-900 dark:text-white">{{ auth()->user()->name ?? 'Caleb Dassi' }}</p>
+                            <p class="text-[10px] text-slate-400 truncate">{{ auth()->user()->email ?? 'calebdassi@gmail.com' }}</p>
+                        </div>
+                        <span class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-emerald-50 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300">
+                            En ligne
+                        </span>
+                    </div>
+
+                    <!-- Navigation Rapide -->
+                    <div class="space-y-1">
+                        <a href="{{ route('reports') }}" class="flex items-center justify-between p-2 rounded-xl bg-blue-50/70 dark:bg-blue-950/40 text-[#0020B2] dark:text-blue-300 font-bold">
+                            <span class="flex items-center gap-2">
+                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
+                                </svg>
+                                {{ __('Rapports & SLA') }}
+                            </span>
+                            <span>→</span>
+                        </a>
+
+                        @if(app()->environment('local', 'staging') || config('app.debug'))
+                        <button @click="mobileMenu = false; $wire.openSimulationHub()" type="button" class="w-full flex items-center justify-between p-2 rounded-xl bg-amber-50/70 dark:bg-amber-950/40 text-amber-800 dark:text-amber-300 font-bold text-left">
+                            <span class="flex items-center gap-2">
+                                <svg class="w-4 h-4 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                                </svg>
+                                {{ __('Simulateur d\'Incidents (20)') }}
+                            </span>
+                            <span class="text-[10px] bg-amber-200 dark:bg-amber-900 px-1.5 py-0.2 rounded">TEST</span>
                         </button>
-                        <button wire:click="setFilter('critical')" 
-                                class="btn-interactive px-3 py-1.5 rounded-lg {{ $filter === 'critical' ? 'bg-red-600 text-white font-bold shadow-xs' : 'bg-slate-100 dark:bg-[#161c2e] text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800' }} text-xs whitespace-nowrap cursor-pointer">
-                            Critiques ({{ $activeCrit }})
-                        </button>
-                        <button wire:click="setFilter('warning')" 
-                                class="btn-interactive px-3 py-1.5 rounded-lg {{ $filter === 'warning' ? 'bg-amber-600 text-white font-bold shadow-xs' : 'bg-slate-100 dark:bg-[#161c2e] text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800' }} text-xs whitespace-nowrap cursor-pointer">
-                            Warnings ({{ $activeWarn }})
+                        @endif
+                    </div>
+
+                    <!-- Options Système (Langue & Thème) -->
+                    <div class="pt-2 border-t border-slate-100 dark:border-slate-800 grid grid-cols-2 gap-2">
+                        <!-- Langue Toggle -->
+                        <a href="{{ route('lang.switch', app()->getLocale() === 'fr' ? 'en' : 'fr') }}" class="p-2 rounded-xl bg-slate-50 dark:bg-[#0c101a] border border-slate-200 dark:border-slate-800 text-center font-bold text-slate-700 dark:text-slate-300">
+                            {{ app()->getLocale() === 'fr' ? '🇬🇧 English' : '🇫🇷 Français' }}
+                        </a>
+
+                        <!-- Thème Toggle -->
+                        <button @click="toggleTheme()" type="button" class="p-2 rounded-xl bg-slate-50 dark:bg-[#0c101a] border border-slate-200 dark:border-slate-800 text-center font-bold text-slate-700 dark:text-slate-300 flex items-center justify-center gap-1">
+                            <span x-text="darkMode ? '☀️ Clair' : '🌙 Sombre'"></span>
                         </button>
                     </div>
+
+                    <!-- Déconnexion -->
+                    <div class="pt-2 border-t border-slate-100 dark:border-slate-800">
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="submit" class="w-full p-2 rounded-xl text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-950/40 font-bold flex items-center justify-center gap-2 cursor-pointer">
+                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
+                                </svg>
+                                <span>{{ __('Se déconnecter') }}</span>
+                            </button>
+                        </form>
+                    </div>
+
                 </div>
 
-                <!-- Boucle dynamique sur les incidents avec barre de défilement verticale et thumb stylisé -->
-                <div class="divide-y divide-slate-100 dark:divide-slate-800/80 mt-1 max-h-[420px] overflow-y-auto custom-scrollbar pr-1.5">
-                    @forelse($incidents as $incident)
-                        <div class="incident-row py-3 flex flex-col md:flex-row md:items-center justify-between gap-2.5 px-2 rounded-xl">
-                            <div class="flex items-start gap-2.5 min-w-0">
-                                <span class="text-[9px] sm:text-[10px] font-mono font-bold px-2 py-0.5 rounded flex-shrink-0 mt-0.5 transition-transform duration-150 hover:scale-105
-                                    @if($incident->severity === 'critical') bg-red-100 dark:bg-red-950/80 text-red-700 dark:text-red-300 border border-red-200 dark:border-red-900/60
-                                    @elseif($incident->severity === 'warning') bg-amber-100 dark:bg-amber-950/80 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-900/60
-                                    @else bg-purple-100 dark:bg-purple-950/80 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-900/60 @endif">
-                                    {{ strtoupper($incident->severity) }}
-                                </span>
-                                <div class="min-w-0 flex-1">
-                                    <div class="flex flex-wrap items-center gap-1.5">
-                                        <span class="text-xs font-bold text-slate-800 dark:text-slate-100 break-words {{ $incident->status === 'resolved' ? 'line-through opacity-60' : '' }}">
-                                            {{ $incident->title }}
+            </div>
+
+        </header>
+
+        <!-- ==================================================== -->
+        <!-- 2. CARTES SYNTHÉTIQUES (3 MÉTRIQUES ESSENTIELLES)    -->
+        <!-- ==================================================== -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+            
+            <!-- Carte 1 : Incidents Actifs -->
+            <div class="dash-card-studio p-4 flex flex-col justify-between">
+                <div class="flex items-center justify-between text-slate-500 dark:text-slate-400">
+                    <span class="text-xs font-semibold">{{ __('Incidents Actifs') }}</span>
+                    <span class="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold {{ $totalActive > 0 ? 'bg-red-50 text-red-700 border border-red-200 dark:bg-red-950/60 dark:text-red-400 dark:border-red-900/60 animate-pulse' : 'bg-emerald-50 text-emerald-700 border border-emerald-200 dark:bg-emerald-950/60 dark:text-emerald-400 dark:border-emerald-900/60' }}">
+                        {{ $totalActive > 0 ? __('Action Requise') : __('Nominal') }}
+                    </span>
+                </div>
+                <div class="mt-3 flex items-baseline justify-between">
+                    <span class="text-2xl sm:text-3xl font-extrabold font-mono tracking-tight {{ $totalActive > 0 ? 'text-red-600 dark:text-red-400' : 'text-slate-900 dark:text-white' }}">
+                        {{ $totalActive }}
+                    </span>
+                    <span class="text-[11px] font-mono text-slate-400">
+                        {{ $activeCrit }} {{ __('Critiques') }} · {{ $activeWarn }} {{ __('Avertissements') }}
+                    </span>
+                </div>
+            </div>
+
+            <!-- Carte 2 : Disponibilité Globale SLA -->
+            <div class="dash-card-studio p-4 flex flex-col justify-between">
+                <div class="flex items-center justify-between text-slate-500 dark:text-slate-400">
+                    <span class="text-xs font-semibold">{{ __('Disponibilité SLA') }}</span>
+                    <span class="w-2 h-2 rounded-full bg-[#0020B2]"></span>
+                </div>
+                <div class="mt-3 flex items-baseline justify-between">
+                    <span class="text-2xl sm:text-3xl font-extrabold font-mono tracking-tight text-slate-900 dark:text-white">
+                        {{ $uptimePct }}%
+                    </span>
+                    <span class="text-[11px] font-mono text-emerald-600 dark:text-emerald-400 font-semibold">
+                        SLA {{ __('CONFORME') }} (≥ 99.5%)
+                    </span>
+                </div>
+            </div>
+
+            <!-- Carte 3 : Dernière Télémétrie -->
+            @php
+                $latestInc = $incidents->first();
+                $lastSeen = $latestInc ? $latestInc->created_at?->diffForHumans() : __('Système Opérationnel');
+            @endphp
+            <div class="dash-card-studio p-4 flex flex-col justify-between">
+                <div class="flex items-center justify-between text-slate-500 dark:text-slate-400">
+                    <span class="text-xs font-semibold">{{ __('Dernière Télémétrie') }}</span>
+                    <span class="w-2 h-2 rounded-full bg-[#F59E0B]"></span>
+                </div>
+                <div class="mt-3 flex items-baseline justify-between">
+                    <span class="text-lg sm:text-xl font-bold font-mono tracking-tight text-slate-900 dark:text-white truncate">
+                        {{ $lastSeen }}
+                    </span>
+                    <span class="text-[11px] font-mono text-slate-400">
+                        srv901529
+                    </span>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- ==================================================== -->
+        <!-- 3. FLUX DES INCIDENTS (ADAPTATIF MOBILE & DESKTOP)   -->
+        <!-- ==================================================== -->
+        <div class="dash-card-studio p-3.5 sm:p-5 space-y-4">
+            
+            <!-- Barre d'outils du tableau -->
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100 dark:border-slate-800">
+                <div>
+                    <h2 class="text-sm font-bold text-slate-900 dark:text-white tracking-tight">{{ __('Registre des Incidents & Alertes') }}</h2>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">{{ __('Surveillance en direct des 20 services critiques') }}</p>
+                </div>
+
+                <!-- Filtres par Criticité Défilables sur Mobile -->
+                <div class="flex items-center gap-1.5 overflow-x-auto custom-scrollbar pb-1 sm:pb-0">
+                    <button wire:click="setFilter('all')" 
+                            class="px-3 py-1.5 rounded-xl text-xs font-mono font-semibold transition cursor-pointer whitespace-nowrap {{ $filter === 'all' ? 'bg-[#0020B2] text-white shadow-xs' : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700' }}">
+                        {{ __('Tous') }} ({{ $totalAll }})
+                    </button>
+                    <button wire:click="setFilter('critical')" 
+                            class="px-3 py-1.5 rounded-xl text-xs font-mono font-semibold transition cursor-pointer whitespace-nowrap {{ $filter === 'critical' ? 'bg-red-600 text-white shadow-xs' : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700' }}">
+                        {{ __('Critiques') }} ({{ $countCrit }})
+                    </button>
+                    <button wire:click="setFilter('warning')" 
+                            class="px-3 py-1.5 rounded-xl text-xs font-mono font-semibold transition cursor-pointer whitespace-nowrap {{ $filter === 'warning' ? 'bg-amber-500 text-white shadow-xs' : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700' }}">
+                        Warnings ({{ $countWarn }})
+                    </button>
+                    <button wire:click="setFilter('info')" 
+                            class="px-3 py-1.5 rounded-xl text-xs font-mono font-semibold transition cursor-pointer whitespace-nowrap {{ $filter === 'info' ? 'bg-blue-600 text-white shadow-xs' : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700' }}">
+                        Infos ({{ $countInfo }})
+                    </button>
+                </div>
+
+            </div>
+
+            <!-- ============================================== -->
+            <!-- VUE 1 (DESKTOP) : GRAND TABLEAU COMPLET       -->
+            <!-- ============================================== -->
+            <div class="hidden md:block overflow-x-auto custom-scrollbar">
+                <table class="w-full text-left text-xs font-mono">
+                    <thead class="bg-slate-50 dark:bg-[#0c101a] text-slate-600 dark:text-slate-400 uppercase text-[10px] tracking-wider border-b border-slate-200 dark:border-slate-800">
+                        <tr>
+                            <th class="py-2.5 px-3 w-12 text-center">ID</th>
+                            <th class="py-2.5 px-3 w-40">{{ __('Horodatage') }}</th>
+                            <th class="py-2.5 px-3">{{ __('Incident') }} / {{ __('Service') }}</th>
+                            <th class="py-2.5 px-3 w-28 text-center">{{ __('Gravité') }}</th>
+                            <th class="py-2.5 px-3 w-24 text-center">{{ __('Statut') }}</th>
+                            <th class="py-2.5 px-3 w-24 text-center">{{ __('Durée (MTTR)') }}</th>
+                            <th class="py-2.5 px-3 w-36">{{ __('Source') }}</th>
+                            <th class="py-2.5 px-3 w-24 text-right">{{ __('Actions') }}</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100 dark:divide-slate-800/60 text-slate-700 dark:text-slate-300">
+                        @forelse($incidents as $incident)
+                            @php
+                                $mttr = '--';
+                                if ($incident->status === 'resolved' && $incident->created_at && $incident->updated_at) {
+                                    $diffSec = $incident->created_at->diffInSeconds($incident->updated_at);
+                                    $mttr = ($diffSec >= 60) ? (floor($diffSec / 60) . 'm ' . ($diffSec % 60) . 's') : ($diffSec . 's');
+                                }
+                            @endphp
+                            <tr class="hover:bg-slate-50/80 dark:hover:bg-slate-800/30 transition">
+                                <td class="py-2.5 px-3 font-bold text-slate-400 text-center">#{{ $incident->id }}</td>
+                                <td class="py-2.5 px-3 text-[11px] whitespace-nowrap text-slate-500 dark:text-slate-400">
+                                    {{ $incident->created_at ? $incident->created_at->format('d/m/Y H:i:s') : 'N/A' }}
+                                </td>
+                                <td class="py-2.5 px-3 font-semibold text-slate-900 dark:text-white">
+                                    {{ $incident->title }}
+                                </td>
+                                <td class="py-2.5 px-3 text-center">
+                                    @if(strtoupper($incident->severity) === 'CRITICAL')
+                                        <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-red-50 text-red-700 border border-red-200 dark:bg-red-950/60 dark:text-red-400 dark:border-red-800">
+                                            CRITICAL
                                         </span>
-                                        <span class="text-[9px] font-mono px-1.5 py-0.2 rounded bg-slate-100 dark:bg-[#161c2e] text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-800">
-                                            {{ $incident->source }}
+                                    @elseif(strtoupper($incident->severity) === 'WARNING')
+                                        <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-50 text-amber-700 border border-amber-200 dark:bg-amber-950/60 dark:text-amber-400 dark:border-amber-800">
+                                            WARNING
                                         </span>
-                                        @if($incident->status === 'resolved')
-                                            <span class="text-[9px] font-mono px-1.5 py-0.2 rounded bg-emerald-100 dark:bg-emerald-950/80 text-emerald-600 dark:text-emerald-400 font-semibold border border-emerald-200 dark:border-emerald-900/40">
-                                                RÉSOLU
-                                            </span>
-                                        @endif
-                                    </div>
-                                    <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5 break-words">
-                                        {{ $incident->description }}
-                                    </p>
-                                </div>
-                            </div>
-                            
-                            <div class="flex items-center justify-between md:justify-end gap-2 text-xs font-mono pt-1 md:pt-0 border-t border-slate-50 dark:border-slate-800/40 md:border-0">
-                                <span class="text-slate-400 text-[10px] sm:text-[11px] whitespace-nowrap">
-                                    {{ $incident->created_at->diffForHumans() }}
-                                </span>
-                                <div class="flex items-center gap-1.5">
+                                    @else
+                                        <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200 dark:bg-blue-950/60 dark:text-blue-400 dark:border-blue-800">
+                                            INFO
+                                        </span>
+                                    @endif
+                                </td>
+                                <td class="py-2.5 px-3 text-center">
+                                    @if($incident->status === 'resolved')
+                                        <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 dark:bg-emerald-950/60 dark:text-emerald-400 dark:border-emerald-800">
+                                            {{ __('Résolu') }}
+                                        </span>
+                                    @else
+                                        <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-rose-50 text-rose-700 border border-rose-200 dark:bg-rose-950/60 dark:text-rose-400 dark:border-rose-800 animate-pulse">
+                                            {{ __('En cours') }}
+                                        </span>
+                                    @endif
+                                </td>
+                                <td class="py-2.5 px-3 font-bold text-[#F59E0B] text-center">
+                                    {{ $mttr }}
+                                </td>
+                                <td class="py-2.5 px-3 text-[11px] text-slate-500 dark:text-slate-400">
+                                    {{ $incident->source ?? 'Kibana Logs' }}
+                                </td>
+                                <td class="py-2.5 px-3 text-right whitespace-nowrap space-x-1">
                                     <button wire:click="viewJson({{ $incident->id }})" 
-                                            class="btn-interactive px-2.5 py-1.5 rounded-lg bg-slate-100 dark:bg-[#161c2e] hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 text-xs font-semibold cursor-pointer">
+                                            class="px-2 py-1 rounded bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 text-[11px] font-bold cursor-pointer transition">
                                         JSON
                                     </button>
                                     @if($incident->status !== 'resolved')
-                                        <button wire:click="resolveIncident({{ $incident->id }})" 
-                                                class="btn-interactive px-3 py-1.5 rounded-lg bg-purple-50 dark:bg-purple-950/50 text-purple-700 dark:text-purple-300 hover:bg-purple-100 dark:hover:bg-purple-900/60 border border-purple-200 dark:border-purple-800 text-xs font-semibold cursor-pointer">
-                                            Résoudre
-                                        </button>
+                                    <button wire:click="resolveIncident({{ $incident->id }})" 
+                                            title="Forcer la clôture de l'incident"
+                                            class="px-2 py-1 rounded bg-emerald-50 dark:bg-emerald-950/50 hover:bg-emerald-100 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 text-[11px] font-bold cursor-pointer transition">
+                                        {{ __('Fermer') }}
+                                    </button>
                                     @endif
-                                </div>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="8" class="py-8 text-center text-slate-400 font-mono text-xs">
+                                    {{ __('Aucun incident actif') }}
+                                </td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- ============================================== -->
+            <!-- VUE 2 (MOBILE) : CARTES D'INCIDENTS TACTILES  -->
+            <!-- ============================================== -->
+            <div class="block md:hidden space-y-3">
+                @forelse($incidents as $incident)
+                    @php
+                        $mttr = '--';
+                        if ($incident->status === 'resolved' && $incident->created_at && $incident->updated_at) {
+                            $diffSec = $incident->created_at->diffInSeconds($incident->updated_at);
+                            $mttr = ($diffSec >= 60) ? (floor($diffSec / 60) . 'm ' . ($diffSec % 60) . 's') : ($diffSec . 's');
+                        }
+                    @endphp
+                    <div class="p-3 rounded-xl bg-slate-50 dark:bg-[#0c101a] border border-slate-200 dark:border-slate-800 space-y-2.5 font-mono text-xs">
+                        
+                        <!-- Top Bar de la carte Mobile -->
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-1.5">
+                                <span class="font-bold text-slate-400">#{{ $incident->id }}</span>
+                                <span class="text-[10px] text-slate-500 dark:text-slate-400">
+                                    {{ $incident->created_at ? $incident->created_at->format('d/m H:i') : '' }}
+                                </span>
+                            </div>
+
+                            <div class="flex items-center gap-1">
+                                @if(strtoupper($incident->severity) === 'CRITICAL')
+                                    <span class="px-1.5 py-0.2 rounded text-[9px] font-bold bg-red-50 text-red-700 border border-red-200 dark:bg-red-950/60 dark:text-red-400">
+                                        CRIT
+                                    </span>
+                                @elseif(strtoupper($incident->severity) === 'WARNING')
+                                    <span class="px-1.5 py-0.2 rounded text-[9px] font-bold bg-amber-50 text-amber-700 border border-amber-200 dark:bg-amber-950/60 dark:text-amber-400">
+                                        WARN
+                                    </span>
+                                @else
+                                    <span class="px-1.5 py-0.2 rounded text-[9px] font-bold bg-blue-50 text-blue-700 border border-blue-200 dark:bg-blue-950/60 dark:text-blue-400">
+                                        INFO
+                                    </span>
+                                @endif
+
+                                @if($incident->status === 'resolved')
+                                    <span class="px-1.5 py-0.2 rounded text-[9px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 dark:bg-emerald-950/60 dark:text-emerald-400">
+                                        {{ __('Résolu') }}
+                                    </span>
+                                @else
+                                    <span class="px-1.5 py-0.2 rounded text-[9px] font-bold bg-rose-50 text-rose-700 border border-rose-200 dark:bg-rose-950/60 dark:text-rose-400 animate-pulse">
+                                        {{ __('En cours') }}
+                                    </span>
+                                @endif
                             </div>
                         </div>
-                    @empty
-                        <div class="py-8 text-center text-xs text-slate-500 font-mono">
-                            <div class="w-8 h-8 rounded-full bg-emerald-100 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mx-auto mb-2 font-bold">
-                                ✓
-                            </div>
-                            Aucun incident actif dans cette vue
+
+                        <!-- Titre de l'incident -->
+                        <div class="font-bold text-slate-900 dark:text-white text-xs leading-snug">
+                            {{ $incident->title }}
                         </div>
-                    @endforelse
+
+                        <!-- Métadonnées (Source & MTTR) -->
+                        <div class="flex items-center justify-between text-[11px] text-slate-500 dark:text-slate-400 pt-1 border-t border-slate-200/60 dark:border-slate-800/60">
+                            <span>📡 {{ $incident->source ?? 'Kibana Logs' }}</span>
+                            <span class="text-amber-500 font-bold">⏱️ {{ $mttr }}</span>
+                        </div>
+
+                        <!-- Actions Mobiles -->
+                        <div class="flex items-center gap-2 pt-1">
+                            <button wire:click="viewJson({{ $incident->id }})" 
+                                    class="flex-1 py-1.5 rounded-lg bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 text-center font-bold text-xs cursor-pointer">
+                                📄 Payload JSON
+                            </button>
+                            @if($incident->status !== 'resolved')
+                            <button wire:click="resolveIncident({{ $incident->id }})" 
+                                    class="flex-1 py-1.5 rounded-lg bg-emerald-600 text-white font-bold text-xs text-center cursor-pointer">
+                                ✓ {{ __('Clôturer') }}
+                            </button>
+                            @endif
+                        </div>
+
+                    </div>
+                @empty
+                    <div class="py-6 text-center text-slate-400 font-mono text-xs">
+                        {{ __('Aucun incident actif') }}
+                    </div>
+                @endforelse
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- ==================================================== -->
+    <!-- 4. MODALE D'INSPECTION DU PAYLOAD JSON               -->
+    <!-- ==================================================== -->
+    @if($showJsonModal && $activeJsonPayload)
+    <div class="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-900/60 backdrop-blur-xs animate-entrance"
+         wire:click.self="closeModal"
+         @keydown.escape.window="$wire.closeModal()">
+        
+        <div class="w-full max-w-2xl bg-white dark:bg-[#111827] rounded-2xl border border-slate-200 dark:border-slate-800 shadow-2xl overflow-hidden space-y-3 p-5"
+             x-data="{ copied: false }">
+            
+            <div class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
+                <div class="flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-[#0020B2]"></span>
+                    <h3 class="text-xs sm:text-sm font-bold text-slate-900 dark:text-white font-mono truncate max-w-md">
+                        Payload JSON — {{ $selectedIncidentTitle }}
+                    </h3>
                 </div>
+                <button wire:click="closeModal" 
+                        class="p-1 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 cursor-pointer">
+                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Contenu JSON brut avec sélection facile -->
+            <div class="relative bg-[#090d16] text-emerald-400 p-4 rounded-xl font-mono text-[11px] sm:text-xs overflow-x-auto max-h-96 border border-slate-800 leading-relaxed custom-scrollbar shadow-inner select-all">
+                <pre class="whitespace-pre font-mono"><code>{{ json_encode($activeJsonPayload, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) }}</code></pre>
+            </div>
+
+            <!-- Barre d'actions : Bouton Copier + Fermer -->
+            <div class="flex items-center justify-between pt-2">
+                <button type="button" 
+                        @click="navigator.clipboard.writeText(JSON.stringify({{ json_encode($activeJsonPayload) }}, null, 2)); copied = true; setTimeout(() => copied = false, 2000)" 
+                        class="px-3 py-1.5 rounded-xl text-xs font-mono font-semibold bg-slate-100 dark:bg-[#161c2e] hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 flex items-center gap-1.5 cursor-pointer transition">
+                    <svg class="w-3.5 h-3.5 text-[#0020B2] dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path>
+                    </svg>
+                    <span x-text="copied ? '✓ Copié !' : 'Copier le JSON'"></span>
+                </button>
+
+                <button wire:click="closeModal" 
+                        class="px-4 py-1.5 rounded-xl bg-[#0020B2] hover:bg-[#001ca0] text-white text-xs font-mono font-semibold cursor-pointer shadow-xs transition">
+                    Fermer
+                </button>
             </div>
 
         </div>
     </div>
+    @endif
+
 
     <!-- ==================================================== -->
-    <!-- 5. MODALE D'INSPECTION JSON AVEC ANIMATION FLUIDE   -->
+    <!-- 5. MODALE DU SIMULATEUR OPS (STAGING / LOCAL SEUL)   -->
     <!-- ==================================================== -->
-    @if($showJsonModal)
-        <div class="fixed inset-0 z-50 flex items-center justify-center p-3 bg-black/60 backdrop-blur-xs"
-             x-transition:enter="transition ease-out duration-150"
-             x-transition:enter-start="opacity-0"
-             x-transition:enter-end="opacity-100"
-             x-transition:leave="transition ease-in duration-100"
-             x-transition:leave-start="opacity-100"
-             x-transition:leave-end="opacity-0">
+    @if($showSimulationHub && (app()->environment('local', 'staging') || config('app.debug')))
+    <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs">
+        <div class="w-full max-w-4xl bg-white dark:bg-[#111827] rounded-2xl border border-slate-200 dark:border-slate-800 shadow-2xl overflow-hidden p-6 space-y-4 max-h-[90vh] flex flex-col">
             
-            <div class="bg-white dark:bg-[#111622] border border-slate-200 dark:border-slate-800 rounded-2xl max-w-xl w-full p-4 shadow-2xl space-y-3"
-                 x-transition:enter="transition ease-out duration-150"
-                 x-transition:enter-start="opacity-0 scale-95 translate-y-1"
-                 x-transition:enter-end="opacity-100 scale-100 translate-y-0"
-                 x-transition:leave="transition ease-in duration-100"
-                 x-transition:leave-start="opacity-100 scale-100"
-                 x-transition:leave-end="opacity-0 scale-95">
-                
-                <div class="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800">
-                    <h3 class="text-xs font-mono font-bold uppercase text-purple-600 dark:text-purple-400 flex items-center gap-2">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
-                        Raw Webhook Payload
+            <div class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
+                <div>
+                    <h3 class="text-base font-bold text-slate-900 dark:text-white font-mono flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+                        Simulateur d'Incidents — 20 Services & Webhook n8n
                     </h3>
-                    <button wire:click="closeModal" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 text-sm font-bold cursor-pointer transition-colors">&times;</button>
+                    <p class="text-xs text-slate-500 font-mono">Mode Staging / Test Local</p>
                 </div>
-                
-                <div class="bg-[#0b0f17] text-emerald-400 p-3.5 rounded-xl font-mono text-[11px] overflow-x-auto max-h-80 border border-slate-800 leading-relaxed custom-scrollbar">
-                    <pre>{{ json_encode($activeJsonPayload, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) }}</pre>
-                </div>
-                
-                <div class="flex justify-end">
-                    <button wire:click="closeModal" class="btn-interactive px-3.5 py-1.5 text-xs font-semibold rounded-xl bg-purple-600 hover:bg-purple-700 text-white cursor-pointer shadow-xs">
-                        Fermer
-                    </button>
-                </div>
+                <button wire:click="closeSimulationHub" class="p-1 rounded-lg text-slate-400 hover:text-slate-600 cursor-pointer">
+                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                </button>
             </div>
+
+            @if($simulationFeedback)
+            <div class="p-3 rounded-xl {{ $simulationFeedbackType === 'success' ? 'bg-emerald-50 text-emerald-800 border border-emerald-200 dark:bg-emerald-950/60 dark:text-emerald-300' : 'bg-red-50 text-red-800 border border-red-200' }} text-xs font-mono">
+                {{ $simulationFeedback }}
+            </div>
+            @endif
+
+            <!-- Filtres de Catégories de Services (Flex Wrap & Contraste Élevé) -->
+            <div class="flex items-center gap-1.5 sm:gap-2 flex-wrap text-xs font-mono">
+                <button wire:click="setSimulationCategory('all')" 
+                        class="px-3 py-1.5 rounded-xl transition cursor-pointer {{ $simulationCategory === 'all' ? 'bg-[#0020B2] text-white font-bold shadow-xs' : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700' }}">
+                    Tous ({{ $allScenariosCount }})
+                </button>
+                <button wire:click="setSimulationCategory('maviance')" 
+                        class="px-3 py-1.5 rounded-xl transition cursor-pointer {{ $simulationCategory === 'maviance' ? 'bg-[#0020B2] text-white font-bold shadow-xs' : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700' }}">
+                    Plateformes Core (4)
+                </button>
+                <button wire:click="setSimulationCategory('banking')" 
+                        class="px-3 py-1.5 rounded-xl transition cursor-pointer {{ $simulationCategory === 'banking' ? 'bg-[#0020B2] text-white font-bold shadow-xs' : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700' }}">
+                    Banques (3)
+                </button>
+                <button wire:click="setSimulationCategory('utilities')" 
+                        class="px-3 py-1.5 rounded-xl transition cursor-pointer {{ $simulationCategory === 'utilities' ? 'bg-[#0020B2] text-white font-bold shadow-xs' : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700' }}">
+                    Factures & Énergie (3)
+                </button>
+                <button wire:click="setSimulationCategory('telco')" 
+                        class="px-3 py-1.5 rounded-xl transition cursor-pointer {{ $simulationCategory === 'telco' ? 'bg-[#0020B2] text-white font-bold shadow-xs' : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700' }}">
+                    Telco & MoMo (4)
+                </button>
+                <button wire:click="setSimulationCategory('media')" 
+                        class="px-3 py-1.5 rounded-xl transition cursor-pointer {{ $simulationCategory === 'media' ? 'bg-[#0020B2] text-white font-bold shadow-xs' : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700' }}">
+                    Télévision & Médias (3)
+                </button>
+                <button wire:click="setSimulationCategory('corporate')" 
+                        class="px-3 py-1.5 rounded-xl transition cursor-pointer {{ $simulationCategory === 'corporate' ? 'bg-[#0020B2] text-white font-bold shadow-xs' : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700' }}">
+                    Entreprises (3)
+                </button>
+            </div>
+
+
+            <!-- Grille des 20 Scénarios -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 overflow-y-auto custom-scrollbar flex-1 pr-1">
+                @foreach($scenarios as $sc)
+                <div class="p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-[#0c101a] flex flex-col justify-between space-y-2.5">
+                    <div class="flex items-start justify-between gap-2">
+                        <div>
+                            <span class="text-xs font-bold text-slate-900 dark:text-white font-mono">{{ $sc['name'] }}</span>
+                            <p class="text-[11px] text-slate-500 font-mono">{{ $sc['alert_title'] }}</p>
+                        </div>
+                        <span class="px-1.5 py-0.5 rounded text-[9px] font-mono font-bold bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
+                            {{ $sc['server'] ?? 'srv901529' }}
+                        </span>
+                    </div>
+                    
+                    <!-- Boutons d'injection selon la Sévérité souhaitée -->
+                    <div class="flex items-center justify-between pt-2 border-t border-slate-200/60 dark:border-slate-800 gap-1.5 text-[11px] font-mono">
+                        <span class="text-slate-400 text-[10px]">Simuler :</span>
+                        <div class="flex items-center gap-1.5">
+                            <button wire:click="triggerScenario('{{ $sc['key'] }}', 'CRITICAL')" 
+                                    title="Injecter en Sévérité CRITICAL"
+                                    class="px-2.5 py-1 rounded-lg bg-red-600 hover:bg-red-700 text-white font-bold text-[10px] cursor-pointer transition">
+                                🔴 Critique
+                            </button>
+                            <button wire:click="triggerScenario('{{ $sc['key'] }}', 'WARNING')" 
+                                    title="Injecter en Sévérité WARNING"
+                                    class="px-2.5 py-1 rounded-lg bg-amber-500 hover:bg-amber-600 text-white font-bold text-[10px] cursor-pointer transition">
+                                🟡 Warning
+                            </button>
+                            <button wire:click="triggerScenario('{{ $sc['key'] }}', 'INFO')" 
+                                    title="Injecter en Sévérité INFO"
+                                    class="px-2.5 py-1 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-bold text-[10px] cursor-pointer transition">
+                                🔵 Info
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                @endforeach
+            </div>
+
+
+
         </div>
+    </div>
     @endif
 
 </div>
