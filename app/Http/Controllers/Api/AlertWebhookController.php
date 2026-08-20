@@ -32,6 +32,9 @@ class AlertWebhookController extends Controller
         $message   = $data['message'] ?? ($data['description'] ?? ($data['message_investigating'] ?? ''));
         $severity  = strtoupper($data['severity'] ?? 'INFO');
         $source    = $data['source'] ?? 'Kibana Logs Engine';
+        if (in_array($source, ['VigilCore Monitoring', 'Monitoring Hub', 'VigilCore Alert Hub'])) {
+            $source = 'Kibana Logs Engine';
+        }
 
         // 1. CAS DE RÉSOLUTION (status = resolved ou ok)
         if (in_array($rawStatus, ['resolved', 'ok'])) {
