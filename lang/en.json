@@ -50,6 +50,10 @@
   "Fermé": "Closed",
 
   "État des Composants & Services": "Components & Services Status",
+  "Santé en Direct des 20 Services & Microservices": "Live Health of the 20 Services & Microservices",
+  "Supervision temps réel de l'écosystème Maviance, Mobile Money, Facturiers et Partenaires": "Real-time monitoring of Maviance platforms, Mobile Money, Billers & Partners",
+  "Opérationnels": "Operational",
+  "Inspecter l'incident actif": "Inspect active incident",
   "Surveillance en direct des 20 services critiques": "Live monitoring of 20 critical services",
   "Registre des Incidents & Alertes": "Incidents & Alerts Registry",
   "Historique Complet des Incidents": "Complete Incidents History",

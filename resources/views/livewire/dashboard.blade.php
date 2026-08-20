@@ -350,6 +350,84 @@
         </div>
 
         <!-- ==================================================== -->
+        <!-- 2. BIS. CARTOGRAPHIE DES 20 SERVICES & SANTÉ EN DIRECT -->
+        <!-- ==================================================== -->
+        <div class="dash-card-studio p-3.5 sm:p-5 space-y-3.5" x-data="{ showServicesGrid: true }">
+            
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pb-2.5 border-b border-slate-100 dark:border-slate-800">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-8 h-8 rounded-xl bg-blue-50 dark:bg-blue-950/60 text-[#0020B2] dark:text-blue-300 flex items-center justify-center font-bold text-sm">
+                        20
+                    </div>
+                    <div>
+                        <h2 class="text-sm font-bold text-slate-900 dark:text-white tracking-tight flex items-center gap-2">
+                            <span>{{ __('Santé en Direct des 20 Services & Microservices') }}</span>
+                            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+                        </h2>
+                        <p class="text-xs text-slate-500 dark:text-slate-400">
+                            {{ __('Supervision temps réel de l\'écosystème Maviance, Mobile Money, Facturiers et Partenaires') }}
+                        </p>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-2 self-start sm:self-auto">
+                    <!-- Badge État Global -->
+                    <span class="px-2.5 py-1 rounded-full text-xs font-mono font-bold {{ $operationalCount === 20 ? 'bg-emerald-50 text-emerald-700 border border-emerald-200 dark:bg-emerald-950/60 dark:text-emerald-300 dark:border-emerald-900/60' : 'bg-red-50 text-red-700 border border-red-200 dark:bg-red-950/60 dark:text-red-400 dark:border-red-900/60 animate-pulse' }}">
+                        {{ $operationalCount }}/20 {{ __('Opérationnels') }}
+                    </span>
+
+                    <!-- Toggle Affichage Grille -->
+                    <button @click="showServicesGrid = !showServicesGrid" 
+                            type="button" 
+                            class="px-2 py-1 text-xs font-mono rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition cursor-pointer">
+                        <span x-text="showServicesGrid ? '▲ Masquer' : '▼ Développer (20)'"></span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Grille des 20 Services -->
+            <div x-show="showServicesGrid" 
+                 x-transition
+                 class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2.5 pt-1">
+                @foreach($servicesHealth as $service)
+                <div class="p-2.5 rounded-xl border transition-all duration-200 flex items-center justify-between gap-2 {{ $service['status'] === 'operational' ? 'bg-slate-50/70 dark:bg-[#0c101a]/70 border-slate-200/80 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700' : 'bg-red-50/80 dark:bg-red-950/40 border-red-300 dark:border-red-800 shadow-sm animate-pulse' }}">
+                    
+                    <div class="min-w-0 flex-1">
+                        <div class="flex items-center gap-1.5 mb-0.5">
+                            <span class="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 truncate">
+                                {{ $service['category_label'] }}
+                            </span>
+                        </div>
+                        <p class="text-xs font-bold text-slate-900 dark:text-white truncate" title="{{ $service['name'] }}">
+                            {{ $service['name'] }}
+                        </p>
+                    </div>
+
+                    <!-- Statut du Service -->
+                    <div class="flex-shrink-0 flex items-center gap-1.5">
+                        @if($service['status'] === 'operational')
+                            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-emerald-50 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-900/60">
+                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                                <span>OK</span>
+                            </span>
+                        @else
+                            <button wire:click="viewJson({{ $service['incident_id'] }})" 
+                                    type="button"
+                                    title="{{ __('Inspecter l\'incident actif') }}"
+                                    class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-red-600 text-white shadow-xs hover:bg-red-700 transition cursor-pointer">
+                                <span class="w-1.5 h-1.5 rounded-full bg-white animate-ping"></span>
+                                <span>{{ $service['severity'] }}</span>
+                            </button>
+                        @endif
+                    </div>
+
+                </div>
+                @endforeach
+            </div>
+
+        </div>
+
+        <!-- ==================================================== -->
         <!-- 3. FLUX DES INCIDENTS (ADAPTATIF MOBILE & DESKTOP)   -->
         <!-- ==================================================== -->
         <div class="dash-card-studio p-3.5 sm:p-5 space-y-4">
