@@ -304,6 +304,40 @@ class Dashboard extends Component
             ? $allScenarios
             : array_values(array_filter($allScenarios, fn($s) => $s['category'] === $this->simulationCategory));
 
+        // Corrélation temps réel de l'état de santé des 20 services
+        $openIncidents = Incident::where('status', '!=', 'resolved')->get();
+        $servicesHealth = collect($allScenarios)->map(function ($s) use ($openIncidents) {
+            $matchingIncident = $openIncidents->first(function ($inc) use ($s) {
+                return ($inc->component === $s['key']) 
+                    || (str_contains(strtolower($inc->title ?? ''), strtolower($s['key'])))
+                    || (str_contains(strtolower($inc->title ?? ''), strtolower($s['name'])));
+            });
+
+            $status = 'operational';
+            $incidentId = null;
+            $severity = null;
+
+            if ($matchingIncident) {
+                $severity = strtoupper($matchingIncident->severity ?? 'CRITICAL');
+                $status = ($severity === 'CRITICAL') ? 'outage' : 'degraded';
+                $incidentId = $matchingIncident->id;
+            }
+
+            return [
+                'key'            => $s['key'],
+                'category'       => $s['category'],
+                'category_label' => $s['category_label'] ?? 'Général',
+                'name'           => $s['name'],
+                'icon'           => $s['icon'] ?? 'server',
+                'color'          => $s['color'] ?? 'blue',
+                'status'         => $status,
+                'severity'       => $severity,
+                'incident_id'    => $incidentId,
+            ];
+        });
+
+        $operationalCount = $servicesHealth->where('status', 'operational')->count();
+
         return view('livewire.dashboard', [
             'incidents'         => $incidents,
             'totalAll'          => $totalAll,
@@ -317,6 +351,8 @@ class Dashboard extends Component
             'uptimePct'         => $uptimePct,
             'scenarios'         => $filteredScenarios,
             'allScenariosCount' => count($allScenarios),
+            'servicesHealth'    => $servicesHealth,
+            'operationalCount'  => $operationalCount,
         ]);
     }
 }
