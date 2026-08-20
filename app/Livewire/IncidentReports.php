@@ -173,11 +173,27 @@ class IncidentReports extends Component
             $mttrFormatted = ($avgMttrSec >= 60) ? (floor($avgMttrSec / 60) . 'm ' . ($avgMttrSec % 60) . 's') : ($avgMttrSec . 's');
 
             // Disponibilité Uptime SLA %
-            $downtimeMinutes = round($totalDurationSec / 60);
-            $uptimePct = 100;
-            if ($totalPeriodMinutes > 0 && $totalCount > 0) {
-                $calculatedUptime = 100 - (($downtimeMinutes / $totalPeriodMinutes) * 100);
-                $uptimePct = max(98.50, min(99.99, round($calculatedUptime, 2)));
+            $downtimeWeightedMinutes = 0;
+            foreach ($allPeriodIncidents as $inc) {
+                $sev = strtoupper($inc->severity ?? 'INFO');
+                if (!in_array($sev, ['CRITICAL', 'WARNING'])) {
+                    continue;
+                }
+                $weight = ($sev === 'CRITICAL') ? 1.0 : 0.3;
+
+                if ($inc->status === 'resolved' && $inc->created_at && $inc->updated_at) {
+                    $diffMin = min(120, $inc->created_at->diffInMinutes($inc->updated_at));
+                    $downtimeWeightedMinutes += ($diffMin * $weight);
+                } elseif ($inc->status !== 'resolved' && $inc->created_at) {
+                    $diffMin = min(180, $inc->created_at->diffInMinutes(now()));
+                    $downtimeWeightedMinutes += ($diffMin * $weight);
+                }
+            }
+
+            $uptimePct = 100.00;
+            if ($totalPeriodMinutes > 0 && $downtimeWeightedMinutes > 0) {
+                $calculatedUptime = 100.0 - (($downtimeWeightedMinutes / $totalPeriodMinutes) * 100);
+                $uptimePct = round(max(95.00, min(99.99, $calculatedUptime)), 2);
             }
 
             // Taux de résolution
