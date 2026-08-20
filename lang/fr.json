@@ -117,5 +117,11 @@
   "Maintenir la session active": "Maintenir la session active",
   "Se Connecter": "Se Connecter",
   "Connexion chiffrée SSL / TLS — srv901529": "Connexion chiffrée SSL / TLS — srv901529",
-  "Ces identifiants de connexion ne correspondent à aucun compte enregistré.": "Ces identifiants de connexion ne correspondent à aucun compte enregistré."
+  "Ces identifiants de connexion ne correspondent à aucun compte enregistré.": "Ces identifiants de connexion ne correspondent à aucun compte enregistré.",
+  "Showing": "Affichage de",
+  "to": "à",
+  "of": "sur",
+  "results": "résultats",
+  "Pagination Navigation": "Navigation dans la pagination",
+  "Go to page :page": "Aller à la page :page"
 }

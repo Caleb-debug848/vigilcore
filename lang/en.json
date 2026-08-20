@@ -117,5 +117,11 @@
   "Maintenir la session active": "Keep session active",
   "Se Connecter": "Sign In",
   "Connexion chiffrée SSL / TLS — srv901529": "Encrypted SSL / TLS Connection — srv901529",
-  "Ces identifiants de connexion ne correspondent à aucun compte enregistré.": "These credentials do not match our records."
+  "Ces identifiants de connexion ne correspondent à aucun compte enregistré.": "These credentials do not match our records.",
+  "Showing": "Showing",
+  "to": "to",
+  "of": "of",
+  "results": "results",
+  "Pagination Navigation": "Pagination Navigation",
+  "Go to page :page": "Go to page :page"
 }
