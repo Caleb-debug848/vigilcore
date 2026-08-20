@@ -352,17 +352,21 @@
         <!-- ==================================================== -->
         <!-- 2. BIS. CARTOGRAPHIE DES 20 SERVICES & SANTÉ EN DIRECT -->
         <!-- ==================================================== -->
-        <div class="dash-card-studio p-3.5 sm:p-5 space-y-3.5" x-data="{ showServicesGrid: true }">
+        <div class="dash-card-studio p-4 sm:p-5 space-y-4" x-data="{ showServicesGrid: true, activeServiceCategory: 'all' }">
             
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pb-2.5 border-b border-slate-100 dark:border-slate-800">
-                <div class="flex items-center gap-2.5">
-                    <div class="w-8 h-8 rounded-xl bg-blue-50 dark:bg-blue-950/60 text-[#0020B2] dark:text-blue-300 flex items-center justify-center font-bold text-sm">
+            <!-- En-tête de la matrice -->
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100 dark:border-slate-800/80">
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-xl bg-blue-500/10 text-[#0020B2] dark:text-blue-400 border border-blue-500/20 flex items-center justify-center font-mono font-bold text-sm shadow-xs">
                         20
                     </div>
                     <div>
                         <h2 class="text-sm font-bold text-slate-900 dark:text-white tracking-tight flex items-center gap-2">
                             <span>{{ __('Santé en Direct des 20 Services & Microservices') }}</span>
-                            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+                            <span class="inline-flex h-2 w-2 relative">
+                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                                <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                            </span>
                         </h2>
                         <p class="text-xs text-slate-500 dark:text-slate-400">
                             {{ __('Supervision temps réel de l\'écosystème Maviance, Mobile Money, Facturiers et Partenaires') }}
@@ -372,41 +376,57 @@
 
                 <div class="flex items-center gap-2 self-start sm:self-auto">
                     <!-- Badge État Global -->
-                    <span class="px-2.5 py-1 rounded-full text-xs font-mono font-bold {{ $operationalCount === 20 ? 'bg-emerald-50 text-emerald-700 border border-emerald-200 dark:bg-emerald-950/60 dark:text-emerald-300 dark:border-emerald-900/60' : 'bg-red-50 text-red-700 border border-red-200 dark:bg-red-950/60 dark:text-red-400 dark:border-red-900/60 animate-pulse' }}">
+                    <span class="px-2.5 py-1 rounded-full text-xs font-mono font-bold {{ $operationalCount === 20 ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20' : 'bg-red-500/10 text-red-600 dark:text-red-400 border border-red-500/30 animate-pulse' }}">
                         {{ $operationalCount }}/20 {{ __('Opérationnels') }}
                     </span>
 
-                    <!-- Toggle Affichage Grille -->
+                    <!-- Toggle Masquer / Afficher -->
                     <button @click="showServicesGrid = !showServicesGrid" 
                             type="button" 
-                            class="px-2 py-1 text-xs font-mono rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition cursor-pointer">
+                            class="px-2.5 py-1 text-xs font-mono font-medium rounded-lg bg-slate-100 dark:bg-slate-800/80 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700/60 transition cursor-pointer">
                         <span x-text="showServicesGrid ? '▲ Masquer' : '▼ Développer (20)'"></span>
                     </button>
                 </div>
             </div>
 
-            <!-- Grille des 20 Services -->
+            <!-- Grille Haute Densité SRE (4 colonnes) -->
             <div x-show="showServicesGrid" 
-                 x-transition
-                 class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2.5 pt-1">
+                 x-transition:enter="transition ease-out duration-200"
+                 x-transition:enter-start="opacity-0 -translate-y-2"
+                 x-transition:enter-end="opacity-100 translate-y-0"
+                 class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 pt-0.5">
                 @foreach($servicesHealth as $service)
-                <div class="p-2.5 rounded-xl border transition-all duration-200 flex items-center justify-between gap-2 {{ $service['status'] === 'operational' ? 'bg-slate-50/70 dark:bg-[#0c101a]/70 border-slate-200/80 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700' : 'bg-red-50/80 dark:bg-red-950/40 border-red-300 dark:border-red-800 shadow-sm animate-pulse' }}">
+                @php
+                    $isOk = ($service['status'] === 'operational');
+                    $catColors = [
+                        'maviance'   => 'text-blue-500 dark:text-blue-400 border-blue-500/20 bg-blue-500/5',
+                        'momo'       => 'text-amber-500 dark:text-amber-400 border-amber-500/20 bg-amber-500/5',
+                        'facturiers' => 'text-emerald-500 dark:text-emerald-400 border-emerald-500/20 bg-emerald-500/5',
+                        'tv'         => 'text-purple-500 dark:text-purple-400 border-purple-500/20 bg-purple-500/5',
+                        'banques'    => 'text-cyan-500 dark:text-cyan-400 border-cyan-500/20 bg-cyan-500/5',
+                    ];
+                    $catStyle = $catColors[$service['category']] ?? 'text-slate-400 border-slate-500/20 bg-slate-500/5';
+                @endphp
+                <div class="group relative p-3 rounded-xl border transition-all duration-200 flex items-center justify-between gap-2.5 {{ $isOk ? 'bg-white dark:bg-[#0c121e]/90 border-slate-200 dark:border-slate-800 hover:border-blue-500/40 dark:hover:border-blue-500/40 hover:shadow-xs' : 'bg-red-500/5 dark:bg-red-950/30 border-red-500/40 dark:border-red-600 shadow-sm animate-pulse' }}">
                     
-                    <div class="min-w-0 flex-1">
-                        <div class="flex items-center gap-1.5 mb-0.5">
-                            <span class="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 truncate">
+                    <!-- Ligne verticale d'accentuation à gauche -->
+                    <div class="w-1 absolute left-0 top-2.5 bottom-2.5 rounded-r {{ $isOk ? 'bg-emerald-500/50 group-hover:bg-blue-500 transition-colors' : 'bg-red-500' }}"></div>
+
+                    <div class="min-w-0 flex-1 pl-1.5">
+                        <div class="flex items-center gap-1.5 mb-1">
+                            <span class="text-[9px] font-mono font-bold uppercase tracking-wider px-1.5 py-0.2 rounded border {{ $catStyle }}">
                                 {{ $service['category_label'] }}
                             </span>
                         </div>
-                        <p class="text-xs font-bold text-slate-900 dark:text-white truncate" title="{{ $service['name'] }}">
+                        <p class="text-xs font-bold text-slate-800 dark:text-slate-100 truncate group-hover:text-[#0020B2] dark:group-hover:text-blue-300 transition-colors" title="{{ $service['name'] }}">
                             {{ $service['name'] }}
                         </p>
                     </div>
 
                     <!-- Statut du Service -->
-                    <div class="flex-shrink-0 flex items-center gap-1.5">
-                        @if($service['status'] === 'operational')
-                            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-emerald-50 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-900/60">
+                    <div class="flex-shrink-0">
+                        @if($isOk)
+                            <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[10px] font-mono font-bold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
                                 <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
                                 <span>OK</span>
                             </span>
@@ -414,7 +434,7 @@
                             <button wire:click="viewJson({{ $service['incident_id'] }})" 
                                     type="button"
                                     title="{{ __('Inspecter l\'incident actif') }}"
-                                    class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-red-600 text-white shadow-xs hover:bg-red-700 transition cursor-pointer">
+                                    class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[10px] font-mono font-bold bg-red-600 hover:bg-red-700 text-white shadow-xs transition cursor-pointer">
                                 <span class="w-1.5 h-1.5 rounded-full bg-white animate-ping"></span>
                                 <span>{{ $service['severity'] }}</span>
                             </button>
