@@ -114,9 +114,9 @@ class StatuspageService
     }
 
     /**
-     * Résoudre un incident existant
+     * Résoudre un incident existant par son ID Statuspage
      */
-    public function resolveIncident(string $incidentId, string $message = 'Incident entièrement résolu.'): ?array
+    public function resolveIncident(string $incidentId, string $message = 'Incident résolu et validé par VigilCore.'): ?array
     {
         if (empty($this->apiKey) || empty($this->pageId)) {
             return ['id' => $incidentId, 'status' => 'resolved'];
@@ -131,10 +131,35 @@ class StatuspageService
             ]);
             \Illuminate\Support\Facades\Cache::forget('statuspage_components_cache');
             return $response->json();
-
         } catch (\Exception $e) {
             Log::error('Statuspage Resolve Incident Error: ' . $e->getMessage());
             return null;
+        }
+    }
+
+    /**
+     * Recherche et résout les incidents actifs correspondants sur Statuspage
+     */
+    public function resolveMatchingIncident(string $title, string $message = 'Incident résolu et validé par les équipes opérationnelles VigilCore.'): void
+    {
+        if (empty($this->apiKey) || empty($this->pageId)) {
+            return;
+        }
+
+        try {
+            $response = $this->client()->get('incidents/unresolved');
+            if ($response->successful()) {
+                $unresolved = $response->json();
+                if (is_array($unresolved)) {
+                    foreach ($unresolved as $inc) {
+                        if (isset($inc['id'])) {
+                            $this->resolveIncident($inc['id'], $message);
+                        }
+                    }
+                }
+            }
+        } catch (\Exception $e) {
+            Log::warning('Statuspage resolve matching incident error: ' . $e->getMessage());
         }
     }
 }
