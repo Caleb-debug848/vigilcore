@@ -3,12 +3,15 @@
 namespace App\Livewire;
 
 use Livewire\Component;
+use Livewire\WithPagination;
 use App\Models\Incident;
 use App\Services\StatuspageService;
 use App\Services\IncidentScenarioService;
 
 class Dashboard extends Component
 {
+    use WithPagination;
+
     public array $statusComponents = [];
     public string $filter = 'all';
     public ?array $activeJsonPayload = null;
@@ -36,6 +39,7 @@ class Dashboard extends Component
     public function setFilter(string $severity)
     {
         $this->filter = strtolower($severity);
+        $this->resetPage();
     }
 
     public function openSimulationHub()
@@ -221,7 +225,7 @@ class Dashboard extends Component
             $query->where('severity', strtoupper($this->filter));
         }
 
-        $incidents = $query->latest()->get();
+        $incidents = $query->latest()->paginate(10);
 
         // Récupération des compteurs avec mise en cache ultra-courte (5s)
         $counts = \Illuminate\Support\Facades\Cache::remember('vigilcore_dashboard_counts', 5, function () {
