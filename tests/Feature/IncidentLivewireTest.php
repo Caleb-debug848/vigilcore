@@ -31,19 +31,21 @@ class IncidentLivewireTest extends TestCase
             ]
         ]);
 
-        Livewire::actingAs($user)
+        $component = Livewire::actingAs($user)
             ->test(Dashboard::class)
             ->assertSee('Test Incident Webhook')
             ->call('viewJson', $incident->id)
             ->assertSet('showJsonModal', true)
-            ->assertSet('activeJsonPayload', [
-                'service' => 's3p',
-                'error_code' => 500,
-                'details' => 'Simulated test spike',
-            ])
             ->assertSee('Payload JSON')
-            ->assertSee('Simulated test spike')
-            ->call('closeModal')
+            ->assertSee('Simulated test spike');
+
+        $payload = $component->get('activeJsonPayload');
+        $this->assertIsArray($payload);
+        $this->assertEquals('s3p', $payload['service']);
+        $this->assertEquals(500, $payload['error_code']);
+        $this->assertStringContainsString('WAT - Douala', $payload['triggered_at_wat']);
+
+        $component->call('closeModal')
             ->assertSet('showJsonModal', false)
             ->assertSet('activeJsonPayload', null);
     }
