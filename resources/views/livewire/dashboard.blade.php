@@ -544,6 +544,15 @@
                 @endforelse
             </div>
 
+            <!-- ============================================== -->
+            <!-- PAGINATION BILINGUE & NUMÉROTATION DES PAGES   -->
+            <!-- ============================================== -->
+            @if($incidents->hasPages())
+            <div class="pt-4 border-t border-slate-200/60 dark:border-slate-800/60">
+                {{ $incidents->links() }}
+            </div>
+            @endif
+
         </div>
 
     </div>
