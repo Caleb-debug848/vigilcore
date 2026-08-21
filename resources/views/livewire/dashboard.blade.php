@@ -462,21 +462,23 @@
                             @elseif(str_contains($key, 'camtel'))
                                 <img src="{{ asset('images/services/camtel.png') }}" alt="Camtel" class="w-full h-full object-contain">
                             @elseif(str_contains($key, 'eneo'))
-                                <img src="{{ asset('images/services/eneo.svg') }}" alt="ENEO" class="w-full h-full object-contain">
+                                <img src="{{ asset('images/services/eneo.png') }}" alt="ENEO" class="w-full h-full object-contain rounded-sm">
                             @elseif(str_contains($key, 'camwater'))
                                 <img src="{{ asset('images/services/camwater.jpg') }}" alt="Camwater" class="w-full h-full object-contain rounded-sm">
                             @elseif(str_contains($key, 'canal'))
-                                <img src="{{ asset('images/services/canal.svg') }}" alt="Canal+" class="w-full h-full object-contain">
+                                <img src="{{ asset('images/services/canal.jpg') }}" alt="Canal+" class="w-full h-full object-contain rounded-sm">
                             @elseif(str_contains($key, 'dstv'))
                                 <img src="{{ asset('images/services/dstv.svg') }}" alt="DSTV" class="w-full h-full object-contain">
                             @elseif(str_contains($key, 'startimes'))
                                 <img src="{{ asset('images/services/startimes.png') }}" alt="StarTimes" class="w-full h-full object-contain">
                             @elseif(str_contains($key, 'sabc'))
-                                <img src="{{ asset('images/services/sabc.svg') }}" alt="SABC" class="w-full h-full object-contain">
-                            @elseif($key === 's3p')
-                                <img src="{{ asset('images/services/s3p.svg') }}" alt="S3P" class="w-full h-full object-contain">
+                                <img src="{{ asset('images/services/sabc.png') }}" alt="Boissons du Cameroun" class="w-full h-full object-contain">
+                            @elseif($key === 'ecommerce')
+                                <img src="{{ asset('images/services/smobilpay-ecommerce.png') }}" alt="Smobilpay e-Commerce" class="w-full h-full object-contain">
+                            @elseif($key === 's3p' || $key === 'smobilpay' || $key === 'merchant_portal')
+                                <img src="{{ asset('images/services/smobilpay.png') }}" alt="Smobilpay" class="w-full h-full object-contain">
                             @else
-                                <img src="{{ asset('images/services/smobilpay.svg') }}" alt="Smobilpay" class="w-full h-full object-contain">
+                                <img src="{{ asset('images/services/smobilpay.png') }}" alt="Smobilpay" class="w-full h-full object-contain">
                             @endif
                         </div>
 
