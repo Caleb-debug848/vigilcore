@@ -460,31 +460,29 @@
                     
                     <!-- Logo Officiel de Marque Dédié -->
                     <div class="flex items-center gap-3 min-w-0 flex-1">
-                        <div class="service-logo-box">
-                            @if(str_contains($key, 'mtn'))
-                                <img src="{{ asset('images/services/mtn.png') }}" alt="MTN">
-                            @elseif(str_contains($key, 'orange'))
-                                <img src="{{ asset('images/services/orange.svg') }}" alt="Orange">
-                            @elseif(str_contains($key, 'camtel'))
-                                <img src="{{ asset('images/services/camtel.png') }}" alt="Camtel">
-                            @elseif(str_contains($key, 'eneo'))
-                                <img src="{{ asset('images/services/eneo.png') }}" alt="ENEO">
-                            @elseif(str_contains($key, 'camwater'))
-                                <img src="{{ asset('images/services/camwater.png') }}" alt="Camwater">
-                            @elseif(str_contains($key, 'canal'))
-                                <img src="{{ asset('images/services/canal.svg') }}" alt="Canal+">
-                            @elseif(str_contains($key, 'dstv'))
-                                <img src="{{ asset('images/services/dstv.svg') }}" alt="DSTV">
-                            @elseif(str_contains($key, 'startimes'))
-                                <img src="{{ asset('images/services/startimes.png') }}" alt="StarTimes">
-                            @elseif(str_contains($key, 'sabc'))
-                                <img src="{{ asset('images/services/sabc.png') }}" alt="Boissons du Cameroun">
+                        <div class="service-logo-box flex-shrink-0" style="width: 36px; height: 36px; min-width: 36px; min-height: 36px; max-width: 36px; max-height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 10px; padding: 4px; overflow: hidden;">
+                            @if(str_starts_with($key, 'orange'))
+                                <img src="{{ asset('images/services/orange.svg') }}" alt="Orange" style="width: 22px; height: 22px; max-width: 22px; max-height: 22px; object-fit: contain;">
+                            @elseif(str_starts_with($key, 'mtn'))
+                                <img src="{{ asset('images/services/mtn.png') }}" alt="MTN" style="width: 24px; height: 24px; max-width: 24px; max-height: 24px; object-fit: contain;">
+                            @elseif($key === 'camtel')
+                                <img src="{{ asset('images/services/camtel.png') }}" alt="Camtel" style="width: 24px; height: 24px; max-width: 24px; max-height: 24px; object-fit: contain;">
+                            @elseif($key === 'eneo')
+                                <img src="{{ asset('images/services/eneo.png') }}" alt="ENEO" style="width: 24px; height: 24px; max-width: 24px; max-height: 24px; object-fit: contain;">
+                            @elseif($key === 'camwater')
+                                <img src="{{ asset('images/services/camwater.png') }}" alt="Camwater" style="width: 24px; height: 24px; max-width: 24px; max-height: 24px; object-fit: contain;">
+                            @elseif($key === 'canal')
+                                <img src="{{ asset('images/services/canal.svg') }}" alt="Canal+" style="width: 22px; height: 22px; max-width: 22px; max-height: 22px; object-fit: contain;">
+                            @elseif($key === 'dstv')
+                                <img src="{{ asset('images/services/dstv.svg') }}" alt="DSTV" style="width: 24px; height: 24px; max-width: 24px; max-height: 24px; object-fit: contain;">
+                            @elseif($key === 'startimes')
+                                <img src="{{ asset('images/services/startimes.png') }}" alt="StarTimes" style="width: 24px; height: 24px; max-width: 24px; max-height: 24px; object-fit: contain;">
+                            @elseif($key === 'sabc')
+                                <img src="{{ asset('images/services/sabc.png') }}" alt="Boissons du Cameroun" style="width: 24px; height: 24px; max-width: 24px; max-height: 24px; object-fit: contain;">
                             @elseif($key === 'ecommerce')
-                                <img src="{{ asset('images/services/smobilpay-ecommerce.png') }}" alt="Smobilpay e-Commerce">
-                            @elseif($key === 's3p' || $key === 'smobilpay' || $key === 'merchant_portal')
-                                <img src="{{ asset('images/services/smobilpay.png') }}" alt="Smobilpay">
+                                <img src="{{ asset('images/services/smobilpay-ecommerce.png') }}" alt="Smobilpay e-Commerce" style="width: 24px; height: 24px; max-width: 24px; max-height: 24px; object-fit: contain;">
                             @else
-                                <img src="{{ asset('images/services/smobilpay.png') }}" alt="Smobilpay">
+                                <img src="{{ asset('images/services/smobilpay.png') }}" alt="Smobilpay" style="width: 24px; height: 24px; max-width: 24px; max-height: 24px; object-fit: contain;">
                             @endif
                         </div>
 
