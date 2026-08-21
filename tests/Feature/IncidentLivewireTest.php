@@ -177,6 +177,70 @@ class IncidentLivewireTest extends TestCase
             ->call('refreshData')
             ->assertStatus(200);
     }
+
+    public function test_incident_auto_sets_resolved_at_and_computes_audit_accessors()
+    {
+        $incident = Incident::create([
+            'title'       => 'Test ENEO Payment Failure',
+            'component'   => 'eneo',
+            'severity'    => 'critical',
+            'source'      => 'Kibana Logs',
+            'status'      => 'open',
+            'raw_payload' => [
+                'error_code'         => 'ERR_GATEWAY_TIMEOUT_504',
+                'root_cause'         => 'ENEO Partner Gateway Unresponsive',
+                'resolution_note'    => 'Failover secondary link activated',
+                'affected_endpoints' => ['/api/v2/eneo/bill/pay'],
+            ],
+        ]);
+
+        $this->assertFalse($incident->is_resolved);
+        $this->assertNull($incident->resolved_at);
+        $this->assertEquals('--', $incident->mttr_formatted);
+        $this->assertEquals('ERR_GATEWAY_TIMEOUT_504', $incident->error_code);
+        $this->assertEquals('ENEO Partner Gateway Unresponsive', $incident->root_cause);
+        $this->assertEquals('/api/v2/eneo/bill/pay', $incident->affected_endpoints_list);
+
+        // Résolution de l'incident
+        $incident->update(['status' => 'resolved']);
+        $incident->refresh();
+
+        $this->assertTrue($incident->is_resolved);
+        $this->assertNotNull($incident->resolved_at);
+        $this->assertNotEquals('--', $incident->mttr_formatted);
+        $this->assertEquals('Failover secondary link activated', $incident->resolution_note);
+        $this->assertStringContainsString('(WAT)', $incident->triggered_at_wat);
+        $this->assertStringContainsString('(WAT)', $incident->resolved_at_wat);
+    }
+
+    public function test_reports_direct_export_csv_and_xls_support_12_columns()
+    {
+        $user = User::factory()->create();
+
+        $incident = Incident::create([
+            'title'       => 'MTN MoMo Collections Spike',
+            'component'   => 'mtn_momo_collections',
+            'severity'    => 'CRITICAL',
+            'source'      => 'Kibana Logs',
+            'status'      => 'resolved',
+            'resolved_at' => now(),
+            'raw_payload' => [
+                'error_code'      => 'ERR_TIMEOUT_SOCKET',
+                'root_cause'      => 'Telecom socket saturation',
+                'resolution_note' => 'Socket pool cleared and restarted',
+            ],
+        ]);
+
+        // Export CSV
+        $responseCsv = $this->actingAs($user)->get('/reports/export?period=week&severity=all&format=csv');
+        $responseCsv->assertStatus(200);
+        $responseCsv->assertHeader('content-type', 'text/csv; charset=UTF-8');
+
+        // Export XLS
+        $responseXls = $this->actingAs($user)->get('/reports/export?period=week&severity=all&format=xls');
+        $responseXls->assertStatus(200);
+        $responseXls->assertHeader('content-type', 'application/vnd.ms-excel; charset=UTF-8');
+    }
 }
 
 

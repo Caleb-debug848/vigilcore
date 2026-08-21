@@ -36,8 +36,10 @@ class ResetActiveIncidents extends Command
 
         // Marque tous les incidents actifs comme résolus
         Incident::where('status', '!=', 'resolved')->update([
-            'status'     => 'resolved',
-            'updated_at' => now(),
+            'status'      => 'resolved',
+            'is_resolved' => true,
+            'resolved_at' => now(),
+            'updated_at'  => now(),
         ]);
 
         // Purge tous les caches de métriques
