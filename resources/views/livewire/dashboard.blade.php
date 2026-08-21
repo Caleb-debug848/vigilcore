@@ -352,20 +352,26 @@
         <!-- ==================================================== -->
         <!-- 2. BIS. CARTOGRAPHIE DES 20 SERVICES & SANTÉ EN DIRECT -->
         <!-- ==================================================== -->
-        <div class="dash-card-studio p-4 sm:p-5 space-y-4" x-data="{ showServicesGrid: true, activeServiceCategory: 'all' }">
+        <div class="dash-card-studio p-4 sm:p-5 space-y-4" 
+             x-data="{ 
+                showServicesGrid: true, 
+                selectedCat: 'all',
+                txtHide: @js(__('Masquer')),
+                txtExpand: @js(__('Développer'))
+             }">
             
             <!-- En-tête de la matrice -->
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100 dark:border-slate-800/80">
                 <div class="flex items-center gap-3">
-                    <div class="w-9 h-9 rounded-xl bg-blue-500/10 text-[#0020B2] dark:text-blue-400 border border-blue-500/20 flex items-center justify-center font-mono font-bold text-sm shadow-xs">
+                    <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-700 text-white flex items-center justify-center font-mono font-extrabold text-sm shadow-md shadow-blue-500/20">
                         20
                     </div>
                     <div>
-                        <h2 class="text-sm font-bold text-slate-900 dark:text-white tracking-tight flex items-center gap-2">
+                        <h2 class="text-sm sm:text-base font-bold text-slate-900 dark:text-white tracking-tight flex items-center gap-2">
                             <span>{{ __('Santé en Direct des 20 Services & Microservices') }}</span>
-                            <span class="inline-flex h-2 w-2 relative">
+                            <span class="inline-flex h-2.5 w-2.5 relative">
                                 <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                                <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                                <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
                             </span>
                         </h2>
                         <p class="text-xs text-slate-500 dark:text-slate-400">
@@ -376,65 +382,174 @@
 
                 <div class="flex items-center gap-2 self-start sm:self-auto">
                     <!-- Badge État Global -->
-                    <span class="px-2.5 py-1 rounded-full text-xs font-mono font-bold {{ $operationalCount === 20 ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20' : 'bg-red-500/10 text-red-600 dark:text-red-400 border border-red-500/30 animate-pulse' }}">
-                        {{ $operationalCount }}/20 {{ __('Opérationnels') }}
+                    <span class="px-3 py-1 rounded-full text-xs font-mono font-bold flex items-center gap-1.5 {{ $operationalCount === 20 ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 shadow-xs' : 'bg-red-500/10 text-red-600 dark:text-red-400 border border-red-500/30 animate-pulse' }}">
+                        <span class="w-1.5 h-1.5 rounded-full {{ $operationalCount === 20 ? 'bg-emerald-500' : 'bg-red-500' }}"></span>
+                        <span>{{ $operationalCount }}/20 {{ __('Opérationnels') }}</span>
                     </span>
 
-                    <!-- Toggle Masquer / Afficher -->
+                    <!-- Toggle Masquer / Afficher (100% Bilingue FR / EN) -->
                     <button @click="showServicesGrid = !showServicesGrid" 
                             type="button" 
-                            class="px-2.5 py-1 text-xs font-mono font-medium rounded-lg bg-slate-100 dark:bg-slate-800/80 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700/60 transition cursor-pointer">
-                        <span x-text="showServicesGrid ? '▲ Masquer' : '▼ Développer (20)'"></span>
+                            class="px-3 py-1 text-xs font-mono font-medium rounded-xl bg-slate-100 dark:bg-slate-800/90 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700/80 transition cursor-pointer flex items-center gap-1">
+                        <span x-text="showServicesGrid ? '▲ ' + txtHide : '▼ ' + txtExpand + ' (20)'"></span>
                     </button>
                 </div>
             </div>
 
-            <!-- Grille Haute Densité SRE (4 colonnes) -->
+            <!-- Barre de Filtres par Catégorie (Onglets interactifs) -->
+            <div x-show="showServicesGrid" class="flex items-center gap-1.5 overflow-x-auto custom-scrollbar pb-1 pt-0.5">
+                <button @click="selectedCat = 'all'" 
+                        type="button"
+                        :class="selectedCat === 'all' ? 'bg-[#0020B2] text-white shadow-xs' : 'bg-slate-100 dark:bg-slate-800/60 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'"
+                        class="px-2.5 py-1 rounded-lg text-[11px] font-mono font-semibold transition cursor-pointer whitespace-nowrap">
+                    🌐 {{ __('Tous') }} (20)
+                </button>
+                <button @click="selectedCat = 'maviance'" 
+                        type="button"
+                        :class="selectedCat === 'maviance' ? 'bg-blue-600 text-white shadow-xs' : 'bg-slate-100 dark:bg-slate-800/60 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'"
+                        class="px-2.5 py-1 rounded-lg text-[11px] font-mono font-semibold transition cursor-pointer whitespace-nowrap flex items-center gap-1">
+                    <span>💳</span> <span>{{ __('Plateformes Maviance') }}</span> (4)
+                </button>
+                <button @click="selectedCat = 'momo'" 
+                        type="button"
+                        :class="selectedCat === 'momo' ? 'bg-amber-600 text-white shadow-xs' : 'bg-slate-100 dark:bg-slate-800/60 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'"
+                        class="px-2.5 py-1 rounded-lg text-[11px] font-mono font-semibold transition cursor-pointer whitespace-nowrap flex items-center gap-1">
+                    <span>📱</span> <span>{{ __('Mobile Money & Télécoms') }}</span> (9)
+                </button>
+                <button @click="selectedCat = 'utilities'" 
+                        type="button"
+                        :class="selectedCat === 'utilities' ? 'bg-emerald-600 text-white shadow-xs' : 'bg-slate-100 dark:bg-slate-800/60 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'"
+                        class="px-2.5 py-1 rounded-lg text-[11px] font-mono font-semibold transition cursor-pointer whitespace-nowrap flex items-center gap-1">
+                    <span>⚡</span> <span>{{ __('Énergie & Eau') }}</span> (2)
+                </button>
+                <button @click="selectedCat = 'tv'" 
+                        type="button"
+                        :class="selectedCat === 'tv' ? 'bg-purple-600 text-white shadow-xs' : 'bg-slate-100 dark:bg-slate-800/60 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'"
+                        class="px-2.5 py-1 rounded-lg text-[11px] font-mono font-semibold transition cursor-pointer whitespace-nowrap flex items-center gap-1">
+                    <span>📺</span> <span>{{ __('Télévision & Médias') }}</span> (3)
+                </button>
+                <button @click="selectedCat = 'regional'" 
+                        type="button"
+                        :class="selectedCat === 'regional' ? 'bg-teal-600 text-white shadow-xs' : 'bg-slate-100 dark:bg-slate-800/60 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'"
+                        class="px-2.5 py-1 rounded-lg text-[11px] font-mono font-semibold transition cursor-pointer whitespace-nowrap flex items-center gap-1">
+                    <span>🤝</span> <span>{{ __('Régional & Partenaires') }}</span> (2)
+                </button>
+            </div>
+
+            <!-- Grille des 20 Services avec Logos & Design Ultra-Pro -->
             <div x-show="showServicesGrid" 
                  x-transition:enter="transition ease-out duration-200"
                  x-transition:enter-start="opacity-0 -translate-y-2"
                  x-transition:enter-end="opacity-100 translate-y-0"
-                 class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 pt-0.5">
+                 class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 pt-1">
                 @foreach($servicesHealth as $service)
                 @php
                     $isOk = ($service['status'] === 'operational');
-                    $catColors = [
-                        'maviance'   => 'text-blue-500 dark:text-blue-400 border-blue-500/20 bg-blue-500/5',
-                        'momo'       => 'text-amber-500 dark:text-amber-400 border-amber-500/20 bg-amber-500/5',
-                        'facturiers' => 'text-emerald-500 dark:text-emerald-400 border-emerald-500/20 bg-emerald-500/5',
-                        'tv'         => 'text-purple-500 dark:text-purple-400 border-purple-500/20 bg-purple-500/5',
-                        'banques'    => 'text-cyan-500 dark:text-cyan-400 border-cyan-500/20 bg-cyan-500/5',
-                    ];
-                    $catStyle = $catColors[$service['category']] ?? 'text-slate-400 border-slate-500/20 bg-slate-500/5';
+                    $key = $service['key'];
+                    $cat = $service['category'];
                 @endphp
-                <div class="group relative p-3 rounded-xl border transition-all duration-200 flex items-center justify-between gap-2.5 {{ $isOk ? 'bg-white dark:bg-[#0c121e]/90 border-slate-200 dark:border-slate-800 hover:border-blue-500/40 dark:hover:border-blue-500/40 hover:shadow-xs' : 'bg-red-500/5 dark:bg-red-950/30 border-red-500/40 dark:border-red-600 shadow-sm animate-pulse' }}">
+                <div x-show="selectedCat === 'all' || selectedCat === '{{ $cat }}'"
+                     x-transition
+                     class="group relative p-3 rounded-2xl border transition-all duration-200 flex items-center justify-between gap-3 {{ $isOk ? 'bg-white dark:bg-[#0c121e]/90 border-slate-200/90 dark:border-slate-800 hover:border-blue-500/50 dark:hover:border-blue-500/50 hover:shadow-md' : 'bg-red-500/5 dark:bg-red-950/30 border-red-500/50 dark:border-red-600 shadow-sm animate-pulse' }}">
                     
-                    <!-- Ligne verticale d'accentuation à gauche -->
-                    <div class="w-1 absolute left-0 top-2.5 bottom-2.5 rounded-r {{ $isOk ? 'bg-emerald-500/50 group-hover:bg-blue-500 transition-colors' : 'bg-red-500' }}"></div>
+                    <!-- Logo / Icône de Marque Dédiée -->
+                    <div class="flex items-center gap-3 min-w-0 flex-1">
+                        <div class="w-10 h-10 rounded-xl flex-shrink-0 flex items-center justify-center shadow-xs transition-transform group-hover:scale-105
+                            @if(str_contains($key, 'mtn')) bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20
+                            @elseif(str_contains($key, 'orange')) bg-orange-500/10 text-orange-600 dark:text-orange-400 border border-orange-500/20
+                            @elseif(str_contains($key, 'camtel')) bg-sky-500/10 text-sky-600 dark:text-sky-400 border border-sky-500/20
+                            @elseif(str_contains($key, 'eneo')) bg-yellow-500/10 text-yellow-600 dark:text-yellow-400 border border-yellow-500/20
+                            @elseif(str_contains($key, 'camwater')) bg-teal-500/10 text-teal-600 dark:text-teal-400 border border-teal-500/20
+                            @elseif(str_contains($key, 'canal') || str_contains($key, 'dstv') || str_contains($key, 'startimes')) bg-purple-500/10 text-purple-600 dark:text-purple-400 border border-purple-500/20
+                            @elseif(str_contains($key, 'sabc')) bg-red-500/10 text-red-600 dark:text-red-400 border border-red-500/20
+                            @else bg-blue-500/10 text-[#0020B2] dark:text-blue-400 border border-blue-500/20
+                            @endif">
+                            
+                            @if($key === 'smobilpay')
+                                <!-- Smobilpay Platform -->
+                                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-6-8.25h19.5a2.25 2.25 0 012.25 2.25v8.25a2.25 2.25 0 01-2.25 2.25H2.25A2.25 2.25 0 010 17.25V11.25A2.25 2.25 0 012.25 9z" />
+                                </svg>
+                            @elseif($key === 's3p')
+                                <!-- S3P Merchant API -->
+                                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M14.25 9.75L16.5 12l-2.25 2.25m-4.5 0L7.5 12l2.25-2.25M6 20.25h12A2.25 2.25 0 0020.25 18V6A2.25 2.25 0 0018 3.75H6A2.25 2.25 0 003.75 6v12A2.25 2.25 0 006 20.25z" />
+                                </svg>
+                            @elseif($key === 'merchant_portal')
+                                <!-- Merchant Portal -->
+                                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 21v-7.5a.75.75 0 01.75-.75h3a.75.75 0 01.75.75V21m-4.5 0H2.25A2.25 2.25 0 010 18.75V10.5m18 10.5h3.75a2.25 2.25 0 002.25-2.25V10.5M3.75 6.75h16.5M3.75 6.75a2.25 2.25 0 012.25-2.25h12a2.25 2.25 0 012.25 2.25m-16.5 0l2.25 3.75m14.25-3.75l-2.25 3.75" />
+                                </svg>
+                            @elseif($key === 'ecommerce')
+                                <!-- E-commerce -->
+                                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+                                </svg>
+                            @elseif(str_contains($key, 'mtn'))
+                                <!-- MTN MoMo & Airtime -->
+                                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 1.5H8.25A2.25 2.25 0 006 3.75v16.5a2.25 2.25 0 002.25 2.25h7.5A2.25 2.25 0 0018 20.25V3.75a2.25 2.25 0 00-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 18.75h3" />
+                                </svg>
+                            @elseif(str_contains($key, 'orange'))
+                                <!-- Orange Money & Airtime -->
+                                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                            @elseif(str_contains($key, 'camtel'))
+                                <!-- Camtel Telecom -->
+                                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M8.288 15.038a5.25 5.25 0 017.424 0M5.106 11.856c3.807-3.808 9.98-3.808 13.788 0M1.924 8.674c5.565-5.565 14.587-5.565 20.152 0M12.53 18.22l-.53.53-.53-.53a.75.75 0 011.06 0z" />
+                                </svg>
+                            @elseif(str_contains($key, 'eneo'))
+                                <!-- ENEO Electricity -->
+                                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
+                                </svg>
+                            @elseif(str_contains($key, 'camwater'))
+                                <!-- Camwater -->
+                                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
+                                </svg>
+                            @elseif(str_contains($key, 'canal') || str_contains($key, 'dstv') || str_contains($key, 'startimes'))
+                                <!-- Television & Media -->
+                                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 20.25h12m-7.5-3v3m3-3v3m-10.125-3h17.25c.621 0 1.125-.504 1.125-1.125V4.875c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125z" />
+                                </svg>
+                            @elseif(str_contains($key, 'sabc'))
+                                <!-- SABC Distribution -->
+                                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 00-3.213-9.193 2.056 2.056 0 00-1.58-.86H14.25M16.5 18.75h-2.25m0-11.25H4.875c-.621 0-1.125.504-1.125 1.125v6.75c0 .621.504 1.125 1.125 1.125h9.75V7.5z" />
+                                </svg>
+                            @else
+                                <!-- Regional Partners -->
+                                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-.778.099-1.533.284-2.253" />
+                                </svg>
+                            @endif
+                        </div>
 
-                    <div class="min-w-0 flex-1 pl-1.5">
-                        <div class="flex items-center gap-1.5 mb-1">
-                            <span class="text-[9px] font-mono font-bold uppercase tracking-wider px-1.5 py-0.2 rounded border {{ $catStyle }}">
-                                {{ $service['category_label'] }}
+                        <div class="min-w-0 flex-1">
+                            <p class="text-xs font-bold text-slate-900 dark:text-white truncate group-hover:text-[#0020B2] dark:group-hover:text-blue-300 transition-colors" title="{{ $service['name'] }}">
+                                {{ $service['name'] }}
+                            </p>
+                            <span class="text-[10px] font-mono font-medium text-slate-500 dark:text-slate-400 truncate block">
+                                {{ __($service['category_label']) }}
                             </span>
                         </div>
-                        <p class="text-xs font-bold text-slate-800 dark:text-slate-100 truncate group-hover:text-[#0020B2] dark:group-hover:text-blue-300 transition-colors" title="{{ $service['name'] }}">
-                            {{ $service['name'] }}
-                        </p>
                     </div>
 
                     <!-- Statut du Service -->
                     <div class="flex-shrink-0">
                         @if($isOk)
-                            <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[10px] font-mono font-bold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
-                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-mono font-bold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 shadow-2xs">
+                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
                                 <span>OK</span>
                             </span>
                         @else
                             <button wire:click="viewJson({{ $service['incident_id'] }})" 
                                     type="button"
                                     title="{{ __('Inspecter l\'incident actif') }}"
-                                    class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[10px] font-mono font-bold bg-red-600 hover:bg-red-700 text-white shadow-xs transition cursor-pointer">
+                                    class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl text-[10px] font-mono font-bold bg-red-600 hover:bg-red-700 text-white shadow-xs transition cursor-pointer">
                                 <span class="w-1.5 h-1.5 rounded-full bg-white animate-ping"></span>
                                 <span>{{ $service['severity'] }}</span>
                             </button>
@@ -471,11 +586,11 @@
                     </button>
                     <button wire:click="setFilter('warning')" 
                             class="px-3 py-1.5 rounded-xl text-xs font-mono font-semibold transition cursor-pointer whitespace-nowrap {{ $filter === 'warning' ? 'bg-amber-500 text-white shadow-xs' : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700' }}">
-                        Warnings ({{ $countWarn }})
+                        {{ __('Avertissements') }} ({{ $countWarn }})
                     </button>
                     <button wire:click="setFilter('info')" 
                             class="px-3 py-1.5 rounded-xl text-xs font-mono font-semibold transition cursor-pointer whitespace-nowrap {{ $filter === 'info' ? 'bg-blue-600 text-white shadow-xs' : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700' }}">
-                        Infos ({{ $countInfo }})
+                        {{ __('Informations') }} ({{ $countInfo }})
                     </button>
                 </div>
 
@@ -670,7 +785,7 @@
                 <div class="flex items-center gap-2">
                     <span class="w-2 h-2 rounded-full bg-[#0020B2]"></span>
                     <h3 class="text-xs sm:text-sm font-bold text-slate-900 dark:text-white font-mono truncate max-w-md">
-                        Payload JSON — {{ $selectedIncidentTitle }}
+                        {{ __('Payload JSON') }} — {{ $selectedIncidentTitle }}
                     </h3>
                 </div>
                 <button wire:click="closeModal" 
@@ -694,12 +809,12 @@
                     <svg class="w-3.5 h-3.5 text-[#0020B2] dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path>
                     </svg>
-                    <span x-text="copied ? '✓ Copié !' : 'Copier le JSON'"></span>
+                    <span x-text="copied ? '✓ {{ __('Copié !') }}' : '{{ __('Copier le JSON') }}'"></span>
                 </button>
 
                 <button wire:click="closeModal" 
                         class="px-4 py-1.5 rounded-xl bg-[#0020B2] hover:bg-[#001ca0] text-white text-xs font-mono font-semibold cursor-pointer shadow-xs transition">
-                    Fermer
+                    {{ __('Fermer') }}
                 </button>
             </div>
 
