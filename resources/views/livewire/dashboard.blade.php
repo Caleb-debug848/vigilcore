@@ -396,47 +396,47 @@
                 </div>
             </div>
 
-            <!-- Barre de Filtres par Catégorie (Onglets interactifs) -->
+            <!-- Barre de Filtres par Catégorie (Onglets interactifs Entreprise) -->
             <div x-show="showServicesGrid" class="flex items-center gap-1.5 overflow-x-auto custom-scrollbar pb-1 pt-0.5">
                 <button @click="selectedCat = 'all'" 
                         type="button"
-                        :class="selectedCat === 'all' ? 'bg-[#0020B2] text-white shadow-xs' : 'bg-slate-100 dark:bg-slate-800/60 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'"
-                        class="px-2.5 py-1 rounded-lg text-[11px] font-mono font-semibold transition cursor-pointer whitespace-nowrap">
-                    🌐 {{ __('Tous') }} (20)
+                        :class="selectedCat === 'all' ? 'bg-[#0020B2] text-white shadow-xs font-bold' : 'bg-slate-100 dark:bg-slate-800/60 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'"
+                        class="px-3 py-1.5 rounded-xl text-xs font-mono font-semibold transition cursor-pointer whitespace-nowrap">
+                    {{ __('Tous') }} (20)
                 </button>
                 <button @click="selectedCat = 'maviance'" 
                         type="button"
-                        :class="selectedCat === 'maviance' ? 'bg-blue-600 text-white shadow-xs' : 'bg-slate-100 dark:bg-slate-800/60 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'"
-                        class="px-2.5 py-1 rounded-lg text-[11px] font-mono font-semibold transition cursor-pointer whitespace-nowrap flex items-center gap-1">
-                    <span>💳</span> <span>{{ __('Plateformes Maviance') }}</span> (4)
+                        :class="selectedCat === 'maviance' ? 'bg-blue-600 text-white shadow-xs font-bold' : 'bg-slate-100 dark:bg-slate-800/60 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'"
+                        class="px-3 py-1.5 rounded-xl text-xs font-mono font-semibold transition cursor-pointer whitespace-nowrap">
+                    {{ __('Plateformes Maviance') }} (4)
                 </button>
                 <button @click="selectedCat = 'momo'" 
                         type="button"
-                        :class="selectedCat === 'momo' ? 'bg-amber-600 text-white shadow-xs' : 'bg-slate-100 dark:bg-slate-800/60 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'"
-                        class="px-2.5 py-1 rounded-lg text-[11px] font-mono font-semibold transition cursor-pointer whitespace-nowrap flex items-center gap-1">
-                    <span>📱</span> <span>{{ __('Mobile Money & Télécoms') }}</span> (9)
+                        :class="selectedCat === 'momo' ? 'bg-amber-600 text-white shadow-xs font-bold' : 'bg-slate-100 dark:bg-slate-800/60 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'"
+                        class="px-3 py-1.5 rounded-xl text-xs font-mono font-semibold transition cursor-pointer whitespace-nowrap">
+                    {{ __('Mobile Money & Télécoms') }} (9)
                 </button>
                 <button @click="selectedCat = 'utilities'" 
                         type="button"
-                        :class="selectedCat === 'utilities' ? 'bg-emerald-600 text-white shadow-xs' : 'bg-slate-100 dark:bg-slate-800/60 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'"
-                        class="px-2.5 py-1 rounded-lg text-[11px] font-mono font-semibold transition cursor-pointer whitespace-nowrap flex items-center gap-1">
-                    <span>⚡</span> <span>{{ __('Énergie & Eau') }}</span> (2)
+                        :class="selectedCat === 'utilities' ? 'bg-emerald-600 text-white shadow-xs font-bold' : 'bg-slate-100 dark:bg-slate-800/60 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'"
+                        class="px-3 py-1.5 rounded-xl text-xs font-mono font-semibold transition cursor-pointer whitespace-nowrap">
+                    {{ __('Énergie & Eau') }} (2)
                 </button>
                 <button @click="selectedCat = 'tv'" 
                         type="button"
-                        :class="selectedCat === 'tv' ? 'bg-purple-600 text-white shadow-xs' : 'bg-slate-100 dark:bg-slate-800/60 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'"
-                        class="px-2.5 py-1 rounded-lg text-[11px] font-mono font-semibold transition cursor-pointer whitespace-nowrap flex items-center gap-1">
-                    <span>📺</span> <span>{{ __('Télévision & Médias') }}</span> (3)
+                        :class="selectedCat === 'tv' ? 'bg-purple-600 text-white shadow-xs font-bold' : 'bg-slate-100 dark:bg-slate-800/60 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'"
+                        class="px-3 py-1.5 rounded-xl text-xs font-mono font-semibold transition cursor-pointer whitespace-nowrap">
+                    {{ __('Télévision & Médias') }} (3)
                 </button>
                 <button @click="selectedCat = 'regional'" 
                         type="button"
-                        :class="selectedCat === 'regional' ? 'bg-teal-600 text-white shadow-xs' : 'bg-slate-100 dark:bg-slate-800/60 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'"
-                        class="px-2.5 py-1 rounded-lg text-[11px] font-mono font-semibold transition cursor-pointer whitespace-nowrap flex items-center gap-1">
-                    <span>🤝</span> <span>{{ __('Régional & Partenaires') }}</span> (2)
+                        :class="selectedCat === 'regional' ? 'bg-teal-600 text-white shadow-xs font-bold' : 'bg-slate-100 dark:bg-slate-800/60 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'"
+                        class="px-3 py-1.5 rounded-xl text-xs font-mono font-semibold transition cursor-pointer whitespace-nowrap">
+                    {{ __('Régional & Partenaires') }} (2)
                 </button>
             </div>
 
-            <!-- Grille des 20 Services avec Logos & Design Ultra-Pro -->
+            <!-- Grille des 20 Services avec Logos Officiels de Marque -->
             <div x-show="showServicesGrid" 
                  x-transition:enter="transition ease-out duration-200"
                  x-transition:enter-start="opacity-0 -translate-y-2"
@@ -452,79 +452,31 @@
                      x-transition
                      class="service-health-card group relative p-3 rounded-2xl flex items-center justify-between gap-3 {{ $isOk ? '' : 'bg-red-500/10 dark:bg-red-950/40 border-red-500/50 shadow-sm animate-pulse' }}">
                     
-                    <!-- Logo / Icône de Marque Dédiée -->
+                    <!-- Logo Officiel de Marque Dédié -->
                     <div class="flex items-center gap-3 min-w-0 flex-1">
-                        <div class="w-10 h-10 rounded-xl flex-shrink-0 flex items-center justify-center shadow-xs transition-transform group-hover:scale-105
-                            @if(str_contains($key, 'mtn')) bg-amber-500/15 text-amber-600 dark:text-amber-300 border border-amber-500/30
-                            @elseif(str_contains($key, 'orange')) bg-orange-500/15 text-orange-600 dark:text-orange-300 border border-orange-500/30
-                            @elseif(str_contains($key, 'camtel')) bg-sky-500/15 text-sky-600 dark:text-sky-300 border border-sky-500/30
-                            @elseif(str_contains($key, 'eneo')) bg-yellow-500/15 text-yellow-600 dark:text-yellow-300 border border-yellow-500/30
-                            @elseif(str_contains($key, 'camwater')) bg-teal-500/15 text-teal-600 dark:text-teal-300 border border-teal-500/30
-                            @elseif(str_contains($key, 'canal') || str_contains($key, 'dstv') || str_contains($key, 'startimes')) bg-purple-500/15 text-purple-600 dark:text-purple-300 border border-purple-500/30
-                            @elseif(str_contains($key, 'sabc')) bg-red-500/15 text-red-600 dark:text-red-300 border border-red-500/30
-                            @else bg-blue-500/15 text-[#0020B2] dark:text-blue-300 border border-blue-500/30
-                            @endif">
-                            
-                            @if($key === 'smobilpay')
-                                <!-- Smobilpay Platform -->
-                                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-6-8.25h19.5a2.25 2.25 0 012.25 2.25v8.25a2.25 2.25 0 01-2.25 2.25H2.25A2.25 2.25 0 010 17.25V11.25A2.25 2.25 0 012.25 9z" />
-                                </svg>
-                            @elseif($key === 's3p')
-                                <!-- S3P Merchant API -->
-                                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M14.25 9.75L16.5 12l-2.25 2.25m-4.5 0L7.5 12l2.25-2.25M6 20.25h12A2.25 2.25 0 0020.25 18V6A2.25 2.25 0 0018 3.75H6A2.25 2.25 0 003.75 6v12A2.25 2.25 0 006 20.25z" />
-                                </svg>
-                            @elseif($key === 'merchant_portal')
-                                <!-- Merchant Portal -->
-                                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 21v-7.5a.75.75 0 01.75-.75h3a.75.75 0 01.75.75V21m-4.5 0H2.25A2.25 2.25 0 010 18.75V10.5m18 10.5h3.75a2.25 2.25 0 002.25-2.25V10.5M3.75 6.75h16.5M3.75 6.75a2.25 2.25 0 012.25-2.25h12a2.25 2.25 0 012.25 2.25m-16.5 0l2.25 3.75m14.25-3.75l-2.25 3.75" />
-                                </svg>
-                            @elseif($key === 'ecommerce')
-                                <!-- E-commerce -->
-                                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
-                                </svg>
-                            @elseif(str_contains($key, 'mtn'))
-                                <!-- MTN MoMo & Airtime -->
-                                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 1.5H8.25A2.25 2.25 0 006 3.75v16.5a2.25 2.25 0 002.25 2.25h7.5A2.25 2.25 0 0018 20.25V3.75a2.25 2.25 0 00-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 18.75h3" />
-                                </svg>
+                        <div class="w-10 h-10 rounded-xl flex-shrink-0 flex items-center justify-center overflow-hidden bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 p-1.5 shadow-2xs transition-transform group-hover:scale-105">
+                            @if(str_contains($key, 'mtn'))
+                                <img src="{{ asset('images/services/mtn.png') }}" alt="MTN" class="w-full h-full object-contain">
                             @elseif(str_contains($key, 'orange'))
-                                <!-- Orange Money & Airtime -->
-                                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                </svg>
+                                <img src="{{ asset('images/services/orange.svg') }}" alt="Orange" class="w-full h-full object-contain">
                             @elseif(str_contains($key, 'camtel'))
-                                <!-- Camtel Telecom -->
-                                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M8.288 15.038a5.25 5.25 0 017.424 0M5.106 11.856c3.807-3.808 9.98-3.808 13.788 0M1.924 8.674c5.565-5.565 14.587-5.565 20.152 0M12.53 18.22l-.53.53-.53-.53a.75.75 0 011.06 0z" />
-                                </svg>
+                                <img src="{{ asset('images/services/camtel.png') }}" alt="Camtel" class="w-full h-full object-contain">
                             @elseif(str_contains($key, 'eneo'))
-                                <!-- ENEO Electricity -->
-                                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
-                                </svg>
+                                <img src="{{ asset('images/services/eneo.svg') }}" alt="ENEO" class="w-full h-full object-contain">
                             @elseif(str_contains($key, 'camwater'))
-                                <!-- Camwater -->
-                                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
-                                </svg>
-                            @elseif(str_contains($key, 'canal') || str_contains($key, 'dstv') || str_contains($key, 'startimes'))
-                                <!-- Television & Media -->
-                                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 20.25h12m-7.5-3v3m3-3v3m-10.125-3h17.25c.621 0 1.125-.504 1.125-1.125V4.875c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125z" />
-                                </svg>
+                                <img src="{{ asset('images/services/camwater.jpg') }}" alt="Camwater" class="w-full h-full object-contain rounded-sm">
+                            @elseif(str_contains($key, 'canal'))
+                                <img src="{{ asset('images/services/canal.svg') }}" alt="Canal+" class="w-full h-full object-contain">
+                            @elseif(str_contains($key, 'dstv'))
+                                <img src="{{ asset('images/services/dstv.svg') }}" alt="DSTV" class="w-full h-full object-contain">
+                            @elseif(str_contains($key, 'startimes'))
+                                <img src="{{ asset('images/services/startimes.png') }}" alt="StarTimes" class="w-full h-full object-contain">
                             @elseif(str_contains($key, 'sabc'))
-                                <!-- SABC Distribution -->
-                                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 00-3.213-9.193 2.056 2.056 0 00-1.58-.86H14.25M16.5 18.75h-2.25m0-11.25H4.875c-.621 0-1.125.504-1.125 1.125v6.75c0 .621.504 1.125 1.125 1.125h9.75V7.5z" />
-                                </svg>
+                                <img src="{{ asset('images/services/sabc.svg') }}" alt="SABC" class="w-full h-full object-contain">
+                            @elseif($key === 's3p')
+                                <img src="{{ asset('images/services/s3p.svg') }}" alt="S3P" class="w-full h-full object-contain">
                             @else
-                                <!-- Regional Partners -->
-                                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-.778.099-1.533.284-2.253" />
-                                </svg>
+                                <img src="{{ asset('images/services/smobilpay.svg') }}" alt="Smobilpay" class="w-full h-full object-contain">
                             @endif
                         </div>
 
@@ -898,22 +850,22 @@
                     
                     <!-- Boutons d'injection selon la Sévérité souhaitée -->
                     <div class="flex items-center justify-between pt-2 border-t border-slate-200/60 dark:border-slate-800 gap-1.5 text-[11px] font-mono">
-                        <span class="text-slate-400 text-[10px]">Simuler :</span>
+                        <span class="text-slate-400 text-[10px]">{{ __('Simuler') }} :</span>
                         <div class="flex items-center gap-1.5">
                             <button wire:click="triggerScenario('{{ $sc['key'] }}', 'CRITICAL')" 
                                     title="Injecter en Sévérité CRITICAL"
                                     class="px-2.5 py-1 rounded-lg bg-red-600 hover:bg-red-700 text-white font-bold text-[10px] cursor-pointer transition">
-                                🔴 Critique
+                                {{ __('Critique') }}
                             </button>
                             <button wire:click="triggerScenario('{{ $sc['key'] }}', 'WARNING')" 
                                     title="Injecter en Sévérité WARNING"
                                     class="px-2.5 py-1 rounded-lg bg-amber-500 hover:bg-amber-600 text-white font-bold text-[10px] cursor-pointer transition">
-                                🟡 Warning
+                                {{ __('Warning') }}
                             </button>
                             <button wire:click="triggerScenario('{{ $sc['key'] }}', 'INFO')" 
                                     title="Injecter en Sévérité INFO"
                                     class="px-2.5 py-1 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-bold text-[10px] cursor-pointer transition">
-                                🔵 Info
+                                {{ __('Info') }}
                             </button>
                         </div>
                     </div>
