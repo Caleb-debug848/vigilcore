@@ -639,6 +639,23 @@ html, body {
     }
 }
 
+/* ========================================================== */
+/* STICKY GLASS HEADER (VERRE DÉPOLI ULTRA-LIMPIDE)           */
+/* ========================================================== */
+.sticky-glass-header {
+    background-color: rgba(255, 255, 255, 0.78) !important;
+    -webkit-backdrop-filter: blur(18px) saturate(180%) !important;
+    backdrop-filter: blur(18px) saturate(180%) !important;
+    border: 1px solid rgba(226, 232, 240, 0.8) !important;
+}
+
+.dark .sticky-glass-header {
+    background-color: rgba(11, 17, 32, 0.82) !important;
+    -webkit-backdrop-filter: blur(18px) saturate(180%) !important;
+    backdrop-filter: blur(18px) saturate(180%) !important;
+    border: 1px solid rgba(30, 46, 74, 0.8) !important;
+}
+
 
 
 
