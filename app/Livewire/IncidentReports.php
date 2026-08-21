@@ -305,7 +305,13 @@ class IncidentReports extends Component
         $incidents = $this->getFilteredQuery()->paginate(15);
 
         return view('livewire.incident-reports', array_merge($analytics, [
-            'incidents' => $incidents,
+            'period'                => $this->period,
+            'severityFilter'        => $this->severityFilter,
+            'search'                => $this->search,
+            'showJsonModal'         => $this->showJsonModal,
+            'activeJsonPayload'     => $this->activeJsonPayload,
+            'selectedIncidentTitle' => $this->selectedIncidentTitle,
+            'incidents'             => $incidents,
         ]))->layout('layouts.app');
     }
 }
