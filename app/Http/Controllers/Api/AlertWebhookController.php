@@ -36,10 +36,20 @@ class AlertWebhookController extends Controller
             $source = 'Kibana Logs Engine';
         }
 
+        $component = $data['component'] ?? $data['service'] ?? null;
+
         // 1. CAS DE RÉSOLUTION (status = resolved ou ok)
         if (in_array($rawStatus, ['resolved', 'ok'])) {
-            $incident = Incident::where('title', 'LIKE', '%' . $title . '%')
-                ->where('status', '!=', 'resolved')
+            $incident = Incident::where('status', '!=', 'resolved')
+                ->where(function ($q) use ($title, $component) {
+                    if ($component) {
+                        $q->where('component', $component)
+                          ->orWhere('title', 'LIKE', '%' . $component . '%');
+                    }
+                    if ($title) {
+                        $q->orWhere('title', 'LIKE', '%' . $title . '%');
+                    }
+                })
                 ->latest()
                 ->first();
 
@@ -93,6 +103,7 @@ class AlertWebhookController extends Controller
             'severity'               => $severity,
             'status'                 => 'open',
             'source'                 => $source,
+            'component'              => $component,
             'statuspage_incident_id' => $data['statuspage_incident_id'] ?? null,
             'raw_payload'            => is_array($data) ? $data : json_decode($data, true),
         ]);
