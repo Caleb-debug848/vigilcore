@@ -57,7 +57,11 @@ class IncidentExportController extends Controller
      */
     public static function exportExcelResponse($incidents, string $period = 'week')
     {
-        $fileName = 'VigilCore_Rapport_' . strtoupper($period) . '_' . date('Ymd_His') . '.xls';
+        $locale = app()->getLocale();
+        $isEn = ($locale === 'en');
+
+        $prefix = $isEn ? 'VigilCore_Report_' : 'VigilCore_Rapport_';
+        $fileName = $prefix . strtoupper($period) . '_' . date('Ymd_His') . '.xls';
 
         $totalCount    = $incidents->count();
         $resolvedCount = $incidents->where('status', 'resolved')->count();
@@ -79,7 +83,7 @@ class IncidentExportController extends Controller
         $avgMttrSec = $resolvedWithTime > 0 ? round($totalDurationSec / $resolvedWithTime) : 120;
         $mttrFormatted = ($avgMttrSec >= 60) ? (floor($avgMttrSec / 60) . 'm ' . ($avgMttrSec % 60) . 's') : ($avgMttrSec . 's');
 
-        return response()->streamDownload(function () use ($incidents, $totalCount, $resolvedCount, $critCount, $warnCount, $resRate, $mttrFormatted, $period) {
+        return response()->streamDownload(function () use ($incidents, $totalCount, $resolvedCount, $critCount, $warnCount, $resRate, $mttrFormatted, $period, $isEn) {
             echo '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">';
             echo '<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">';
             echo '<!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>VigilCore SLA Report</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]-->';
@@ -107,35 +111,56 @@ class IncidentExportController extends Controller
             echo '<table border="0" cellspacing="0" cellpadding="0" style="width:100%;">';
             
             // Header Banner
-            echo '<tr><td colspan="8" class="title-banner">VIGILCORE OPS-01 — RAPPORT D\'AUDIT & ANALYTICS SLA</td></tr>';
-            echo '<tr><td colspan="8" class="subtitle">Généré le ' . date('d/m/Y à H:i:s') . ' | Période : ' . strtoupper($period) . ' | Environnement : Production srv901529</td></tr>';
+            $titleBanner = $isEn ? 'VIGILCORE OPS-01 — SLA AUDIT & ANALYTICS REPORT' : 'VIGILCORE OPS-01 — RAPPORT D\'AUDIT & ANALYTICS SLA';
+            $subtitle = $isEn 
+                ? ('Generated on ' . date('Y-m-d \a\t H:i:s') . ' | Period: ' . strtoupper($period) . ' | Environment: Production srv901529')
+                : ('Généré le ' . date('d/m/Y à H:i:s') . ' | Période : ' . strtoupper($period) . ' | Environnement : Production srv901529');
+            
+            echo '<tr><td colspan="8" class="title-banner">' . $titleBanner . '</td></tr>';
+            echo '<tr><td colspan="8" class="subtitle">' . $subtitle . '</td></tr>';
             echo '<tr><td colspan="8" style="height:12px;"></td></tr>';
 
             // KPI Summary Cards in Table
+            $lblTotal = $isEn ? 'TOTAL INCIDENTS' : 'TOTAL INCIDENTS';
+            $lblSla   = $isEn ? 'SLA AVAILABILITY' : 'DISPONIBILITÉ SLA';
+            $lblMttr  = $isEn ? 'AVERAGE MTTR' : 'MTTR MOYEN';
+            $lblRate  = $isEn ? 'RESOLUTION RATE' : 'TAUX DE RÉSOLUTION';
+            $lblCritDetail = $isEn ? ('(' . $critCount . ' critical)') : ('(' . $critCount . ' critiques)');
+            $lblResDetail  = $isEn ? ('(' . $resolvedCount . ' resolved)') : ('(' . $resolvedCount . ' résolus)');
+
             echo '<tr>
-                <td colspan="2" class="kpi-title">TOTAL INCIDENTS</td>
-                <td colspan="2" class="kpi-title">DISPONIBILITÉ SLA</td>
-                <td colspan="2" class="kpi-title">MTTR MOYEN</td>
-                <td colspan="2" class="kpi-title">TAUX DE RÉSOLUTION</td>
+                <td colspan="2" class="kpi-title">' . $lblTotal . '</td>
+                <td colspan="2" class="kpi-title">' . $lblSla . '</td>
+                <td colspan="2" class="kpi-title">' . $lblMttr . '</td>
+                <td colspan="2" class="kpi-title">' . $lblRate . '</td>
             </tr>';
             echo '<tr>
-                <td colspan="2" class="kpi-val">' . $totalCount . ' <span style="font-size:9pt;color:#64748b;">(' . $critCount . ' critiques)</span></td>
+                <td colspan="2" class="kpi-val">' . $totalCount . ' <span style="font-size:9pt;color:#64748b;">' . $lblCritDetail . '</span></td>
                 <td colspan="2" class="kpi-val kpi-sla">≥ 99.85%</td>
                 <td colspan="2" class="kpi-val kpi-mttr">' . $mttrFormatted . '</td>
-                <td colspan="2" class="kpi-val kpi-sla">' . $resRate . '% (' . $resolvedCount . ' résolus)</td>
+                <td colspan="2" class="kpi-val kpi-sla">' . $resRate . '% ' . $lblResDetail . '</td>
             </tr>';
             echo '<tr><td colspan="8" style="height:16px;"></td></tr>';
 
             // Data Table Headers
+            $thId    = 'ID';
+            $thDate  = $isEn ? 'DATE & TIME' : 'DATE & HEURE';
+            $thComp  = $isEn ? 'COMPONENT / TITLE' : 'COMPOSANT / INTITULÉ';
+            $thSev   = $isEn ? 'SEVERITY' : 'SÉVÉRITÉ';
+            $thStat  = $isEn ? 'STATUS' : 'STATUT';
+            $thDur   = $isEn ? 'MTTR (DURATION)' : 'MTTR (DURÉE)';
+            $thSrc   = 'SOURCE';
+            $thDesc  = $isEn ? 'DETAILED DESCRIPTION' : 'DESCRIPTION DÉTAILLÉE';
+
             echo '<tr>
-                <th style="width:60px;">ID</th>
-                <th style="width:150px;">DATE & HEURE</th>
-                <th style="width:260px;">COMPOSANT / INTITULÉ</th>
-                <th style="width:110px;text-align:center;">SÉVÉRITÉ</th>
-                <th style="width:110px;text-align:center;">STATUT</th>
-                <th style="width:110px;text-align:center;">MTTR (DURÉE)</th>
-                <th style="width:160px;">SOURCE</th>
-                <th style="width:350px;">DESCRIPTION DÉTAILLÉE</th>
+                <th style="width:60px;">' . $thId . '</th>
+                <th style="width:150px;">' . $thDate . '</th>
+                <th style="width:260px;">' . $thComp . '</th>
+                <th style="width:110px;text-align:center;">' . $thSev . '</th>
+                <th style="width:110px;text-align:center;">' . $thStat . '</th>
+                <th style="width:110px;text-align:center;">' . $thDur . '</th>
+                <th style="width:160px;">' . $thSrc . '</th>
+                <th style="width:350px;">' . $thDesc . '</th>
             </tr>';
 
             $i = 0;
@@ -156,11 +181,15 @@ class IncidentExportController extends Controller
                 elseif ($sev === 'WARNING') $sevClass = 'badge-warn';
 
                 $statClass = ($inc->status === 'resolved') ? 'badge-res' : 'badge-open';
-                $statLabel = ($inc->status === 'resolved') ? 'RÉSOLU' : 'EN COURS';
+                $statLabel = ($inc->status === 'resolved') 
+                    ? ($isEn ? 'RESOLVED' : 'RÉSOLU') 
+                    : ($isEn ? 'IN PROGRESS' : 'EN COURS');
+
+                $dateFormat = $isEn ? 'Y-m-d H:i:s' : 'd/m/Y H:i:s';
 
                 echo "<tr class='{$rowClass}'>
                     <td style='font-weight:bold;text-align:center;'>#{$inc->id}</td>
-                    <td>" . ($inc->created_at ? $inc->created_at->format('d/m/Y H:i:s') : '') . "</td>
+                    <td>" . ($inc->created_at ? $inc->created_at->format($dateFormat) : '') . "</td>
                     <td style='font-weight:bold;color:#0f172a;'>" . htmlspecialchars($inc->title ?? $inc->alert_name ?? 'Incident') . "</td>
                     <td class='{$sevClass}'>{$sev}</td>
                     <td class='{$statClass}'>{$statLabel}</td>
@@ -170,8 +199,12 @@ class IncidentExportController extends Controller
                 </tr>";
             }
 
+            $footerMsg = $isEn 
+                ? 'Document automatically generated by VigilCore OPS-01 — Confidential & Restricted to Operations.'
+                : 'Document généré automatiquement par VigilCore OPS-01 — Confidentiel & Réservé à l\'exploitation.';
+
             echo '<tr><td colspan="8" style="height:14px;"></td></tr>';
-            echo '<tr><td colspan="8" class="footer">Document généré automatiquement par VigilCore OPS-01 — Confidentiel & Réservé à l\'exploitation.</td></tr>';
+            echo '<tr><td colspan="8" class="footer">' . $footerMsg . '</td></tr>';
             echo '</table></body></html>';
         }, $fileName, [
             'Content-Type'        => 'application/vnd.ms-excel; charset=UTF-8',
@@ -186,14 +219,22 @@ class IncidentExportController extends Controller
      */
     public static function exportCsvResponse($incidents, string $period = 'week')
     {
-        $fileName = 'VigilCore_Rapport_' . strtoupper($period) . '_' . date('Ymd_His') . '.csv';
+        $locale = app()->getLocale();
+        $isEn = ($locale === 'en');
 
-        return response()->streamDownload(function () use ($incidents) {
+        $prefix = $isEn ? 'VigilCore_Report_' : 'VigilCore_Rapport_';
+        $fileName = $prefix . strtoupper($period) . '_' . date('Ymd_His') . '.csv';
+
+        return response()->streamDownload(function () use ($incidents, $isEn) {
             $handle = fopen('php://output', 'w');
             // UTF-8 BOM pour Excel
             fprintf($handle, chr(0xEF).chr(0xBB).chr(0xBF));
 
-            fputcsv($handle, ['ID', 'Date & Heure', 'Composant / Intitule', 'Severite', 'Statut', 'Duree (MTTR)', 'Source', 'Description']);
+            $headers = $isEn
+                ? ['ID', 'Date & Time', 'Component / Title', 'Severity', 'Status', 'Duration (MTTR)', 'Source', 'Description']
+                : ['ID', 'Date & Heure', 'Composant / Intitule', 'Severite', 'Statut', 'Duree (MTTR)', 'Source', 'Description'];
+
+            fputcsv($handle, $headers);
 
             foreach ($incidents as $inc) {
                 $durationSec = 0;
@@ -203,12 +244,18 @@ class IncidentExportController extends Controller
                     $mttr = ($diff >= 60) ? (floor($diff / 60) . 'm ' . ($diff % 60) . 's') : ($diff . 's');
                 }
 
+                $statLabel = ($inc->status === 'resolved')
+                    ? ($isEn ? 'RESOLVED' : 'RESOLU')
+                    : ($isEn ? 'IN PROGRESS' : 'EN COURS');
+
+                $dateFormat = $isEn ? 'Y-m-d H:i:s' : 'd/m/Y H:i:s';
+
                 fputcsv($handle, [
                     '#' . $inc->id,
-                    $inc->created_at ? $inc->created_at->format('d/m/Y H:i:s') : '',
+                    $inc->created_at ? $inc->created_at->format($dateFormat) : '',
                     $inc->title ?? $inc->alert_name ?? 'Incident',
                     strtoupper($inc->severity ?? 'INFO'),
-                    $inc->status === 'resolved' ? 'RESOLU' : 'EN COURS',
+                    $statLabel,
                     $mttr,
                     $inc->source ?? 'Monitoring',
                     $inc->description ?? $inc->message ?? ''
