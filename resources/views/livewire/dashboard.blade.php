@@ -20,7 +20,7 @@
         <!-- ==================================================== -->
         <!-- 1. EN-TÊTE DE NAVIGATION (100% MOBILE-FIRST ADAPTATIF)-->
         <!-- ==================================================== -->
-        <header class="no-print sticky top-2 sm:top-3 z-40 flex items-center justify-between gap-2 sm:gap-4 p-2.5 sm:px-4 rounded-xl sm:rounded-2xl bg-white/95 dark:bg-[#111827]/95 backdrop-blur-md border border-slate-200 dark:border-slate-800 shadow-sm transition-all duration-200 animate-entrance-1">
+        <header class="sticky-glass-header no-print sticky top-2 sm:top-3 z-40 flex items-center justify-between gap-2 sm:gap-4 p-2.5 sm:px-4 rounded-xl sm:rounded-2xl shadow-sm transition-all duration-200 animate-entrance-1">
             
             <!-- Gauche : Logo & Badge OPS-01 -->
             <div class="flex items-center gap-2 sm:gap-3 min-w-0 flex-shrink-0">
