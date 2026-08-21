@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
+  <rect width="120" height="120" rx="24" fill="#111111"/>
+  <text x="50" y="70" font-family="'Helvetica Neue', Arial, sans-serif" font-size="22" font-weight="900" fill="#FFFFFF" text-anchor="middle" letter-spacing="1">CANAL</text>
+  <path d="M88 52v20m-10-10h20" stroke="#E50914" stroke-width="5" stroke-linecap="round"/>
+</svg>
