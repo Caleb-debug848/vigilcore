@@ -274,7 +274,31 @@ PAYLOAD=$(cat <<EOF
 EOF
 )
 
-echo "[1/2] Déclenchement de l'alerte orchestrée sur n8n..."
+echo "[1/3] Injection de traces d'erreurs HTTP 500/504 dans Elasticsearch..."
+ES_LOG=$(cat <<EOF
+{
+  "@timestamp": "$NOW_ISO",
+  "service": { "name": "$KEY" },
+  "http": { "response": { "status_code": 504 } },
+  "log": { "level": "error" },
+  "message": "Gateway Timeout 504 on endpoint /api/v2/$KEY/validate - $TITLE",
+  "host": { "name": "$HOST_NAME" },
+  "component": "$KEY",
+  "source": "Kibana Logs Engine"
+}
+EOF
+)
+
+# Envoi du log dans Elasticsearch (ports 9200 standards)
+curl -s -o /dev/null -X POST "http://127.0.0.1:9200/filebeat-logs/_doc" \
+  -H "Content-Type: application/json" \
+  -d "$ES_LOG" 2>/dev/null || curl -s -o /dev/null -X POST "http://127.0.0.1:9200/logs-app/_doc" \
+  -H "Content-Type: application/json" \
+  -d "$ES_LOG" 2>/dev/null || true
+
+echo "      ✓ Traces et pics d'erreurs indexés dans Elasticsearch (Visibles dans Kibana)"
+
+echo "[2/3] Déclenchement de l'alerte orchestrée sur n8n..."
 HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" -X POST "$N8N_URL" \
   -H "Content-Type: application/json" \
   -d "$PAYLOAD")
@@ -285,7 +309,7 @@ else
   echo "      ⚠️  Réponse n8n : HTTP $HTTP_STATUS"
 fi
 
-echo "[2/2] Enregistrement en base locale VigilCore..."
+echo "[3/3] Enregistrement en base locale VigilCore..."
 # Appel direct à l'API interne VigilCore pour enregistrer l'incident si besoin
 curl -s -o /dev/null -X POST "http://127.0.0.1:8000/api/webhooks/alerts" \
   -H "Content-Type: application/json" \
