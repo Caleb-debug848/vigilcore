@@ -522,6 +522,44 @@ html, body {
     }
 }
 
+/* ========================================================== */
+/* SERVICE HEALTH CARDS (20 SERVICES SRE COCKPIT)             */
+/* ========================================================== */
+.service-health-card {
+    background-color: #ffffff;
+    border: 1px solid #e2e8f0;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.service-health-card:hover {
+    border-color: #93c5fd;
+    box-shadow: 0 4px 12px -2px rgba(0, 0, 0, 0.05);
+}
+
+.dark .service-health-card {
+    background-color: #0b1120 !important;
+    border-color: #1e293b !important;
+}
+.dark .service-health-card:hover {
+    background-color: #10192e !important;
+    border-color: #3b82f6 !important;
+    box-shadow: 0 4px 20px -2px rgba(0, 32, 178, 0.25) !important;
+}
+
+.service-health-card .service-title {
+    color: #0f172a;
+}
+.dark .service-health-card .service-title {
+    color: #f8fafc !important;
+}
+
+.service-health-card .service-sub {
+    color: #64748b;
+}
+.dark .service-health-card .service-sub {
+    color: #94a3b8 !important;
+}
+
+
 
 
 
