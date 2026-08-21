@@ -460,31 +460,31 @@
                     
                     <!-- Logo Officiel de Marque Dédié -->
                     <div class="flex items-center gap-3 min-w-0 flex-1">
-                        <div class="w-10 h-10 rounded-xl flex-shrink-0 flex items-center justify-center overflow-hidden bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 p-1.5 shadow-2xs transition-transform group-hover:scale-105">
+                        <div class="service-logo-box">
                             @if(str_contains($key, 'mtn'))
-                                <img src="{{ asset('images/services/mtn.png') }}" alt="MTN" class="w-full h-full object-contain">
+                                <img src="{{ asset('images/services/mtn.png') }}" alt="MTN">
                             @elseif(str_contains($key, 'orange'))
-                                <img src="{{ asset('images/services/orange.svg') }}" alt="Orange" class="w-full h-full object-contain">
+                                <img src="{{ asset('images/services/orange.svg') }}" alt="Orange">
                             @elseif(str_contains($key, 'camtel'))
-                                <img src="{{ asset('images/services/camtel.png') }}" alt="Camtel" class="w-full h-full object-contain">
+                                <img src="{{ asset('images/services/camtel.png') }}" alt="Camtel">
                             @elseif(str_contains($key, 'eneo'))
-                                <img src="{{ asset('images/services/eneo.png') }}" alt="ENEO" class="w-full h-full object-contain rounded-sm">
+                                <img src="{{ asset('images/services/eneo.png') }}" alt="ENEO">
                             @elseif(str_contains($key, 'camwater'))
-                                <img src="{{ asset('images/services/camwater.jpg') }}" alt="Camwater" class="w-full h-full object-contain rounded-sm">
+                                <img src="{{ asset('images/services/camwater.png') }}" alt="Camwater">
                             @elseif(str_contains($key, 'canal'))
-                                <img src="{{ asset('images/services/canal.jpg') }}" alt="Canal+" class="w-full h-full object-contain rounded-sm">
+                                <img src="{{ asset('images/services/canal.svg') }}" alt="Canal+">
                             @elseif(str_contains($key, 'dstv'))
-                                <img src="{{ asset('images/services/dstv.svg') }}" alt="DSTV" class="w-full h-full object-contain">
+                                <img src="{{ asset('images/services/dstv.svg') }}" alt="DSTV">
                             @elseif(str_contains($key, 'startimes'))
-                                <img src="{{ asset('images/services/startimes.png') }}" alt="StarTimes" class="w-full h-full object-contain">
+                                <img src="{{ asset('images/services/startimes.png') }}" alt="StarTimes">
                             @elseif(str_contains($key, 'sabc'))
-                                <img src="{{ asset('images/services/sabc.png') }}" alt="Boissons du Cameroun" class="w-full h-full object-contain">
+                                <img src="{{ asset('images/services/sabc.png') }}" alt="Boissons du Cameroun">
                             @elseif($key === 'ecommerce')
-                                <img src="{{ asset('images/services/smobilpay-ecommerce.png') }}" alt="Smobilpay e-Commerce" class="w-full h-full object-contain">
+                                <img src="{{ asset('images/services/smobilpay-ecommerce.png') }}" alt="Smobilpay e-Commerce">
                             @elseif($key === 's3p' || $key === 'smobilpay' || $key === 'merchant_portal')
-                                <img src="{{ asset('images/services/smobilpay.png') }}" alt="Smobilpay" class="w-full h-full object-contain">
+                                <img src="{{ asset('images/services/smobilpay.png') }}" alt="Smobilpay">
                             @else
-                                <img src="{{ asset('images/services/smobilpay.png') }}" alt="Smobilpay" class="w-full h-full object-contain">
+                                <img src="{{ asset('images/services/smobilpay.png') }}" alt="Smobilpay">
                             @endif
                         </div>
 
