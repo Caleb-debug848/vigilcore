@@ -472,7 +472,7 @@
                             @elseif($key === 'camwater')
                                 <img src="{{ asset('images/services/camwater.png') }}" alt="Camwater" style="width: 24px; height: 24px; max-width: 24px; max-height: 24px; object-fit: contain;">
                             @elseif($key === 'canal')
-                                <img src="{{ asset('images/services/canal.svg') }}" alt="Canal+" style="width: 22px; height: 22px; max-width: 22px; max-height: 22px; object-fit: contain;">
+                                <img src="{{ asset('images/services/canal.png') }}" alt="Canal+" style="width: 24px; height: 24px; max-width: 24px; max-height: 24px; object-fit: cover; border-radius: 6px;">
                             @elseif($key === 'dstv')
                                 <img src="{{ asset('images/services/dstv.svg') }}" alt="DSTV" style="width: 24px; height: 24px; max-width: 24px; max-height: 24px; object-fit: contain;">
                             @elseif($key === 'startimes')
