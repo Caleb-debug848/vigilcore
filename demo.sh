@@ -289,10 +289,12 @@ ES_LOG=$(cat <<EOF
 EOF
 )
 
-# Envoi du log dans Elasticsearch (ports 9200 standards)
-curl -s -o /dev/null -X POST "http://127.0.0.1:9200/filebeat-logs/_doc" \
+# Envoi du log dans Elasticsearch (compatible Data View 'All logs' logs-*-* et filebeat)
+curl -s -o /dev/null -X POST "http://127.0.0.1:9200/logs-generic-default/_doc" \
   -H "Content-Type: application/json" \
-  -d "$ES_LOG" 2>/dev/null || curl -s -o /dev/null -X POST "http://127.0.0.1:9200/logs-app/_doc" \
+  -d "$ES_LOG" 2>/dev/null || true
+
+curl -s -o /dev/null -X POST "http://127.0.0.1:9200/filebeat-logs/_doc" \
   -H "Content-Type: application/json" \
   -d "$ES_LOG" 2>/dev/null || true
 
