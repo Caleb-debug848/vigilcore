@@ -102,21 +102,21 @@
                             type="button" 
                             title="{{ __('Changer de langue') }}"
                             class="px-2.5 py-1.5 text-xs font-mono font-bold rounded-xl bg-slate-50 dark:bg-[#0c101a] text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800/60 cursor-pointer transition flex items-center gap-1">
-                        <span>{{ app()->getLocale() === 'en' ? '🇬🇧 EN' : '🇫🇷 FR' }}</span>
+                        <span>{{ strtoupper(app()->getLocale()) }}</span>
                         <svg class="w-3 h-3 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
                         </svg>
                     </button>
                     <div x-show="langOpen" 
                          x-transition
-                         class="absolute right-0 mt-1.5 w-32 bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 rounded-xl shadow-xl z-50 p-1 space-y-0.5 text-xs font-mono"
+                         class="absolute right-0 mt-1.5 w-36 bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 rounded-xl shadow-xl z-50 p-1 space-y-0.5 text-xs font-mono"
                          style="display: none;">
-                        <button type="button" wire:click="switchLocale('fr')" @click="langOpen = false" class="w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg {{ app()->getLocale() === 'fr' ? 'bg-blue-50 dark:bg-blue-950/60 text-[#0020B2] font-bold' : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800' }}">
-                            <span>🇫🇷 FR</span>
+                        <button type="button" wire:click="switchLocale('fr')" @click="langOpen = false" class="w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg {{ app()->getLocale() === 'fr' ? 'bg-blue-50 dark:bg-blue-950/60 text-[#0020B2] dark:text-blue-300 font-bold' : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800' }}">
+                            <span>FR — Français</span>
                             @if(app()->getLocale() === 'fr') <span class="text-xs">✓</span> @endif
                         </button>
-                        <button type="button" wire:click="switchLocale('en')" @click="langOpen = false" class="w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg {{ app()->getLocale() === 'en' ? 'bg-blue-50 dark:bg-blue-950/60 text-[#0020B2] font-bold' : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800' }}">
-                            <span>🇬🇧 EN</span>
+                        <button type="button" wire:click="switchLocale('en')" @click="langOpen = false" class="w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg {{ app()->getLocale() === 'en' ? 'bg-blue-50 dark:bg-blue-950/60 text-[#0020B2] dark:text-blue-300 font-bold' : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800' }}">
+                            <span>EN — English</span>
                             @if(app()->getLocale() === 'en') <span class="text-xs">✓</span> @endif
                         </button>
                     </div>
