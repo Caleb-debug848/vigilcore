@@ -450,19 +450,19 @@
                 @endphp
                 <div x-show="selectedCat === 'all' || selectedCat === '{{ $cat }}'"
                      x-transition
-                     class="group relative p-3 rounded-2xl border transition-all duration-200 flex items-center justify-between gap-3 {{ $isOk ? 'bg-white dark:bg-[#0c121e]/90 border-slate-200/90 dark:border-slate-800 hover:border-blue-500/50 dark:hover:border-blue-500/50 hover:shadow-md' : 'bg-red-500/5 dark:bg-red-950/30 border-red-500/50 dark:border-red-600 shadow-sm animate-pulse' }}">
+                     class="service-health-card group relative p-3 rounded-2xl flex items-center justify-between gap-3 {{ $isOk ? '' : 'bg-red-500/10 dark:bg-red-950/40 border-red-500/50 shadow-sm animate-pulse' }}">
                     
                     <!-- Logo / Icône de Marque Dédiée -->
                     <div class="flex items-center gap-3 min-w-0 flex-1">
                         <div class="w-10 h-10 rounded-xl flex-shrink-0 flex items-center justify-center shadow-xs transition-transform group-hover:scale-105
-                            @if(str_contains($key, 'mtn')) bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20
-                            @elseif(str_contains($key, 'orange')) bg-orange-500/10 text-orange-600 dark:text-orange-400 border border-orange-500/20
-                            @elseif(str_contains($key, 'camtel')) bg-sky-500/10 text-sky-600 dark:text-sky-400 border border-sky-500/20
-                            @elseif(str_contains($key, 'eneo')) bg-yellow-500/10 text-yellow-600 dark:text-yellow-400 border border-yellow-500/20
-                            @elseif(str_contains($key, 'camwater')) bg-teal-500/10 text-teal-600 dark:text-teal-400 border border-teal-500/20
-                            @elseif(str_contains($key, 'canal') || str_contains($key, 'dstv') || str_contains($key, 'startimes')) bg-purple-500/10 text-purple-600 dark:text-purple-400 border border-purple-500/20
-                            @elseif(str_contains($key, 'sabc')) bg-red-500/10 text-red-600 dark:text-red-400 border border-red-500/20
-                            @else bg-blue-500/10 text-[#0020B2] dark:text-blue-400 border border-blue-500/20
+                            @if(str_contains($key, 'mtn')) bg-amber-500/15 text-amber-600 dark:text-amber-300 border border-amber-500/30
+                            @elseif(str_contains($key, 'orange')) bg-orange-500/15 text-orange-600 dark:text-orange-300 border border-orange-500/30
+                            @elseif(str_contains($key, 'camtel')) bg-sky-500/15 text-sky-600 dark:text-sky-300 border border-sky-500/30
+                            @elseif(str_contains($key, 'eneo')) bg-yellow-500/15 text-yellow-600 dark:text-yellow-300 border border-yellow-500/30
+                            @elseif(str_contains($key, 'camwater')) bg-teal-500/15 text-teal-600 dark:text-teal-300 border border-teal-500/30
+                            @elseif(str_contains($key, 'canal') || str_contains($key, 'dstv') || str_contains($key, 'startimes')) bg-purple-500/15 text-purple-600 dark:text-purple-300 border border-purple-500/30
+                            @elseif(str_contains($key, 'sabc')) bg-red-500/15 text-red-600 dark:text-red-300 border border-red-500/30
+                            @else bg-blue-500/15 text-[#0020B2] dark:text-blue-300 border border-blue-500/30
                             @endif">
                             
                             @if($key === 'smobilpay')
@@ -529,10 +529,10 @@
                         </div>
 
                         <div class="min-w-0 flex-1">
-                            <p class="text-xs font-bold text-slate-900 dark:text-white truncate group-hover:text-[#0020B2] dark:group-hover:text-blue-300 transition-colors" title="{{ $service['name'] }}">
+                            <p class="service-title text-xs font-bold truncate group-hover:text-[#0020B2] dark:group-hover:text-blue-400 transition-colors" title="{{ $service['name'] }}">
                                 {{ $service['name'] }}
                             </p>
-                            <span class="text-[10px] font-mono font-medium text-slate-500 dark:text-slate-400 truncate block">
+                            <span class="service-sub text-[10px] font-mono font-medium truncate block">
                                 {{ __($service['category_label']) }}
                             </span>
                         </div>
@@ -541,7 +541,7 @@
                     <!-- Statut du Service -->
                     <div class="flex-shrink-0">
                         @if($isOk)
-                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-mono font-bold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 shadow-2xs">
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-mono font-bold bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30 shadow-2xs">
                                 <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
                                 <span>OK</span>
                             </span>
