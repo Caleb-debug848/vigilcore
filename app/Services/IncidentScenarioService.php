@@ -310,11 +310,11 @@ class IncidentScenarioService
                 ]
             ],
 
-            // --- 5. SERVICES RÉGIONAUX & PARTENAIRES ---
+            // --- 5. SERVICES RÉGIONAUX & DISTRIBUTION ---
             [
                 'key'        => 'mtn_congo',
                 'category'   => 'regional',
-                'category_label' => 'Régional & Partenaires',
+                'category_label' => 'Régional (Congo)',
                 'name'       => 'MTN Mobile Money Congo',
                 'alert_title'=> 'Lenteurs MTN Mobile Money Congo',
                 'severity'   => 'CRITICAL',
@@ -329,9 +329,9 @@ class IncidentScenarioService
             ],
             [
                 'key'        => 'sabc',
-                'category'   => 'regional',
-                'category_label' => 'Régional & Partenaires',
-                'name'       => 'SABC Boissons (Paiements Marchands)',
+                'category'   => 'sabc',
+                'category_label' => 'Boissons du Cameroun',
+                'name'       => 'Boissons du Cameroun (SABC)',
                 'alert_title'=> 'Délai Validation Commandes SABC',
                 'severity'   => 'CRITICAL',
                 'icon'       => 'truck',

@@ -107,7 +107,7 @@ class IncidentExportController extends Controller
             echo '<table border="0" cellspacing="0" cellpadding="0" style="width:100%;">';
             
             // Header Banner
-            echo '<tr><td colspan="8" class="title-banner">🛡️ VIGILCORE OPS-01 — RAPPORT D\'AUDIT & ANALYTICS SLA</td></tr>';
+            echo '<tr><td colspan="8" class="title-banner">VIGILCORE OPS-01 — RAPPORT D\'AUDIT & ANALYTICS SLA</td></tr>';
             echo '<tr><td colspan="8" class="subtitle">Généré le ' . date('d/m/Y à H:i:s') . ' | Période : ' . strtoupper($period) . ' | Environnement : Production srv901529</td></tr>';
             echo '<tr><td colspan="8" style="height:12px;"></td></tr>';
 
