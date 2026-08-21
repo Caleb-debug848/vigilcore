@@ -37,7 +37,11 @@ class IncidentWebhookController extends Controller
             });
         }
 
-        $updatedCount = $query->update(['status' => 'resolved']);
+        $updatedCount = $query->update([
+            'status'      => 'resolved',
+            'is_resolved' => true,
+            'resolved_at' => now(),
+        ]);
 
         return response()->json([
             'success'       => true,

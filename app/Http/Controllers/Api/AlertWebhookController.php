@@ -68,6 +68,8 @@ class AlertWebhookController extends Controller
 
                 $incident->update([
                     'status'      => 'resolved',
+                    'is_resolved' => true,
+                    'resolved_at' => now(),
                     'raw_payload' => $raw,
                 ]);
 

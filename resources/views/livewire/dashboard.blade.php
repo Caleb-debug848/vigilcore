@@ -557,6 +557,7 @@
             </div>
 
             <!-- ============================================== -->
+            <!-- ============================================== -->
             <!-- VUE 1 (DESKTOP) : GRAND TABLEAU COMPLET       -->
             <!-- ============================================== -->
             <div class="hidden md:block overflow-x-auto custom-scrollbar">
@@ -564,33 +565,37 @@
                     <thead class="bg-slate-50 dark:bg-[#0c101a] text-slate-600 dark:text-slate-400 uppercase text-[10px] tracking-wider border-b border-slate-200 dark:border-slate-800">
                         <tr>
                             <th class="py-2.5 px-3 w-12 text-center">ID</th>
-                            <th class="py-2.5 px-3 w-40">{{ __('Horodatage') }}</th>
+                            <th class="py-2.5 px-3 w-36">{{ __('Heure Début (WAT)') }}</th>
+                            <th class="py-2.5 px-3 w-36">{{ __('Heure Fin (WAT)') }}</th>
                             <th class="py-2.5 px-3">{{ __('Incident') }} / {{ __('Service') }}</th>
-                            <th class="py-2.5 px-3 w-28 text-center">{{ __('Gravité') }}</th>
-                            <th class="py-2.5 px-3 w-24 text-center">{{ __('Statut') }}</th>
-                            <th class="py-2.5 px-3 w-24 text-center">{{ __('Durée (MTTR)') }}</th>
-                            <th class="py-2.5 px-3 w-36">{{ __('Source') }}</th>
-                            <th class="py-2.5 px-3 w-24 text-right">{{ __('Actions') }}</th>
+                            <th class="py-2.5 px-2 w-24 text-center">{{ __('Gravité') }}</th>
+                            <th class="py-2.5 px-2 w-24 text-center">{{ __('Statut') }}</th>
+                            <th class="py-2.5 px-2 w-28 text-center">{{ __('Code Erreur') }}</th>
+                            <th class="py-2.5 px-2 w-24 text-center">{{ __('Durée (MTTR)') }}</th>
+                            <th class="py-2.5 px-3 w-32">{{ __('Source') }}</th>
+                            <th class="py-2.5 px-3 w-20 text-right">{{ __('Actions') }}</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-slate-100 dark:divide-slate-800/60 text-slate-700 dark:text-slate-300">
                         @forelse($incidents as $incident)
                             @php
-                                $mttr = '--';
-                                if ($incident->status === 'resolved' && $incident->created_at && $incident->updated_at) {
-                                    $diffSec = $incident->created_at->diffInSeconds($incident->updated_at);
-                                    $mttr = ($diffSec >= 60) ? (floor($diffSec / 60) . 'm ' . ($diffSec % 60) . 's') : ($diffSec . 's');
-                                }
+                                $startStr = $incident->created_at ? $incident->created_at->format('d/m/Y H:i:s') : 'N/A';
+                                $endObj = $incident->resolved_at ?? (($incident->status === 'resolved') ? $incident->updated_at : null);
+                                $endStr = $endObj ? $endObj->format('d/m/Y H:i:s') : __('En cours');
+                                $mttr = $incident->mttr_formatted;
                             @endphp
                             <tr class="hover:bg-slate-50/80 dark:hover:bg-slate-800/30 transition">
                                 <td class="py-2.5 px-3 font-bold text-slate-400 text-center">#{{ $incident->id }}</td>
                                 <td class="py-2.5 px-3 text-[11px] whitespace-nowrap text-slate-500 dark:text-slate-400">
-                                    {{ $incident->created_at ? $incident->created_at->format('d/m/Y H:i:s') : 'N/A' }}
+                                    {{ $startStr }}
+                                </td>
+                                <td class="py-2.5 px-3 text-[11px] whitespace-nowrap text-emerald-600 dark:text-emerald-400 font-semibold">
+                                    {{ $endStr }}
                                 </td>
                                 <td class="py-2.5 px-3 font-semibold text-slate-900 dark:text-white">
                                     {{ $incident->title }}
                                 </td>
-                                <td class="py-2.5 px-3 text-center">
+                                <td class="py-2.5 px-2 text-center">
                                     @if(strtoupper($incident->severity) === 'CRITICAL')
                                         <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-red-50 text-red-700 border border-red-200 dark:bg-red-950/60 dark:text-red-400 dark:border-red-800">
                                             CRITICAL
@@ -605,7 +610,7 @@
                                         </span>
                                     @endif
                                 </td>
-                                <td class="py-2.5 px-3 text-center">
+                                <td class="py-2.5 px-2 text-center">
                                     @if($incident->status === 'resolved')
                                         <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 dark:bg-emerald-950/60 dark:text-emerald-400 dark:border-emerald-800">
                                             {{ __('Résolu') }}
@@ -616,7 +621,12 @@
                                         </span>
                                     @endif
                                 </td>
-                                <td class="py-2.5 px-3 font-bold text-[#F59E0B] text-center">
+                                <td class="py-2.5 px-2 text-center">
+                                    <span class="px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
+                                        {{ $incident->error_code }}
+                                    </span>
+                                </td>
+                                <td class="py-2.5 px-2 font-bold text-[#F59E0B] text-center whitespace-nowrap">
                                     {{ $mttr }}
                                 </td>
                                 <td class="py-2.5 px-3 text-[11px] text-slate-500 dark:text-slate-400">
@@ -631,7 +641,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="8" class="py-8 text-center text-slate-400 font-mono text-xs">
+                                <td colspan="10" class="py-8 text-center text-slate-400 font-mono text-xs">
                                     {{ __('Aucun incident actif') }}
                                 </td>
                             </tr>
@@ -646,11 +656,10 @@
             <div class="block md:hidden space-y-3">
                 @forelse($incidents as $incident)
                     @php
-                        $mttr = '--';
-                        if ($incident->status === 'resolved' && $incident->created_at && $incident->updated_at) {
-                            $diffSec = $incident->created_at->diffInSeconds($incident->updated_at);
-                            $mttr = ($diffSec >= 60) ? (floor($diffSec / 60) . 'm ' . ($diffSec % 60) . 's') : ($diffSec . 's');
-                        }
+                        $startStr = $incident->created_at ? $incident->created_at->format('d/m H:i') : '';
+                        $endObj = $incident->resolved_at ?? (($incident->status === 'resolved') ? $incident->updated_at : null);
+                        $endStr = $endObj ? $endObj->format('d/m H:i') : __('En cours');
+                        $mttr = $incident->mttr_formatted;
                     @endphp
                     <div class="p-3 rounded-xl bg-slate-50 dark:bg-[#0c101a] border border-slate-200 dark:border-slate-800 space-y-2.5 font-mono text-xs">
                         
@@ -659,7 +668,7 @@
                             <div class="flex items-center gap-1.5">
                                 <span class="font-bold text-slate-400">#{{ $incident->id }}</span>
                                 <span class="text-[10px] text-slate-500 dark:text-slate-400">
-                                    {{ $incident->created_at ? $incident->created_at->format('d/m H:i') : '' }}
+                                    {{ $startStr }} ➔ {{ $endStr }}
                                 </span>
                             </div>
 
@@ -695,9 +704,9 @@
                             {{ $incident->title }}
                         </div>
 
-                        <!-- Métadonnées (Source & MTTR) -->
+                        <!-- Métadonnées (Code Erreur, Source & MTTR) -->
                         <div class="flex items-center justify-between text-[11px] text-slate-500 dark:text-slate-400 pt-1 border-t border-slate-200/60 dark:border-slate-800/60">
-                            <span>📡 {{ $incident->source ?? 'Kibana Logs' }}</span>
+                            <span class="font-semibold text-slate-700 dark:text-slate-300">⚡ {{ $incident->error_code }}</span>
                             <span class="text-amber-500 font-bold">⏱️ {{ $mttr }}</span>
                         </div>
 

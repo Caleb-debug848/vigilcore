@@ -212,7 +212,11 @@ class Dashboard extends Component
                 $statuspage->resolveMatchingIncident($incident->title);
             }
 
-            $incident->update(['status' => 'resolved']);
+            $incident->update([
+                'status'      => 'resolved',
+                'is_resolved' => true,
+                'resolved_at' => now(),
+            ]);
             \Illuminate\Support\Facades\Cache::forget('vigilcore_dashboard_counts');
             \Illuminate\Support\Facades\Cache::forget('vigilcore_active_counts');
             \Illuminate\Support\Facades\Cache::forget('statuspage_components_cache');
