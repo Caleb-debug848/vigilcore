@@ -460,29 +460,29 @@
                     
                     <!-- Logo Officiel de Marque Dédié -->
                     <div class="flex items-center gap-3 min-w-0 flex-1">
-                        <div class="service-logo-box flex-shrink-0" style="width: 36px; height: 36px; min-width: 36px; min-height: 36px; max-width: 36px; max-height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 10px; padding: 4px; overflow: hidden;">
+                        <div class="service-logo-box flex-shrink-0" style="width: 36px; height: 36px; min-width: 36px; min-height: 36px; max-width: 36px; max-height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 9px; padding: 2px; overflow: hidden; background: #ffffff; border: 1px solid rgba(226, 232, 240, 0.9); box-shadow: 0 1px 3px rgba(0,0,0,0.08);">
                             @if(str_starts_with($key, 'orange'))
-                                <img src="{{ asset('images/services/orange.svg') }}" alt="Orange" style="width: 22px; height: 22px; max-width: 22px; max-height: 22px; object-fit: contain;">
+                                <img src="{{ asset('images/services/orange.svg') }}" alt="Orange" style="width: 100%; height: 100%; object-fit: contain; border-radius: 7px;">
                             @elseif(str_starts_with($key, 'mtn'))
-                                <img src="{{ asset('images/services/mtn.png') }}" alt="MTN" style="width: 24px; height: 24px; max-width: 24px; max-height: 24px; object-fit: contain;">
+                                <img src="{{ asset('images/services/mtn.png') }}" alt="MTN" style="width: 100%; height: 100%; object-fit: contain; border-radius: 7px;">
                             @elseif($key === 'camtel')
-                                <img src="{{ asset('images/services/camtel.png') }}" alt="Camtel" style="width: 24px; height: 24px; max-width: 24px; max-height: 24px; object-fit: contain;">
+                                <img src="{{ asset('images/services/camtel.png') }}" alt="Camtel" style="width: 100%; height: 100%; object-fit: contain; border-radius: 7px;">
                             @elseif($key === 'eneo')
-                                <img src="{{ asset('images/services/eneo.png') }}" alt="ENEO" style="width: 24px; height: 24px; max-width: 24px; max-height: 24px; object-fit: contain;">
+                                <img src="{{ asset('images/services/eneo.png') }}" alt="ENEO" style="width: 100%; height: 100%; object-fit: contain; border-radius: 7px;">
                             @elseif($key === 'camwater')
-                                <img src="{{ asset('images/services/camwater.png') }}" alt="Camwater" style="width: 24px; height: 24px; max-width: 24px; max-height: 24px; object-fit: contain;">
+                                <img src="{{ asset('images/services/camwater.png') }}" alt="Camwater" style="width: 100%; height: 100%; object-fit: contain; border-radius: 7px;">
                             @elseif($key === 'canal')
-                                <img src="{{ asset('images/services/canal.png') }}" alt="Canal+" style="width: 24px; height: 24px; max-width: 24px; max-height: 24px; object-fit: cover; border-radius: 6px;">
+                                <img src="{{ asset('images/services/canal.png') }}" alt="Canal+" style="width: 100%; height: 100%; object-fit: cover; border-radius: 7px;">
                             @elseif($key === 'dstv')
-                                <img src="{{ asset('images/services/dstv.svg') }}" alt="DSTV" style="width: 24px; height: 24px; max-width: 24px; max-height: 24px; object-fit: contain;">
+                                <img src="{{ asset('images/services/dstv.svg') }}" alt="DSTV" style="width: 100%; height: 100%; object-fit: contain; border-radius: 7px;">
                             @elseif($key === 'startimes')
-                                <img src="{{ asset('images/services/startimes.png') }}" alt="StarTimes" style="width: 24px; height: 24px; max-width: 24px; max-height: 24px; object-fit: contain;">
+                                <img src="{{ asset('images/services/startimes.png') }}" alt="StarTimes" style="width: 100%; height: 100%; object-fit: contain; border-radius: 7px;">
                             @elseif($key === 'sabc')
-                                <img src="{{ asset('images/services/sabc.png') }}" alt="Boissons du Cameroun" style="width: 24px; height: 24px; max-width: 24px; max-height: 24px; object-fit: contain;">
+                                <img src="{{ asset('images/services/sabc.png') }}" alt="Boissons du Cameroun" style="width: 100%; height: 100%; object-fit: contain; border-radius: 7px;">
                             @elseif($key === 'ecommerce')
-                                <img src="{{ asset('images/services/smobilpay-ecommerce.png') }}" alt="Smobilpay e-Commerce" style="width: 24px; height: 24px; max-width: 24px; max-height: 24px; object-fit: contain;">
+                                <img src="{{ asset('images/services/smobilpay-ecommerce.png') }}" alt="Smobilpay e-Commerce" style="width: 100%; height: 100%; object-fit: contain; border-radius: 7px;">
                             @else
-                                <img src="{{ asset('images/services/smobilpay.png') }}" alt="Smobilpay" style="width: 24px; height: 24px; max-width: 24px; max-height: 24px; object-fit: contain;">
+                                <img src="{{ asset('images/services/smobilpay.png') }}" alt="Smobilpay" style="width: 100%; height: 100%; object-fit: contain; border-radius: 7px;">
                             @endif
                         </div>
 
