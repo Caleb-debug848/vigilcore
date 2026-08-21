@@ -17,10 +17,10 @@
 
         <!-- ==================================================== -->
         <!-- 1. EN-TÊTE DE NAVIGATION (STREAMLINED & MOBILE-FIRST)-->
-        <!-- ==================================================== -->        <!-- ==================================================== -->
+        <!-- ==================================================== -->
         <!-- 1. EN-TÊTE DE NAVIGATION (100% MOBILE-FIRST ADAPTATIF)-->
         <!-- ==================================================== -->
-        <header class="flex items-center justify-between gap-2 sm:gap-4 p-2.5 sm:px-4 bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800/80 rounded-2xl shadow-xs transition-colors">
+        <header class="no-print sticky top-2 sm:top-3 z-40 flex items-center justify-between gap-2 sm:gap-4 p-2.5 sm:px-4 rounded-xl sm:rounded-2xl bg-white/95 dark:bg-[#111827]/95 backdrop-blur-md border border-slate-200 dark:border-slate-800 shadow-sm transition-all duration-200 animate-entrance-1">
             
             <!-- Gauche : Logo & Badge OPS-01 -->
             <div class="flex items-center gap-2 sm:gap-3 min-w-0 flex-shrink-0">
@@ -291,7 +291,7 @@
         <!-- ==================================================== -->
         <!-- 2. CARTES SYNTHÉTIQUES (3 MÉTRIQUES ESSENTIELLES)    -->
         <!-- ==================================================== -->
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 animate-entrance-2">
             
             <!-- Carte 1 : Incidents Actifs -->
             <div class="dash-card-studio p-4 flex flex-col justify-between">
@@ -352,7 +352,7 @@
         <!-- ==================================================== -->
         <!-- 2. BIS. CARTOGRAPHIE DES 20 SERVICES & SANTÉ EN DIRECT -->
         <!-- ==================================================== -->
-        <div class="dash-card-studio p-4 sm:p-5 space-y-4" 
+        <div class="dash-card-studio p-4 sm:p-5 space-y-4 animate-entrance-3" 
              x-data="{ 
                 showServicesGrid: true, 
                 selectedCat: 'all',
@@ -455,7 +455,9 @@
                     $cat = $service['category'];
                 @endphp
                 <div x-show="selectedCat === 'all' || selectedCat === '{{ $cat }}'"
-                     x-transition
+                     x-transition:enter="transition-all ease-out duration-200"
+                     x-transition:enter-start="opacity-0 scale-98 translate-y-1"
+                     x-transition:enter-end="opacity-100 scale-100 translate-y-0"
                      class="service-health-card group relative p-3 rounded-2xl flex items-center justify-between gap-3 {{ $isOk ? '' : 'bg-red-500/10 dark:bg-red-950/40 border-red-500/50 shadow-sm animate-pulse' }}">
                     
                     <!-- Logo Officiel de Marque Dédié -->
@@ -523,7 +525,7 @@
         <!-- ==================================================== -->
         <!-- 3. FLUX DES INCIDENTS (ADAPTATIF MOBILE & DESKTOP)   -->
         <!-- ==================================================== -->
-        <div class="dash-card-studio p-3.5 sm:p-5 space-y-4">
+        <div class="dash-card-studio p-3.5 sm:p-5 space-y-4 animate-entrance-4">
             
             <!-- Barre d'outils du tableau -->
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100 dark:border-slate-800">

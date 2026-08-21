@@ -601,6 +601,44 @@ html, body {
     display: block;
 }
 
+/* ========================================================== */
+/* STAGGERED ENTRANCE ANIMATIONS (FLUIDE, 60 FPS)             */
+/* ========================================================== */
+@keyframes subtleEntrance {
+    0% {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-entrance-1 {
+    animation: subtleEntrance 0.3s cubic-bezier(0.16, 1, 0.3, 1) 0ms both;
+}
+.animate-entrance-2 {
+    animation: subtleEntrance 0.35s cubic-bezier(0.16, 1, 0.3, 1) 40ms both;
+}
+.animate-entrance-3 {
+    animation: subtleEntrance 0.4s cubic-bezier(0.16, 1, 0.3, 1) 80ms both;
+}
+.animate-entrance-4 {
+    animation: subtleEntrance 0.45s cubic-bezier(0.16, 1, 0.3, 1) 120ms both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .animate-entrance-1,
+    .animate-entrance-2,
+    .animate-entrance-3,
+    .animate-entrance-4 {
+        animation: none !important;
+        opacity: 1 !important;
+        transform: none !important;
+    }
+}
+
 
 
 
