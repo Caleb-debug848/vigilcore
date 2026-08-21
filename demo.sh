@@ -1,14 +1,10 @@
 #!/usr/bin/env bash
 
 # ==============================================================================
-# VIGILCORE INCIDENT SIMULATOR (20 SERVICES & 4 ÉTAPES DÉDIÉES)
+# 🛡️ VIGILCORE INCIDENT SIMULATOR (CLI PRO STUDIO EDITION)
 # ==============================================================================
-# Ce script permet à l'opérateur de déclencher à la demande un incident réaliste
-# sur l'un des 20 services critiques de l'écosystème Maviance / Smobilpay.
-# Il envoie le webhook d'alerte directement à n8n qui orchestre :
-# 1. WhatsApp & Telegram
-# 2. Atlassian Statuspage (4 étapes : Investigating -> Identified -> Monitoring -> Resolved)
-# 3. VigilCore Dashboard (affichage temps réel & boîte noire JSON)
+# Plateforme de Télémétrie, Observabilité & Alerting de Haute Disponibilité
+# Écosystème : Maviance / Smobilpay • Douala Datacenter (Cameroun)
 # ==============================================================================
 
 N8N_URL="https://n8n.srv901529.hstgr.cloud/webhook/vigilcore-alert"
@@ -16,34 +12,93 @@ HOST_NAME="srv901529"
 NOW_WAT=$(date "+%d/%m/%Y %H:%M:%S (WAT - Douala)")
 NOW_ISO=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
 
+# --- COULEURS ANSI HAUTE DÉFINITION ---
+C_RESET="\033[0m"
+C_BOLD="\033[1m"
+C_DIM="\033[2m"
+
+# Palette Thématique VigilCore
+C_BLUE="\033[1;38;5;33m"
+C_NAVY="\033[38;5;27m"
+C_CYAN="\033[1;38;5;51m"
+C_GREEN="\033[1;38;5;48m"
+C_AMBER="\033[1;38;5;214m"
+C_PURPLE="\033[1;38;5;141m"
+C_RED="\033[1;38;5;196m"
+C_GRAY="\033[38;5;244m"
+C_WHITE="\033[1;37m"
+BG_BLUE="\033[48;5;21m"
+
 clear
-echo "================================================================================"
-echo "       VIGILCORE INCIDENT SIMULATOR (20 SERVICES & 4 ÉTAPES DÉDIÉES)      "
-echo "================================================================================"
-echo "--- PLATEFORMES MAVIANCE ---"
-echo "  1) Smobilpay Payment Platform & APIs       3) Agent & Merchant Payment Portal"
-echo "  2) Third Party Merchant API (S3P)          4) Smobilpay for e-commerce"
+
+# --- BANNIÈRE ASCII OFFICIELLE VIGILCORE ---
+echo -e "${C_BLUE}"
+echo "  ██╗   ██╗██╗ ██████╗ ██╗██╗      ██████╗ ██████╗ ██████╗ ███████╗"
+echo "  ██║   ██║██║██╔════╝ ██║██║     ██╔════╝██╔═══██╗██╔══██╗██╔════╝"
+echo "  ██║   ██║██║██║  ███╗██║██║     ██║     ██║   ██║██████╔╝█████╗  "
+echo "  ╚██╗ ██╔╝██║██║   ██║██║██║     ██║     ██║   ██║██╔══██╗██╔══╝  "
+echo "   ╚████╔╝ ██║╚██████╔╝██║███████╗╚██████╗╚██████╔╝██║  ██║███████╗"
+echo "    ╚═══╝  ╚═╝ ╚═════╝ ╚═╝╚══════╝ ╚═════╝ ╚═════╝ ╚═╝  ╚═╝╚══════╝"
+echo -e "${C_RESET}"
+echo -e "   ${C_BOLD}${C_WHITE}VIGILCORE OPS-01${C_RESET} ${C_GRAY}•${C_RESET} ${C_CYAN}Incident & SLA Orchestrator${C_RESET} ${C_GRAY}•${C_RESET} ${C_GREEN}20 Services Hub${C_RESET}"
+echo -e "   ${C_GRAY}Host: ${C_WHITE}${HOST_NAME}${C_RESET} ${C_GRAY}| Timezone: ${C_AMBER}Africa/Douala (WAT UTC+1)${C_RESET}"
+echo -e "${C_GRAY}────────────────────────────────────────────────────────────────────────────────${C_RESET}"
+
+# --- CATÉGORIE 1 : PLATEFORMES MAVIANCE ---
+echo -e " ${C_BOLD}${C_CYAN}🏦 1. PLATEFORMES MAVIANCE CORE${C_RESET}"
+printf "   ${C_BLUE}[%2d]${C_RESET} %-36s ${C_BLUE}[%2d]${C_RESET} %-36s\n" \
+  1 "Smobilpay Platform & APIs" \
+  3 "Agent & Merchant Portal"
+printf "   ${C_BLUE}[%2d]${C_RESET} %-36s ${C_BLUE}[%2d]${C_RESET} %-36s\n" \
+  2 "Third Party Merchant API (S3P)" \
+  4 "Smobilpay for e-commerce"
 echo ""
-echo "--- MOBILE MONEY & TÉLÉCOMS (CAMEROUN) ---"
-echo "  5) MTN Mobile Money (Général)              10) Orange Money : Disbursement (Retraits)"
-echo "  6) Orange Money (Général)                  11) MTN Recharge / Airtime"
-echo "  7) MTN MoMo : Collections (Encaissements)  12) Orange Recharge / Airtime"
-echo "  8) Orange Money : Collections              13) Camtel Recharge / Top-up"
-echo "  9) MTN MoMo : Disbursement (Retraits)"
+
+# --- CATÉGORIE 2 : MOBILE MONEY & TÉLÉCOMS ---
+echo -e " ${C_BOLD}${C_AMBER}📱 2. MOBILE MONEY & TÉLÉCOMS (CAMEROUN)${C_RESET}"
+printf "   ${C_AMBER}[%2d]${C_RESET} %-36s ${C_AMBER}[%2d]${C_RESET} %-36s\n" \
+  5 "MTN Mobile Money (Général)" \
+  10 "Orange Money : Disbursement (Retraits)"
+printf "   ${C_AMBER}[%2d]${C_RESET} %-36s ${C_AMBER}[%2d]${C_RESET} %-36s\n" \
+  6 "Orange Money (Général)" \
+  11 "MTN Recharge / Airtime"
+printf "   ${C_AMBER}[%2d]${C_RESET} %-36s ${C_AMBER}[%2d]${C_RESET} %-36s\n" \
+  7 "MTN MoMo : Collections" \
+  12 "Orange Recharge / Airtime"
+printf "   ${C_AMBER}[%2d]${C_RESET} %-36s ${C_AMBER}[%2d]${C_RESET} %-36s\n" \
+  8 "Orange Money : Collections" \
+  13 "Camtel Recharge / Top-up"
+printf "   ${C_AMBER}[%2d]${C_RESET} %-36s\n" \
+  9 "MTN MoMo : Disbursement (Retraits)"
 echo ""
-echo "--- FACTURES D'ÉNERGIE & D'EAU ---"
-echo "  14) Factures ENEO (Électricité / Prépayé)   15) Factures Camwater (Eau)"
+
+# --- CATÉGORIE 3 : FACTURIERS ÉNERGIE & EAU ---
+echo -e " ${C_BOLD}${C_GREEN}⚡ 3. FACTURES D'ÉNERGIE & D'EAU${C_RESET}"
+printf "   ${C_GREEN}[%2d]${C_RESET} %-36s ${C_GREEN}[%2d]${C_RESET} %-36s\n" \
+  14 "Factures ENEO (Électricité / Token)" \
+  15 "Factures Camwater (Eau)"
 echo ""
-echo "--- RÉABONNEMENTS TÉLÉVISION ---"
-echo "  16) Canal+ Télévision                       18) StarTimes TV"
-echo "  17) DSTV Télévision"
+
+# --- CATÉGORIE 4 : RÉABONNEMENTS TV ---
+echo -e " ${C_BOLD}${C_PURPLE}📺 4. RÉABONNEMENTS TÉLÉVISION${C_RESET}"
+printf "   ${C_PURPLE}[%2d]${C_RESET} %-36s ${C_PURPLE}[%2d]${C_RESET} %-36s\n" \
+  16 "Canal+ Télévision" \
+  18 "StarTimes TV"
+printf "   ${C_PURPLE}[%2d]${C_RESET} %-36s\n" \
+  17 "DSTV Télévision"
 echo ""
-echo "--- SERVICES RÉGIONAUX & PARTENAIRES ---"
-echo "  19) MTN Mobile Money Congo                  20) SABC Boissons (Paiements Marchands)"
+
+# --- CATÉGORIE 5 : RÉGIONAL & ENTREPRISES ---
+echo -e " ${C_BOLD}${C_CYAN}🌍 5. SERVICES RÉGIONAUX & PARTENAIRES${C_RESET}"
+printf "   ${C_CYAN}[%2d]${C_RESET} %-36s ${C_CYAN}[%2d]${C_RESET} %-36s\n" \
+  19 "MTN Mobile Money Congo" \
+  20 "SABC Boissons (Paiements Marchands)"
 echo ""
-echo "  0) Quitter"
-echo "================================================================================"
-read -p "Sélectionnez un service à tester [1-20] : " choice
+
+echo -e "   ${C_RED}[ 0]${C_RESET} ${C_GRAY}Annuler et Quitter${C_RESET}"
+echo -e "${C_GRAY}────────────────────────────────────────────────────────────────────────────────${C_RESET}"
+echo -ne " ${C_BOLD}${C_WHITE}👉 Sélectionnez un service à tester ${C_CYAN}[1-20]${C_WHITE} : ${C_RESET}"
+read choice
 
 case $choice in
   1)
@@ -227,19 +282,20 @@ case $choice in
     MSG_RES="Le service de paiement des commandes marchands SABC est pleinement opérationnel. Bonnes ventes à vous !"
     ;;
   0)
-    echo "Opération annulée. Aucun incident déclenché."
+    echo -e "${C_GRAY}Opération annulée. Aucun incident déclenché.${C_RESET}"
     exit 0
     ;;
   *)
-    echo "Option invalide. Veuillez choisir un chiffre entre 1 et 20."
+    echo -e "${C_RED}❌ Option invalide. Veuillez choisir un chiffre entre 1 et 20.${C_RESET}"
     exit 1
     ;;
 esac
 
 echo ""
-echo "⚡ INITIALISATION DU SCÉNARIO D'INCIDENT..."
-echo "   Service cible : $NAME ($KEY)"
-echo "   Gravité :       CRITICAL (P1)"
+echo -e "${C_BOLD}${C_RED}⚡ INITIALISATION DU SCÉNARIO D'INCIDENT CRITIQUE...${C_RESET}"
+echo -e "   ${C_GRAY}Service Cible :${C_RESET} ${C_BOLD}${C_WHITE}$NAME${C_RESET} ${C_GRAY}(key: ${KEY})${C_RESET}"
+echo -e "   ${C_GRAY}Niveau Gravité:${C_RESET} ${C_RED}● CRITICAL (P1 / Haute Priorité)${C_RESET}"
+echo -e "   ${C_GRAY}Datacenter :   ${C_RESET} ${C_WHITE}Douala Datacenter (Cameroun)${C_RESET}"
 echo ""
 
 # Construction du payload JSON certifié
@@ -274,60 +330,60 @@ PAYLOAD=$(cat <<EOF
 EOF
 )
 
-echo "[1/3] Injection de traces d'erreurs HTTP 500/504 dans Elasticsearch..."
+# --- 1/3 INJECTION DANS ELASTICSEARCH ---
+echo -e "${C_CYAN}[1/3]${C_RESET} ${C_WHITE}Injection des traces HTTP 504 dans Elasticsearch...${C_RESET}"
 ES_LOG=$(cat <<EOF
 {
   "@timestamp": "$NOW_ISO",
   "service": { "name": "$KEY" },
+  "component": "$KEY",
+  "service_name": "$NAME",
   "http": { "response": { "status_code": 504 } },
   "log": { "level": "error" },
   "message": "Gateway Timeout 504 on endpoint /api/v2/$KEY/validate - $TITLE",
   "host": { "name": "$HOST_NAME" },
-  "component": "$KEY",
   "source": "Kibana Logs Engine"
 }
 EOF
 )
 
-# Envoi du log dans Elasticsearch (compatible Data View 'All logs' logs-*-* et filebeat)
 curl -s -o /dev/null -X POST "http://127.0.0.1:9200/logs-generic-default/_doc" \
-  -H "Content-Type: application/json" \
-  -d "$ES_LOG" 2>/dev/null || true
+  -H "Content-Type: application/json" -d "$ES_LOG" 2>/dev/null || true
 
 curl -s -o /dev/null -X POST "http://127.0.0.1:9200/filebeat-logs/_doc" \
-  -H "Content-Type: application/json" \
-  -d "$ES_LOG" 2>/dev/null || true
+  -H "Content-Type: application/json" -d "$ES_LOG" 2>/dev/null || true
 
-echo "      ✓ Traces et pics d'erreurs indexés dans Elasticsearch (Visibles dans Kibana)"
+echo -e "      ${C_GREEN}✓ Traces et pics d'erreurs indexés dans Elasticsearch (Visibles dans Kibana)${C_RESET}"
 
-echo "[2/3] Déclenchement de l'alerte orchestrée sur n8n..."
+# --- 2/3 ORCHESTRATION N8N ---
+echo -e "${C_PURPLE}[2/3]${C_RESET} ${C_WHITE}Transmission de l'alerte à l'orchestrateur n8n...${C_RESET}"
 HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" -X POST "$N8N_URL" \
   -H "Content-Type: application/json" \
   -d "$PAYLOAD")
 
 if [ "$HTTP_STATUS" -eq 200 ] || [ "$HTTP_STATUS" -eq 201 ]; then
-  echo "      ✓ Alerte transmise avec succès à n8n (HTTP $HTTP_STATUS) !"
+  echo -e "      ${C_GREEN}✓ Alerte transmise avec succès à n8n (HTTP $HTTP_STATUS) !${C_RESET}"
 else
-  echo "      ⚠️  Réponse n8n : HTTP $HTTP_STATUS"
+  echo -e "      ${C_AMBER}⚠️  Réponse n8n : HTTP $HTTP_STATUS (Vérifiez le webhook n8n)${C_RESET}"
 fi
 
-echo "[3/3] Enregistrement en base locale VigilCore..."
-# Appel direct à l'API interne VigilCore pour enregistrer l'incident si besoin
+# --- 3/3 SYNCHRONISATION VIGILCORE ---
+echo -e "${C_BLUE}[3/3]${C_RESET} ${C_WHITE}Synchronisation du Dashboard VigilCore (Temps Réel)...${C_RESET}"
 curl -s -o /dev/null -X POST "http://127.0.0.1:8000/api/webhooks/alerts" \
   -H "Content-Type: application/json" \
   -d "$PAYLOAD" 2>/dev/null || true
 
-echo "      ✓ Incident synchronisé dans le Dashboard VigilCore"
+echo -e "      ${C_GREEN}✓ Carte de service basculée en ROUGE (CRITICAL) sur VigilCore${C_RESET}"
 
+# --- CHRONOLOGIE EN DIRECT ---
 echo ""
-echo "================================================================================"
-echo "✓ LE CYCLE AUTOMATIQUE EST EN COURS SUR VOS SYSTÈMES !"
-echo "================================================================================"
-echo " Chronologie en direct sur la Statuspage :"
-echo "  🔴 T + 0s   : INVESTIGATING -> \"$(echo $MSG_INV | cut -c 1-65)...\""
-echo "  🟠 T + 40s  : IDENTIFIED    -> \"$(echo $MSG_ID | cut -c 1-65)...\""
-echo "  🟡 T + 80s  : MONITORING    -> \"$(echo $MSG_MON | cut -c 1-65)...\""
-echo "  🟢 T + 120s : RESOLVED      -> \"$(echo $MSG_RES | cut -c 1-65)...\""
-echo "================================================================================"
-echo " Les messages personnalisés ci-dessus défileront automatiquement sans intervention."
+echo -e "${C_GRAY}════════════════════════════════════════════════════════════════════════════════${C_RESET}"
+echo -e " ${C_BOLD}${C_GREEN}✓ CYCLE AUTOMATISÉ EN COURS SUR ATLASSIAN STATUSPAGE & WHATSAPP${C_RESET}"
+echo -e "${C_GRAY}════════════════════════════════════════════════════════════════════════════════${C_RESET}"
+echo -e "  ${C_RED}● T + 0s   : INVESTIGATING${C_RESET} ➔ \"${C_DIM}$(echo $MSG_INV | cut -c 1-60)...${C_RESET}\""
+echo -e "  ${C_AMBER}● T + 40s  : IDENTIFIED   ${C_RESET} ➔ \"${C_DIM}$(echo $MSG_ID | cut -c 1-60)...${C_RESET}\""
+echo -e "  ${C_BLUE}● T + 80s  : MONITORING   ${C_RESET} ➔ \"${C_DIM}$(echo $MSG_MON | cut -c 1-60)...${C_RESET}\""
+echo -e "  ${C_GREEN}● T + 120s : RESOLVED     ${C_RESET} ➔ \"${C_DIM}$(echo $MSG_RES | cut -c 1-60)...${C_RESET}\""
+echo -e "${C_GRAY}════════════════════════════════════════════════════════════════════════════════${C_RESET}"
+echo -e " ${C_CYAN}ℹ️  Les messages partenaires ci-dessus défileront automatiquement sans intervention.${C_RESET}"
 echo ""
