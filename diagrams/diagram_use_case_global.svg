@@ -1,0 +1,201 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1320 920" width="100%" height="100%" style="background-color: #ffffff; font-family: 'Segoe UI', Calibri, Arial, sans-serif;">
+    <defs>
+        <!-- Filtres et ombres douces  -->
+        <filter id="shadow-pamc-g" x="-10%" y="-10%" width="130%" height="130%">
+            <feDropShadow dx="2" dy="3" stdDeviation="3" flood-color="#000000" flood-opacity="0.10"/>
+        </filter>
+        <filter id="actor-shadow-pamc-g" x="-20%" y="-20%" width="140%" height="140%">
+            <feDropShadow dx="1" dy="2" stdDeviation="2" flood-color="#000000" flood-opacity="0.12"/>
+        </filter>
+
+        <!-- Marqueur Flèche Ouverte <<include>> Normée UML 2.5 -->
+        <marker id="arrow-inc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M 0 1.5 L 9 5 L 0 8.5" fill="none" stroke="#0020B2" stroke-width="1.8" stroke-linecap="round"/>
+        </marker>
+    </defs>
+
+    <!-- ========================================================================= -->
+    <!-- CADRE DU SYSTÈME (POWERAMC BOUNDARY BOX)                                 -->
+    <!-- ========================================================================= -->
+    <rect x="270" y="30" width="730" height="860" rx="10" ry="10" fill="#f8fafc" stroke="#0020B2" stroke-width="2.5" filter="url(#shadow-pamc-g)"/>
+    
+    <!-- En-tête  en haut à droite du cadre -->
+    <path d="M 700 30 L 1000 30 L 1000 70 L 685 70 Z" fill="#0020B2"/>
+    <text x="842" y="56" fill="#ffffff" font-size="15" font-weight="bold" text-anchor="middle" letter-spacing="0.5">Système : VigilCore</text>
+
+
+    <!-- ========================================================================= -->
+    <!-- ACTEURS HUMAINS (À GAUCHE - CONFORMITÉ AUX DIRECTIVES DU PROF)            -->
+    <!-- ========================================================================= -->
+    
+    <!-- 1. Opérateur / Technicien de Supervision (Centre: X=110, Y=330) -->
+    <g transform="translate(70, 255)" filter="url(#actor-shadow-pamc-g)">
+        <circle cx="40" cy="18" r="17" fill="#ffffff" stroke="#000000" stroke-width="2.2"/>
+        <line x1="40" y1="35" x2="40" y2="76" stroke="#000000" stroke-width="2.2"/>
+        <line x1="10" y1="52" x2="70" y2="52" stroke="#000000" stroke-width="2.2"/>
+        <line x1="40" y1="76" x2="14" y2="110" stroke="#000000" stroke-width="2.2"/>
+        <line x1="40" y1="76" x2="66" y2="110" stroke="#000000" stroke-width="2.2"/>
+        <text x="40" y="132" fill="#000000" font-size="13" font-weight="bold" text-anchor="middle">Opérateur / Technicien</text>
+        <text x="40" y="149" fill="#334155" font-size="11.5" font-weight="bold" text-anchor="middle">de Supervision</text>
+    </g>
+
+    <!-- 2. Administrateur Système (Centre: X=110, Y=660) -->
+    <g transform="translate(70, 585)" filter="url(#actor-shadow-pamc-g)">
+        <circle cx="40" cy="18" r="17" fill="#ffffff" stroke="#000000" stroke-width="2.2"/>
+        <line x1="40" y1="35" x2="40" y2="76" stroke="#000000" stroke-width="2.2"/>
+        <line x1="10" y1="52" x2="70" y2="52" stroke="#000000" stroke-width="2.2"/>
+        <line x1="40" y1="76" x2="14" y2="110" stroke="#000000" stroke-width="2.2"/>
+        <line x1="40" y1="76" x2="66" y2="110" stroke="#000000" stroke-width="2.2"/>
+        <text x="40" y="132" fill="#000000" font-size="13" font-weight="bold" text-anchor="middle">Administrateur</text>
+        <text x="40" y="149" fill="#334155" font-size="11.5" font-weight="bold" text-anchor="middle">Système</text>
+    </g>
+
+    <!-- 3. Partenaire Marchand / Client Externe (Centre: X=110, Y=810) -->
+    <g transform="translate(70, 750)" filter="url(#actor-shadow-pamc-g)">
+        <circle cx="40" cy="15" r="14" fill="#ffffff" stroke="#000000" stroke-width="2"/>
+        <line x1="40" y1="29" x2="40" y2="58" stroke="#000000" stroke-width="2"/>
+        <line x1="16" y1="42" x2="64" y2="42" stroke="#000000" stroke-width="2"/>
+        <line x1="40" y1="58" x2="18" y2="86" stroke="#000000" stroke-width="2"/>
+        <line x1="40" y1="58" x2="62" y2="86" stroke="#000000" stroke-width="2"/>
+        <text x="40" y="104" fill="#000000" font-size="12.5" font-weight="bold" text-anchor="middle">Partenaire Marchand</text>
+    </g>
+
+
+    <!-- ========================================================================= -->
+    <!-- ACTEURS SYSTÈMES TIERS EXTERNES (À DROITE, X=1030)                        -->
+    <!-- ========================================================================= -->
+    
+    <!-- 1. Passerelles de Paiement Partenaires (Centre Y: 200) -->
+    <g transform="translate(1030, 168)" filter="url(#shadow-pamc-g)">
+        <rect x="0" y="0" width="250" height="64" rx="8" fill="#ffffff" stroke="#0020B2" stroke-width="2.2"/>
+        <text x="125" y="23" fill="#475569" font-size="11.5" font-weight="bold" text-anchor="middle">&lt;&lt;Système Tiers Externe&gt;&gt;</text>
+        <text x="125" y="43" fill="#0f172a" font-size="13" font-weight="bold" text-anchor="middle">Passerelles Partenaires</text>
+        <text x="125" y="57" fill="#475569" font-size="10.5" font-weight="bold" text-anchor="middle">(Orange, MTN, ENEO, Camwater...)</text>
+    </g>
+
+    <!-- 2. Passerelle WhatsApp (Evolution API) (Centre Y: 320) -->
+    <g transform="translate(1030, 288)" filter="url(#shadow-pamc-g)">
+        <rect x="0" y="0" width="250" height="64" rx="8" fill="#ffffff" stroke="#16a34a" stroke-width="2.2"/>
+        <text x="125" y="23" fill="#475569" font-size="11.5" font-weight="bold" text-anchor="middle">&lt;&lt;Système Tiers Externe&gt;&gt;</text>
+        <text x="125" y="43" fill="#16a34a" font-size="13" font-weight="bold" text-anchor="middle">Passerelle WhatsApp</text>
+        <text x="125" y="57" fill="#475569" font-size="10.5" font-weight="bold" text-anchor="middle">(Evolution API / Docker)</text>
+    </g>
+
+
+    <!-- ========================================================================= -->
+    <!-- CAS D'UTILISATION (DEUX COLONNES DÉCOUPLÉES SANS AUCUN CHEVAUCHEMENT)    -->
+    <!-- ========================================================================= -->
+
+    <!-- CU 0 : S'authentifier (Centré en haut de la colonne 1) -->
+    <g transform="translate(460, 90)" filter="url(#shadow-pamc-g)">
+        <ellipse cx="0" cy="0" rx="110" ry="26" fill="#ffffff" stroke="#000000" stroke-width="2.2"/>
+        <text x="0" y="5" fill="#000000" font-size="13.5" font-weight="bold" text-anchor="middle">S'authentifier</text>
+    </g>
+
+    <!-- COLONNE 1 : INTERACTIONS UTILISATEURS (CENTRE X = 460) -->
+
+    <!-- CU 1 : Surveiller la disponibilité des 20 passerelles en direct -->
+    <g transform="translate(460, 200)" filter="url(#shadow-pamc-g)">
+        <ellipse cx="0" cy="0" rx="160" ry="34" fill="#ffffff" stroke="#000000" stroke-width="2.2"/>
+        <text x="0" y="-4" fill="#000000" font-size="13" font-weight="bold" text-anchor="middle">Surveiller la disponibilité des</text>
+        <text x="0" y="15" fill="#000000" font-size="13" font-weight="bold" text-anchor="middle">20 passerelles en direct</text>
+    </g>
+
+    <!-- CU 2 : Acquitter et consigner la résolution d'un incident -->
+    <g transform="translate(460, 320)" filter="url(#shadow-pamc-g)">
+        <ellipse cx="0" cy="0" rx="155" ry="32" fill="#ffffff" stroke="#000000" stroke-width="2.2"/>
+        <text x="0" y="-3" fill="#000000" font-size="13" font-weight="bold" text-anchor="middle">Acquitter et consigner</text>
+        <text x="0" y="15" fill="#000000" font-size="13" font-weight="bold" text-anchor="middle">la résolution d'un incident</text>
+    </g>
+
+    <!-- CU 3 : Simuler une panne sur banc d'essai -->
+    <g transform="translate(460, 440)" filter="url(#shadow-pamc-g)">
+        <ellipse cx="0" cy="0" rx="150" ry="30" fill="#ffffff" stroke="#000000" stroke-width="2.2"/>
+        <text x="0" y="-3" fill="#000000" font-size="13" font-weight="bold" text-anchor="middle">Simuler une panne</text>
+        <text x="0" y="15" fill="#000000" font-size="13" font-weight="bold" text-anchor="middle">sur banc d'essai</text>
+    </g>
+
+    <!-- CU 4 : Générer et exporter les rapports d'audit SLA (Excel / PDF) -->
+    <g transform="translate(460, 560)" filter="url(#shadow-pamc-g)">
+        <ellipse cx="0" cy="0" rx="165" ry="34" fill="#ffffff" stroke="#000000" stroke-width="2.2"/>
+        <text x="0" y="-4" fill="#000000" font-size="13.5" font-weight="bold" text-anchor="middle">Générer et exporter les</text>
+        <text x="0" y="16" fill="#000000" font-size="13.5" font-weight="bold" text-anchor="middle">rapports d'audit SLA (Excel / PDF)</text>
+    </g>
+
+    <!-- CU 5 : Configurer les passerelles et les seuils de sondes -->
+    <g transform="translate(460, 690)" filter="url(#shadow-pamc-g)">
+        <ellipse cx="0" cy="0" rx="160" ry="32" fill="#ffffff" stroke="#000000" stroke-width="2.2"/>
+        <text x="0" y="-3" fill="#000000" font-size="13" font-weight="bold" text-anchor="middle">Configurer les passerelles</text>
+        <text x="0" y="15" fill="#000000" font-size="13" font-weight="bold" text-anchor="middle">et les seuils de sondes</text>
+    </g>
+
+    <!-- CU 6 : Consulter la page publique d'état -->
+    <g transform="translate(460, 810)" filter="url(#shadow-pamc-g)">
+        <ellipse cx="0" cy="0" rx="150" ry="30" fill="#ffffff" stroke="#000000" stroke-width="2.2"/>
+        <text x="0" y="5" fill="#000000" font-size="13" font-weight="bold" text-anchor="middle">Consulter la page publique d'état</text>
+    </g>
+
+
+    <!-- COLONNE 2 : TRAITEMENTS AUTOMATISÉS & MOTEUR (CENTRE X = 830) -->
+
+    <!-- CU 7 : Détecter et consigner les incidents (Boîte Noire) -->
+    <g transform="translate(830, 200)" filter="url(#shadow-pamc-g)">
+        <ellipse cx="0" cy="0" rx="150" ry="34" fill="#ffffff" stroke="#0020B2" stroke-width="2.2"/>
+        <text x="0" y="-4" fill="#0020B2" font-size="13" font-weight="bold" text-anchor="middle">Détecter et consigner les</text>
+        <text x="0" y="15" fill="#0020B2" font-size="13" font-weight="bold" text-anchor="middle">incidents (Boîte Noire)</text>
+    </g>
+
+    <!-- CU 8 : Diffuser les alertes d'incident en temps réel -->
+    <g transform="translate(830, 320)" filter="url(#shadow-pamc-g)">
+        <ellipse cx="0" cy="0" rx="150" ry="32" fill="#ffffff" stroke="#16a34a" stroke-width="2.2"/>
+        <text x="0" y="-3" fill="#16a34a" font-size="13" font-weight="bold" text-anchor="middle">Diffuser les alertes d'incident</text>
+        <text x="0" y="15" fill="#16a34a" font-size="13" font-weight="bold" text-anchor="middle">en temps réel (WhatsApp)</text>
+    </g>
+
+    <!-- CU 9 : Calculer automatiquement les métriques SLA (Tâche de fond) -->
+    <g transform="translate(830, 560)" filter="url(#shadow-pamc-g)">
+        <ellipse cx="0" cy="0" rx="150" ry="34" fill="#ffffff" stroke="#0020B2" stroke-width="2.2"/>
+        <text x="0" y="-4" fill="#0020B2" font-size="13" font-weight="bold" text-anchor="middle">Calculer automatiquement</text>
+        <text x="0" y="15" fill="#0020B2" font-size="13" font-weight="bold" text-anchor="middle">les métriques SLA (Uptime, MTTR)</text>
+    </g>
+
+
+    <!-- ========================================================================= -->
+    <!-- LIAISONS D'ASSOCIATION ACTEURS -> CAS D'UTILISATION                       -->
+    <!-- ========================================================================= -->
+
+    <!-- 1. LIAISONS DE L'OPÉRATEUR DE SUPERVISION -->
+    <line x1="145" y1="300" x2="300" y2="200" stroke="#000000" stroke-width="2"/>
+    <line x1="145" y1="325" x2="305" y2="320" stroke="#000000" stroke-width="2"/>
+    <line x1="145" y1="350" x2="310" y2="440" stroke="#000000" stroke-width="2"/>
+    <line x1="145" y1="375" x2="295" y2="550" stroke="#000000" stroke-width="2"/>
+
+    <!-- 2. LIAISONS DE L'ADMINISTRATEUR SYSTÈME -->
+    <line x1="145" y1="640" x2="295" y2="570" stroke="#000000" stroke-width="2"/>
+    <line x1="145" y1="660" x2="300" y2="690" stroke="#000000" stroke-width="2"/>
+
+    <!-- 3. LIAISON DU PARTENAIRE MARCHAND -->
+    <line x1="145" y1="810" x2="310" y2="810" stroke="#000000" stroke-width="2"/>
+
+    <!-- 4. LIAISONS DES SYSTÈMES TIERS EXTERNES (DROITE) -->
+    <line x1="1030" y1="200" x2="980" y2="200" stroke="#000000" stroke-width="2"/>
+    <line x1="1030" y1="320" x2="980" y2="320" stroke="#000000" stroke-width="2"/>
+
+
+    <!-- ========================================================================= -->
+    <!-- RELATIONS <<include>> NORMALISÉES (TYPOGRAPHIE EXTRA-LISIBLE)             -->
+    <!-- ========================================================================= -->
+
+    <!-- 1. <<include>> : Surveiller -> S'authentifier -->
+    <line x1="460" y1="166" x2="460" y2="116" stroke="#0020B2" stroke-width="1.8" stroke-dasharray="5 4" marker-end="url(#arrow-inc)"/>
+    <text x="472" y="145" fill="#0020B2" font-size="12" font-style="italic" font-weight="bold">&lt;&lt;include&gt;&gt;</text>
+
+    <!-- 2. <<include>> : Détecter Incident -> Diffuser Alertes -->
+    <line x1="830" y1="234" x2="830" y2="288" stroke="#0020B2" stroke-width="1.8" stroke-dasharray="5 4" marker-end="url(#arrow-inc)"/>
+    <text x="842" y="265" fill="#0020B2" font-size="12" font-style="italic" font-weight="bold">&lt;&lt;include&gt;&gt;</text>
+
+    <!-- 3. <<include>> : Générer Rapports SLA -> Calculer Métriques SLA -->
+    <line x1="625" y1="560" x2="680" y2="560" stroke="#0020B2" stroke-width="1.8" stroke-dasharray="5 4" marker-end="url(#arrow-inc)"/>
+    <text x="652" y="548" fill="#0020B2" font-size="12" font-style="italic" font-weight="bold" text-anchor="middle">&lt;&lt;include&gt;&gt;</text>
+
+</svg>

@@ -1,0 +1,216 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1380 880" width="100%" height="100%" style="background-color: #ffffff; font-family: 'Segoe UI', Calibri, Arial, sans-serif;">
+    <defs>
+        <!-- Filtre ombre douce  -->
+        <filter id="shadow-dep2" x="-10%" y="-10%" width="130%" height="130%">
+            <feDropShadow dx="2" dy="3" stdDeviation="3" flood-color="#000000" flood-opacity="0.12"/>
+        </filter>
+    </defs>
+
+    <!-- CADRE GÉNÉRAL DU DIAGRAMME DE DÉPLOIEMENT POWERAMC -->
+    <rect x="20" y="20" width="1340" height="840" rx="8" ry="8" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5" filter="url(#shadow-dep2)"/>
+    
+    <!-- BANDEAU DE TITRE UML POWERAMC -->
+    <path d="M 20 20 L 740 20 L 765 48 L 740 48 L 20 48 Z" fill="#0020B2"/>
+    <text x="35" y="37" fill="#ffffff" font-size="14" font-weight="bold" letter-spacing="0.5">
+        dep : Déploiement — Cas 2 : Audit SLA, Haute Disponibilité &amp; Preuves (VigilCore)
+    </text>
+
+    <!-- ========================================================================= -->
+    <!-- NŒUD 1 : POSTE AUDITEUR & COMITÉS BANCAIRES                               -->
+    <!-- Position: X=50, Y=90 | L=310, H=240, Profondeur 3D=18                    -->
+    <!-- ========================================================================= -->
+    <g transform="translate(50, 90)" filter="url(#shadow-dep2)">
+        <polygon points="0 18, 18 0, 328 0, 310 18" fill="#bae6fd" stroke="#0284c7" stroke-width="1.4"/>
+        <polygon points="310 18, 328 0, 328 242, 310 260" fill="#7dd3fc" stroke="#0284c7" stroke-width="1.4"/>
+        <rect x="0" y="18" width="310" height="242" fill="#e0f2fe" stroke="#0284c7" stroke-width="1.4"/>
+        <text x="155" y="38" fill="#0369a1" font-size="11" font-style="italic" text-anchor="middle">&lt;&lt;device&gt;&gt;</text>
+        <text x="155" y="54" fill="#000000" font-size="13" font-weight="bold" text-anchor="middle">Poste Auditeur / Comité de Direction</text>
+        
+        <!-- Composant 1 : Navigateur Web IHM Audit -->
+        <g transform="translate(20, 75)">
+            <rect x="15" y="0" width="255" height="64" fill="#ffffff" stroke="#0284c7" stroke-width="1.2"/>
+            <rect x="5" y="10" width="20" height="12" fill="#bae6fd" stroke="#0284c7" stroke-width="1"/>
+            <rect x="5" y="36" width="20" height="12" fill="#bae6fd" stroke="#0284c7" stroke-width="1"/>
+            <text x="145" y="26" fill="#000000" font-size="12" font-weight="bold" text-anchor="middle">Portail d'Audit Web (Livewire)</text>
+            <text x="145" y="47" fill="#334155" font-size="10.5" text-anchor="middle">Choix de la période &amp; calcul des coupures</text>
+        </g>
+
+        <!-- Composant 2 : Suite Bureautique & Visionneuse -->
+        <g transform="translate(20, 155)">
+            <rect x="15" y="0" width="255" height="68" fill="#ffffff" stroke="#0284c7" stroke-width="1.2"/>
+            <rect x="5" y="10" width="20" height="12" fill="#bae6fd" stroke="#0284c7" stroke-width="1"/>
+            <rect x="5" y="38" width="20" height="12" fill="#bae6fd" stroke="#0284c7" stroke-width="1"/>
+            <text x="145" y="26" fill="#000000" font-size="12" font-weight="bold" text-anchor="middle">Lecteur Excel &amp; PDF Signé</text>
+            <text x="145" y="46" fill="#334155" font-size="10.5" text-anchor="middle">Registre d'audit 12 colonnes</text>
+            <text x="145" y="60" fill="#334155" font-size="10" text-anchor="middle">Contrôle de l'empreinte SHA-256</text>
+        </g>
+    </g>
+
+
+    <!-- LIAISON 1 : POSTE AUDITEUR -> SERVEUR AUDIT VIGILCORE -->
+    <line x1="378" y1="210" x2="480" y2="210" stroke="#000000" stroke-width="1.8"/>
+    <text x="429" y="198" fill="#0020B2" font-size="11" font-weight="bold" text-anchor="middle">&lt;&lt;protocol&gt;&gt;</text>
+    <text x="429" y="228" fill="#000000" font-size="10.5" font-weight="bold" text-anchor="middle">HTTPS (443)</text>
+
+
+    <!-- ========================================================================= -->
+    <!-- NŒUD 2 : SERVEUR DE CALCUL & CERTIFICATION SLA (VIGILCORE AUDIT ENGINE)   -->
+    <!-- Position: X=480, Y=75 | L=410, H=340, Profondeur 3D=18                   -->
+    <!-- ========================================================================= -->
+    <g transform="translate(480, 75)" filter="url(#shadow-dep2)">
+        <polygon points="0 18, 18 0, 428 0, 410 18" fill="#fed7aa" stroke="#ea580c" stroke-width="1.4"/>
+        <polygon points="410 18, 428 0, 428 342, 410 360" fill="#fdba74" stroke="#ea580c" stroke-width="1.4"/>
+        <rect x="0" y="18" width="410" height="342" fill="#fff7ed" stroke="#ea580c" stroke-width="1.4"/>
+        <text x="205" y="38" fill="#c2410c" font-size="11" font-style="italic" text-anchor="middle">&lt;&lt;execution environment&gt;&gt;</text>
+        <text x="205" y="54" fill="#000000" font-size="13" font-weight="bold" text-anchor="middle">Moteur d'Audit &amp; Certification SLA</text>
+        
+        <!-- Composant 1 : Constructeur Tableur 12 Colonnes -->
+        <g transform="translate(20, 70)">
+            <rect x="15" y="0" width="360" height="54" fill="#ffffff" stroke="#ea580c" stroke-width="1.2"/>
+            <rect x="5" y="8" width="20" height="12" fill="#fed7aa" stroke="#ea580c" stroke-width="1"/>
+            <rect x="5" y="30" width="20" height="12" fill="#fed7aa" stroke="#ea580c" stroke-width="1"/>
+            <text x="195" y="22" fill="#000000" font-size="12" font-weight="bold" text-anchor="middle">Générateur Excel 12 Colonnes</text>
+            <text x="195" y="40" fill="#334155" font-size="10.5" text-anchor="middle">Fichier XLSX avec formules &amp; calcul des pénalités</text>
+        </g>
+
+        <!-- Composant 2 : Rendu PDF Paysage A4 -->
+        <g transform="translate(20, 135)">
+            <rect x="15" y="0" width="360" height="54" fill="#ffffff" stroke="#ea580c" stroke-width="1.2"/>
+            <rect x="5" y="8" width="20" height="12" fill="#fed7aa" stroke="#ea580c" stroke-width="1"/>
+            <rect x="5" y="30" width="20" height="12" fill="#fed7aa" stroke="#ea580c" stroke-width="1"/>
+            <text x="195" y="22" fill="#000000" font-size="12" font-weight="bold" text-anchor="middle">Générateur PDF Paysage A4</text>
+            <text x="195" y="40" fill="#334155" font-size="10.5" text-anchor="middle">Mise en page certifiée &amp; bilan des 20 services</text>
+        </g>
+
+        <!-- Composant 3 : Module de Scellement SHA-256 -->
+        <g transform="translate(20, 200)">
+            <rect x="15" y="0" width="360" height="54" fill="#ffffff" stroke="#ea580c" stroke-width="1.2"/>
+            <rect x="5" y="8" width="20" height="12" fill="#fed7aa" stroke="#ea580c" stroke-width="1"/>
+            <rect x="5" y="30" width="20" height="12" fill="#fed7aa" stroke="#ea580c" stroke-width="1"/>
+            <text x="195" y="22" fill="#000000" font-size="12" font-weight="bold" text-anchor="middle">Module de Signature SHA-256</text>
+            <text x="195" y="40" fill="#334155" font-size="10.5" text-anchor="middle">Calcul d'une empreinte infalsifiable certifiée</text>
+        </g>
+
+        <!-- Composant 4 : Reconciliateur SLA -->
+        <g transform="translate(20, 265)">
+            <rect x="15" y="0" width="360" height="54" fill="#ffffff" stroke="#ea580c" stroke-width="1.2"/>
+            <rect x="5" y="8" width="20" height="12" fill="#fed7aa" stroke="#ea580c" stroke-width="1"/>
+            <rect x="5" y="30" width="20" height="12" fill="#fed7aa" stroke="#ea580c" stroke-width="1"/>
+            <text x="195" y="22" fill="#000000" font-size="12" font-weight="bold" text-anchor="middle">Calculateur de Disponibilité SLA</text>
+            <text x="195" y="40" fill="#334155" font-size="10.5" text-anchor="middle">Vérification de l'objectif de 99.9% de disponibilité</text>
+        </g>
+    </g>
+
+
+    <!-- ========================================================================= -->
+    <!-- NŒUD 3 : CLUSTER POSTGRESQL EN HAUTE DISPONIBILITÉ (HA REPLICATION)       -->
+    <!-- Position: X=950, Y=75 | L=360, H=340, Profondeur 3D=18                   -->
+    <!-- ========================================================================= -->
+    <g transform="translate(950, 75)" filter="url(#shadow-dep2)">
+        <polygon points="0 18, 18 0, 378 0, 360 18" fill="#ddd6fe" stroke="#7c3aed" stroke-width="1.4"/>
+        <polygon points="360 18, 378 0, 378 342, 360 360" fill="#c4b5fd" stroke="#7c3aed" stroke-width="1.4"/>
+        <rect x="0" y="18" width="360" height="342" fill="#f5f3ff" stroke="#7c3aed" stroke-width="1.4"/>
+        <text x="180" y="38" fill="#6d28d9" font-size="11" font-style="italic" text-anchor="middle">&lt;&lt;device cluster&gt;&gt;</text>
+        <text x="180" y="54" fill="#000000" font-size="13" font-weight="bold" text-anchor="middle">Base PostgreSQL 16 (Haute Disponibilité)</text>
+        
+        <!-- Composant Nœud Primaire -->
+        <g transform="translate(18, 75)">
+            <rect x="15" y="0" width="310" height="64" fill="#ffffff" stroke="#7c3aed" stroke-width="1.2"/>
+            <rect x="5" y="10" width="20" height="12" fill="#ddd6fe" stroke="#7c3aed" stroke-width="1"/>
+            <rect x="5" y="36" width="20" height="12" fill="#ddd6fe" stroke="#7c3aed" stroke-width="1"/>
+            <text x="170" y="26" fill="#000000" font-size="12" font-weight="bold" text-anchor="middle">Base Principale (Écriture/Lecture)</text>
+            <text x="170" y="47" fill="#334155" font-size="10.5" text-anchor="middle">Enregistrement des pannes en direct</text>
+        </g>
+
+        <!-- Composant Read Replica -->
+        <g transform="translate(18, 160)">
+            <rect x="15" y="0" width="310" height="64" fill="#ffffff" stroke="#7c3aed" stroke-width="1.2"/>
+            <rect x="5" y="10" width="20" height="12" fill="#ddd6fe" stroke="#7c3aed" stroke-width="1"/>
+            <rect x="5" y="36" width="20" height="12" fill="#ddd6fe" stroke="#7c3aed" stroke-width="1"/>
+            <text x="170" y="26" fill="#000000" font-size="12" font-weight="bold" text-anchor="middle">Base Répliquée (Dédiée aux Rapports)</text>
+            <text x="170" y="47" fill="#334155" font-size="10.5" text-anchor="middle">Calculs lourds sans ralentir la supervision</text>
+        </g>
+
+        <!-- Réplication Interne -->
+        <line x1="173" y1="140" x2="173" y2="160" stroke="#7c3aed" stroke-width="1.6" stroke-dasharray="3 3"/>
+        <text x="235" y="153" fill="#7c3aed" font-size="10" font-style="italic">Copie automatique continue</text>
+    </g>
+
+    <!-- LIAISON 2 : SERVEUR AUDIT -> POSTGRESQL READ REPLICA -->
+    <line x1="908" y1="210" x2="950" y2="210" stroke="#000000" stroke-width="1.8"/>
+    <text x="929" y="198" fill="#0020B2" font-size="11" font-weight="bold" text-anchor="middle">&lt;&lt;SQL&gt;&gt;</text>
+    <text x="929" y="228" fill="#000000" font-size="10" font-weight="bold" text-anchor="middle">Port 5433</text>
+
+
+    <!-- ========================================================================= -->
+    <!-- NŒUD 4 : HISTORIQUE SÉCURISÉ DES PREUVES (ARCHIVAGE SCELLÉ)               -->
+    <!-- Position: X=480, Y=480 | L=410, H=290, Profondeur 3D=18                  -->
+    <!-- ========================================================================= -->
+    <g transform="translate(480, 480)" filter="url(#shadow-dep2)">
+        <polygon points="0 18, 18 0, 428 0, 410 18" fill="#fed7aa" stroke="#ca8a04" stroke-width="1.4"/>
+        <polygon points="410 18, 428 0, 428 292, 410 310" fill="#fef08a" stroke="#ca8a04" stroke-width="1.4"/>
+        <rect x="0" y="18" width="410" height="292" fill="#fefce8" stroke="#ca8a04" stroke-width="1.4"/>
+        <text x="205" y="38" fill="#a16207" font-size="11" font-style="italic" text-anchor="middle">&lt;&lt;storage device&gt;&gt;</text>
+        <text x="205" y="54" fill="#000000" font-size="13" font-weight="bold" text-anchor="middle">Historique Sécurisé &amp; Preuves SHA-256</text>
+        
+        <!-- Composant 1 : Archive Boîte Noire -->
+        <g transform="translate(20, 75)">
+            <rect x="15" y="0" width="360" height="68" fill="#ffffff" stroke="#ca8a04" stroke-width="1.2"/>
+            <rect x="5" y="10" width="20" height="12" fill="#fef08a" stroke="#ca8a04" stroke-width="1"/>
+            <rect x="5" y="38" width="20" height="12" fill="#fef08a" stroke="#ca8a04" stroke-width="1"/>
+            <text x="195" y="26" fill="#000000" font-size="12" font-weight="bold" text-anchor="middle">Archive des Enregistrements JSON</text>
+            <text x="195" y="47" fill="#334155" font-size="10.5" text-anchor="middle">Stockage certifié et inaltérable des erreurs 500</text>
+        </g>
+
+        <!-- Composant 2 : Registre Certifié Opposable -->
+        <g transform="translate(20, 160)">
+            <rect x="15" y="0" width="360" height="68" fill="#ffffff" stroke="#ca8a04" stroke-width="1.2"/>
+            <rect x="5" y="10" width="20" height="12" fill="#fef08a" stroke="#ca8a04" stroke-width="1"/>
+            <rect x="5" y="38" width="20" height="12" fill="#fef08a" stroke="#ca8a04" stroke-width="1"/>
+            <text x="195" y="26" fill="#000000" font-size="12" font-weight="bold" text-anchor="middle">Archivage des PDF &amp; Excel Scellés</text>
+            <text x="195" y="47" fill="#334155" font-size="10.5" text-anchor="middle">Conservation certifiée avec signature de sécurité</text>
+        </g>
+    </g>
+
+    <!-- LIAISON 3 : SERVEUR AUDIT -> COFFRE-FORT SÉCURISÉ (VERTICALE DIRECTE) -->
+    <line x1="685" y1="435" x2="685" y2="498" stroke="#000000" stroke-width="1.8"/>
+    <text x="760" y="458" fill="#0020B2" font-size="11" font-weight="bold">&lt;&lt;TLS S3 API&gt;&gt;</text>
+    <text x="760" y="474" fill="#000000" font-size="10" font-weight="bold">Stockage chiffré AES-256</text>
+
+
+    <!-- ========================================================================= -->
+    <!-- NŒUD 5 : SERVEUR DE LOGS ELASTICSEARCH                                    -->
+    <!-- Position: X=50, Y=480 | L=380, H=290, Profondeur 3D=18                   -->
+    <!-- ========================================================================= -->
+    <g transform="translate(50, 480)" filter="url(#shadow-dep2)">
+        <polygon points="0 18, 18 0, 398 0, 380 18" fill="#d1fae5" stroke="#059669" stroke-width="1.4"/>
+        <polygon points="380 18, 398 0, 398 292, 380 310" fill="#a7f3d0" stroke="#059669" stroke-width="1.4"/>
+        <rect x="0" y="18" width="380" height="292" fill="#ecfdf5" stroke="#059669" stroke-width="1.4"/>
+        <text x="190" y="38" fill="#047857" font-size="11" font-style="italic" text-anchor="middle">&lt;&lt;cloud logging service&gt;&gt;</text>
+        <text x="190" y="54" fill="#000000" font-size="13" font-weight="bold" text-anchor="middle">Serveur de Logs Elasticsearch (Historique)</text>
+        
+        <!-- Composant Elastic Engine -->
+        <g transform="translate(18, 75)">
+            <rect x="15" y="0" width="330" height="68" fill="#ffffff" stroke="#059669" stroke-width="1.2"/>
+            <rect x="5" y="10" width="20" height="12" fill="#d1fae5" stroke="#059669" stroke-width="1"/>
+            <rect x="5" y="38" width="20" height="12" fill="#d1fae5" stroke="#059669" stroke-width="1"/>
+            <text x="180" y="26" fill="#000000" font-size="12" font-weight="bold" text-anchor="middle">Index Temporel Elasticsearch</text>
+            <text x="180" y="47" fill="#334155" font-size="10.5" text-anchor="middle">Conservation 90 jours des logs d'erreurs des 20 passerelles</text>
+        </g>
+
+        <!-- Composant Kibana Dashboard -->
+        <g transform="translate(18, 160)">
+            <rect x="15" y="0" width="330" height="68" fill="#ffffff" stroke="#059669" stroke-width="1.2"/>
+            <rect x="5" y="10" width="20" height="12" fill="#d1fae5" stroke="#059669" stroke-width="1"/>
+            <rect x="5" y="38" width="20" height="12" fill="#d1fae5" stroke="#059669" stroke-width="1"/>
+            <text x="180" y="26" fill="#000000" font-size="12" font-weight="bold" text-anchor="middle">Collecteur et Analyseur de Logs</text>
+            <text x="180" y="47" fill="#334155" font-size="10.5" text-anchor="middle">Lecture continue des métriques de disponibilité</text>
+        </g>
+    </g>
+
+    <!-- LIAISON 4 : SERVEUR AUDIT -> ELASTICSEARCH (HORIZONTAL DIRECT BAS) -->
+    <line x1="480" y1="630" x2="448" y2="630" stroke="#000000" stroke-width="1.8"/>
+    <text x="464" y="618" fill="#0020B2" font-size="11" font-weight="bold" text-anchor="middle">&lt;&lt;REST HTTPS&gt;&gt;</text>
+    <text x="464" y="648" fill="#000000" font-size="10" font-weight="bold" text-anchor="middle">Port 9200</text>
+
+</svg>

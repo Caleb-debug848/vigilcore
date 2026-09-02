@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>1. Diagramme de Classes — VigilCore</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;600;700&display=swap');
+
+        body {
+            font-family: 'Segoe UI', Calibri, Arial, sans-serif;
+            color: #1e293b;
+            background-color: #f1f5f9;
+            margin: 0;
+            padding: 30px 15px;
+            line-height: 1.6;
+        }
+
+        .action-bar {
+            max-width: 960px;
+            margin: 0 auto 25px auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #0f172a;
+            padding: 14px 20px;
+            border-radius: 12px;
+            color: #ffffff;
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.3);
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .action-bar h2 {
+            margin: 0;
+            font-size: 16px;
+            color: #60a5fa;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-group {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            background: #2563eb;
+            color: #ffffff;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-size: 12.5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn:hover {
+            background: #1d4ed8;
+            transform: translateY(-1px);
+        }
+        .btn-green { background: #059669; }
+        .btn-green:hover { background: #047857; }
+        .btn-purple { background: #7c3aed; }
+        .btn-purple:hover { background: #6d28d9; }
+        .btn-secondary { background: #475569; }
+        .btn-secondary:hover { background: #334155; }
+
+        .doc-page {
+            max-width: 960px;
+            margin: 0 auto 40px auto;
+            background: #ffffff;
+            padding: 60px 70px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        /* Titre conforme rapport Word / Thèse */
+        h1.chap-title {
+            color: #1e40af;
+            font-size: 26px;
+            font-weight: 700;
+            text-align: center;
+            margin-top: 0;
+            margin-bottom: 28px;
+        }
+
+        p.text-body {
+            font-size: 14.5px;
+            text-align: justify;
+            margin-bottom: 16px;
+            color: #1f2937;
+        }
+
+        ul.concept-list {
+            margin: 16px 0 24px 20px;
+            padding-left: 15px;
+            font-size: 14.5px;
+        }
+        ul.concept-list li {
+            margin-bottom: 12px;
+            text-align: justify;
+        }
+        ul.sub-list {
+            margin: 8px 0 10px 20px;
+            list-style-type: disc;
+        }
+        ul.sub-list li {
+            margin-bottom: 6px;
+        }
+
+        /* Tableau de Formalisme  */
+        .table-intro {
+            font-size: 14.5px;
+            margin-top: 25px;
+            margin-bottom: 14px;
+        }
+
+        table.formalism-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+            font-size: 13.5px;
+        }
+        table.formalism-table th {
+            background-color: #3b82f6;
+            color: #ffffff;
+            font-weight: 700;
+            text-align: left;
+            padding: 10px 16px;
+            border: 1px solid #2563eb;
+        }
+        table.formalism-table td {
+            border: 1px solid #cbd5e1;
+            padding: 12px 16px;
+            vertical-align: middle;
+            background-color: #f8fafc;
+        }
+        table.formalism-table tr:nth-child(even) td {
+            background-color: #ffffff;
+        }
+        table.formalism-table td.elem-name {
+            font-weight: 700;
+            color: #0f172a;
+            width: 25%;
+        }
+
+        /* Section Exemple */
+        .section-subtitle {
+            font-size: 15px;
+            font-weight: 700;
+            color: #0f172a;
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+
+        .example-box {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0 35px 0;
+            padding: 15px;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+        }
+
+        /* Conteneur du Grand Diagramme du Projet */
+        .diagram-container {
+            width: 100%;
+            margin: 20px 0;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            background: #ffffff;
+        }
+        .diagram-container svg {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* Dictionnaire de données */
+        table.dict-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            font-size: 13px;
+        }
+        table.dict-table th {
+            background-color: #1e40af;
+            color: #ffffff;
+            padding: 8px 12px;
+            text-align: left;
+            border: 1px solid #1e3a8a;
+        }
+        table.dict-table td {
+            border: 1px solid #cbd5e1;
+            padding: 8px 12px;
+            vertical-align: top;
+        }
+        table.dict-table tr:nth-child(even) {
+            background-color: #f8fafc;
+        }
+
+        @media print {
+            body { background: white; padding: 0; }
+            .action-bar { display: none; }
+            .doc-page { box-shadow: none; padding: 20px 30px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Barre d'outils d'exportation pour Word & PDF -->
+    <div class="action-bar">
+        <h2>🛡️ Chapitre Officiel : 1. Diagramme de Classes (VigilCore)</h2>
+        <div class="btn-group">
+            <button class="btn btn-green" onclick="copyProjectDiagramImage()">
+                📋 Copier l'Image (Ctrl+V dans Word)
+            </button>
+            <button class="btn btn-purple" onclick="downloadSvg()">
+                📥 Télécharger SVG
+            </button>
+            <button class="btn" onclick="downloadPngHd()">
+                📥 Télécharger PNG 8K
+            </button>
+            <button class="btn btn-secondary" onclick="window.print()">
+                🖨️ Imprimer / Exporter PDF
+            </button>
+        </div>
+    </div>
+
+    <!-- DOCUMENT DU RAPPORT / THÈSE -->
+    <div class="doc-page" id="report-content">
+        
+        <h1 class="chap-title">1. Diagramme de classes</h1>
+
+        <p class="text-body">
+            Le diagramme de classes représente la structure statique du système <strong>VigilCore</strong> en montrant les classes, leurs attributs, leurs méthodes et les relations qui les unissent. Le diagramme de classe met en évidence d'éventuelles relations entre ces classes. Le diagramme de classes comporte 6 concepts : <strong>classe, attribut, identifiant, relation, opération, généralisation/spécialisation</strong>. Ce diagramme est constitué des éléments suivants :
+        </p>
+
+        <ul class="concept-list">
+            <li>
+                <strong>Classe :</strong> il s'agit de la description abstraite d'un ensemble d'objets : elle définit leurs structures, leurs comportements et leurs relations.
+            </li>
+            <li>
+                <strong>L'attribut :</strong> Il représente la modélisation d'une information élémentaire représentée par son nom et son format.<br>
+                <strong>UML</strong> définit 3 (trois) niveaux de visibilité pour les attributs :
+                <ul class="sub-list">
+                    <li><strong>Public (+) :</strong> l'élément est visible par tous les clients de la classe.</li>
+                    <li><strong>Protégé (#) :</strong> l'élément n'est visible que par les sous-classes ou les classes filles.</li>
+                    <li><strong>Privé (-) :</strong> l'élément n'est visible que par les objets de la classe auxquels il appartient.</li>
+                </ul>
+            </li>
+            <li>
+                <strong>L'identifiant :</strong> c'est un attribut particulier, qui permet de repérer de façon unique chaque objet, instance de la classe (Clé Primaire <code>[PK]</code>).
+            </li>
+            <li>
+                <strong>Multiplicité :</strong> elle définit le nombre d'instances de la classe, elle est définie par un nombre entier ou un intervalle de valeur (1..1, 0..1, 1..*, 0..*).
+            </li>
+            <li>
+                <strong>Associations :</strong> Une association est une relation entre deux classes (association binaire) ou plus (association n-aire), qui décrit les connexions structurelles entre leurs instances.
+                Il existe plusieurs types de relations dont les plus connues sont les suivantes :
+                <ul class="sub-list">
+                    <li><strong>Généralisation :</strong> Relation d'héritage, dans laquelle les objets de l'élément spécialisé (Classe enfant) peuvent remplacer les objets de l'élément général (Classe parent).</li>
+                    <li><strong>Agrégation :</strong> utilisé pour les relations de types « contenant / contenu ».</li>
+                    <li><strong>La composition :</strong> La composition est un cas particulier de l'agrégation dans laquelle la vie des composants est liée à celle des agrégats (destruction en cascade).</li>
+                </ul>
+            </li>
+        </ul>
+
+        <p class="table-intro">
+            Le tableau suivant nous donne une liste assez détaillée du formalisme du diagramme de classe en un tableau :
+        </p>
+
+        <!-- TABLEAU DU FORMALISME CONFORME POWERAMC -->
+        <table class="formalism-table">
+            <thead>
+                <tr>
+                    <th style="width: 25%;">Élément</th>
+                    <th style="width: 75%;">Représentation</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- 1. Classe -->
+                <tr>
+                    <td class="elem-name">Classe</td>
+                    <td>
+                        <svg width="220" height="95" viewBox="0 0 220 95">
+                            <rect x="10" y="5" width="200" height="85" fill="#ffffff" stroke="#0020B2" stroke-width="1.8" rx="3"/>
+                            <rect x="10" y="5" width="200" height="24" fill="#e0e7ff"/>
+                            <text x="110" y="21" fill="#0020B2" font-size="12" font-weight="bold" text-anchor="middle">Classe</text>
+                            <line x1="10" y1="29" x2="210" y2="29" stroke="#0020B2" stroke-width="1.2"/>
+                            <text x="18" y="44" fill="#0f172a" font-size="10.5">- Attribut : (type)</text>
+                            <line x1="10" y1="56" x2="210" y2="56" stroke="#cbd5e1" stroke-width="1"/>
+                            <text x="18" y="73" fill="#0f172a" font-size="10.5">+ method() : type</text>
+                        </svg>
+                    </td>
+                </tr>
+
+                <!-- 2. Association -->
+                <tr>
+                    <td class="elem-name">Association</td>
+                    <td>
+                        <svg width="340" height="40" viewBox="0 0 340 40">
+                            <line x1="40" y1="20" x2="300" y2="20" stroke="#0f172a" stroke-width="1.6"/>
+                            <polygon points="290 15, 300 20, 290 25" fill="none" stroke="#0f172a" stroke-width="1.5"/>
+                            <text x="15" y="15" fill="#0f172a" font-size="11" font-weight="bold">1..*</text>
+                            <text x="305" y="15" fill="#0f172a" font-size="11" font-weight="bold">1..*</text>
+                        </svg>
+                    </td>
+                </tr>
+
+                <!-- 3. Composition -->
+                <tr>
+                    <td class="elem-name">Composition</td>
+                    <td>
+                        <svg width="340" height="40" viewBox="0 0 340 40">
+                            <line x1="50" y1="20" x2="260" y2="20" stroke="#0f172a" stroke-width="1.6"/>
+                            <!-- Flèche à gauche -->
+                            <path d="M 60 15 L 50 20 L 60 25" fill="none" stroke="#0f172a" stroke-width="1.5"/>
+                            <!-- Losange plein à droite -->
+                            <polygon points="260 20, 275 13, 290 20, 275 27" fill="#0f172a"/>
+                            <text x="15" y="15" fill="#0f172a" font-size="11" font-weight="bold">0..*</text>
+                            <text x="300" y="15" fill="#0f172a" font-size="11" font-weight="bold">0..1</text>
+                        </svg>
+                    </td>
+                </tr>
+
+                <!-- 4. Agrégation -->
+                <tr>
+                    <td class="elem-name">Agrégation</td>
+                    <td>
+                        <svg width="340" height="40" viewBox="0 0 340 40">
+                            <!-- Losange creux à gauche -->
+                            <polygon points="65 20, 80 13, 95 20, 80 27" fill="#ffffff" stroke="#0f172a" stroke-width="1.6"/>
+                            <line x1="95" y1="20" x2="290" y2="20" stroke="#0f172a" stroke-width="1.6"/>
+                            <polygon points="280 15, 290 20, 280 25" fill="none" stroke="#0f172a" stroke-width="1.5"/>
+                            <text x="25" y="24" fill="#0f172a" font-size="11" font-weight="bold">0..*</text>
+                            <text x="300" y="24" fill="#0020B2" font-size="11" font-weight="bold" text-decoration="underline">1..*</text>
+                        </svg>
+                    </td>
+                </tr>
+
+                <!-- 5. Généralisation -->
+                <tr>
+                    <td class="elem-name">Généralisation</td>
+                    <td>
+                        <svg width="340" height="40" viewBox="0 0 340 40">
+                            <line x1="40" y1="20" x2="280" y2="20" stroke="#0f172a" stroke-width="1.6"/>
+                            <polygon points="280 12, 300 20, 280 28" fill="#ffffff" stroke="#0f172a" stroke-width="1.6"/>
+                        </svg>
+                    </td>
+                </tr>
+
+                <!-- 6. Multiplicité -->
+                <tr>
+                    <td class="elem-name">Multiplicité</td>
+                    <td style="font-size: 13px; font-weight: bold; color: #0f172a;">
+                        0..* , 0..1 , 1..1 , 1..*
+                    </td>
+                </tr>
+
+                <!-- 7. Modificateur d'accès -->
+                <tr>
+                    <td class="elem-name">Modificateur d'accès</td>
+                    <td style="font-size: 13px; font-weight: bold; color: #0020B2;">
+                        + (Public) , - (Privé) , # (Protégé) , ~ (Package) , / (Dérivé)
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- SECTION EXEMPLE DE DIAGRAMME -->
+        <p class="section-subtitle">Exemple de diagramme de classe :</p>
+
+        <div class="example-box">
+            <svg width="550" height="260" viewBox="0 0 550 260" style="font-family: 'Segoe UI', Arial, sans-serif;">
+                <!-- Classe Parente : Utilisateur -->
+                <g transform="translate(185, 10)">
+                    <rect x="0" y="0" width="180" height="110" rx="4" fill="#e0f2fe" stroke="#0284c7" stroke-width="1.5"/>
+                    <text x="90" y="20" fill="#0369a1" font-size="11" font-weight="bold" text-anchor="middle">Utilisateur</text>
+                    <line x1="0" y1="28" x2="180" y2="28" stroke="#0284c7" stroke-width="1"/>
+                    <text x="8" y="44" fill="#0f172a" font-size="9.5">- attribut1: typeAttribut1</text>
+                    <text x="8" y="58" fill="#0f172a" font-size="9.5">- attribut2: typeAttribut2</text>
+                    <line x1="0" y1="68" x2="180" y2="68" stroke="#0284c7" stroke-width="1"/>
+                    <text x="8" y="84" fill="#0f172a" font-size="9.5">+methode une()</text>
+                    <text x="8" y="98" fill="#0f172a" font-size="9.5">-methode deux()</text>
+                </g>
+
+                <!-- Arbre de Généralisation (Héritage) -->
+                <line x1="275" y1="120" x2="275" y2="140" stroke="#0f172a" stroke-width="1.4"/>
+                <polygon points="270 130, 275 120, 280 130" fill="#ffffff" stroke="#0f172a" stroke-width="1.4"/>
+                
+                <line x1="85" y1="140" x2="465" y2="140" stroke="#0f172a" stroke-width="1.4"/>
+                <line x1="85" y1="140" x2="85" y2="155" stroke="#0f172a" stroke-width="1.4"/>
+                <line x1="275" y1="140" x2="275" y2="155" stroke="#0f172a" stroke-width="1.4"/>
+                <line x1="465" y1="140" x2="465" y2="155" stroke="#0f172a" stroke-width="1.4"/>
+
+                <!-- Classe Fille 1 : Professeur / Operateur -->
+                <g transform="translate(10, 155)">
+                    <rect x="0" y="0" width="150" height="95" rx="4" fill="#e0f2fe" stroke="#0284c7" stroke-width="1.5"/>
+                    <text x="75" y="18" fill="#0369a1" font-size="10.5" font-weight="bold" text-anchor="middle">Professeur</text>
+                    <line x1="0" y1="25" x2="150" y2="25" stroke="#0284c7" stroke-width="1"/>
+                    <text x="6" y="40" fill="#0f172a" font-size="9">- attribut1: type1</text>
+                    <text x="6" y="54" fill="#0f172a" font-size="9">- attribut2: type2</text>
+                    <line x1="0" y1="62" x2="150" y2="62" stroke="#0284c7" stroke-width="1"/>
+                    <text x="6" y="76" fill="#0f172a" font-size="9">+methode une()</text>
+                    <text x="6" y="88" fill="#0f172a" font-size="9">-methode deux()</text>
+                </g>
+
+                <!-- Classe Fille 2 : Etudiant -->
+                <g transform="translate(200, 155)">
+                    <rect x="0" y="0" width="150" height="95" rx="4" fill="#e0f2fe" stroke="#0284c7" stroke-width="1.5"/>
+                    <text x="75" y="18" fill="#0369a1" font-size="10.5" font-weight="bold" text-anchor="middle">Etudiant</text>
+                    <line x1="0" y1="25" x2="150" y2="25" stroke="#0284c7" stroke-width="1"/>
+                    <text x="6" y="40" fill="#0f172a" font-size="9">- attribut1: type1</text>
+                    <text x="6" y="54" fill="#0f172a" font-size="9">- attribut2: type2</text>
+                    <line x1="0" y1="62" x2="150" y2="62" stroke="#0284c7" stroke-width="1"/>
+                    <text x="6" y="76" fill="#0f172a" font-size="9">+methode une()</text>
+                    <text x="6" y="88" fill="#0f172a" font-size="9">-methode deux()</text>
+                </g>
+
+                <!-- Classe Fille 3 : Admin -->
+                <g transform="translate(390, 155)">
+                    <rect x="0" y="0" width="150" height="95" rx="4" fill="#e0f2fe" stroke="#0284c7" stroke-width="1.5"/>
+                    <text x="75" y="18" fill="#0369a1" font-size="10.5" font-weight="bold" text-anchor="middle">Admin</text>
+                    <line x1="0" y1="25" x2="150" y2="25" stroke="#0284c7" stroke-width="1"/>
+                    <text x="6" y="40" fill="#0f172a" font-size="9">- attribut1: type1</text>
+                    <text x="6" y="54" fill="#0f172a" font-size="9">- attribut2: type2</text>
+                    <line x1="0" y1="62" x2="150" y2="62" stroke="#0284c7" stroke-width="1"/>
+                    <text x="6" y="76" fill="#0f172a" font-size="9">+methode une()</text>
+                    <text x="6" y="88" fill="#0f172a" font-size="9">-methode deux()</text>
+                </g>
+            </svg>
+        </div>
+
+        <!-- SECTION DU DIAGRAMME DU PROJET -->
+        <p class="section-subtitle">Le diagramme de classe de notre projet est le suivant :</p>
+
+        <!-- INTÉGRATION DU DIAGRAMME COMPLET POWERAMC DU PROJET VIGILCORE -->
+        <div class="diagram-container">
+            <svg id="svg-classes-rep" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1420 1020" width="100%" height="100%" style="background-color: #ffffff; font-family: 'Segoe UI', Calibri, Arial, sans-serif;">
+    <defs>
+        <!-- Filtre ombre douce  -->
+        <filter id="shadow-pamc" x="-10%" y="-10%" width="130%" height="130%">
+            <feDropShadow dx="2" dy="3" stdDeviation="3" flood-color="#000000" flood-opacity="0.12"/>
+        </filter>
+        
+        <!-- Marqueur Composition : Losange plein noir extérieur -->
+        <marker id="diamond-comp" viewBox="0 0 12 12" refX="11" refY="6" markerWidth="11" markerHeight="11" orient="auto-start-reverse">
+            <polygon points="1 6, 6 1, 11 6, 6 11" fill="#000000"/>
+        </marker>
+    </defs>
+
+    <!-- CADRE GÉNÉRAL DU DIAGRAMME DE CLASSES POWERAMC -->
+    <rect x="20" y="20" width="1380" height="980" rx="10" ry="10" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5" filter="url(#shadow-pamc)"/>
+    
+    <!-- BANDEAU DE TITRE UML POWERAMC -->
+    <path d="M 20 20 L 580 20 L 605 48 L 580 48 L 20 48 Z" fill="#0020B2"/>
+    <text x="35" y="37" fill="#ffffff" font-size="14" font-weight="bold" letter-spacing="0.5">
+        cd : Diagramme de Classes du Domaine VigilCore
+    </text>
+
+    <!-- ========================================================================= -->
+    <!-- 1. CLASSE : Utilisateur                                                   -->
+    <!-- Position: X=50, Y=70 | L=320, H=330                                       -->
+    <!-- ========================================================================= -->
+    <g transform="translate(50, 70)" filter="url(#shadow-pamc)">
+        <rect x="0" y="0" width="320" height="330" rx="6" fill="#ffffff" stroke="#0020B2" stroke-width="2"/>
+        <rect x="0" y="0" width="320" height="34" rx="6" fill="#0020B2"/>
+        <rect x="0" y="24" width="320" height="10" fill="#0020B2"/>
+        <text x="160" y="23" fill="#ffffff" font-size="13.5" font-weight="bold" text-anchor="middle">Utilisateur</text>
+        
+        <!-- Attributs -->
+        <text x="12" y="54" fill="#000000" font-size="11.5">- id : entier [ClePrimaire]</text>
+        <text x="12" y="72" fill="#000000" font-size="11.5">- nom : texte</text>
+        <text x="12" y="90" fill="#000000" font-size="11.5">- email : texte [Unique]</text>
+        <text x="12" y="108" fill="#000000" font-size="11.5">- mot_de_passe : texte (Chiffre)</text>
+        <text x="12" y="126" fill="#000000" font-size="11.5">- jeton_session : texte?</text>
+        <text x="12" y="144" fill="#000000" font-size="11.5">- date_creation : DateHeure</text>
+        <text x="12" y="162" fill="#000000" font-size="11.5">- date_modification : DateHeure</text>
+
+        <!-- Séparateur -->
+        <line x1="0" y1="172" x2="320" y2="172" stroke="#cbd5e1" stroke-width="1.2"/>
+
+        <!-- Méthodes -->
+        <text x="12" y="192" fill="#000000" font-size="11.5">+ sAuthentifier() : booleen</text>
+        <text x="12" y="211" fill="#000000" font-size="11.5">+ seDeconnecter() : void</text>
+        <text x="12" y="230" fill="#000000" font-size="11.5">+ surveillerServices() : void</text>
+        <text x="12" y="249" fill="#000000" font-size="11.5">+ inspecterBoiteNoire(id: entier) : Diagnostic</text>
+        <text x="12" y="268" fill="#000000" font-size="11.5">+ genererRegistreExcel12Col() : Fichier</text>
+        <text x="12" y="287" fill="#000000" font-size="11.5">+ certifierRapport(id: entier) : texte</text>
+        <text x="12" y="306" fill="#000000" font-size="11.5">+ declencherSimulation(id: texte) : void</text>
+    </g>
+
+
+    <!-- ========================================================================= -->
+    <!-- 2. CLASSE : ServicePartenaire (Matrice des 20 Services)                   -->
+    <!-- Position: X=540, Y=70 | L=310, H=290                                      -->
+    <!-- ========================================================================= -->
+    <g transform="translate(540, 70)" filter="url(#shadow-pamc)">
+        <rect x="0" y="0" width="310" height="290" rx="6" fill="#ffffff" stroke="#0020B2" stroke-width="2"/>
+        <rect x="0" y="0" width="310" height="34" rx="6" fill="#0020B2"/>
+        <rect x="0" y="24" width="310" height="10" fill="#0020B2"/>
+        <text x="155" y="23" fill="#ffffff" font-size="13.5" font-weight="bold" text-anchor="middle">ServicePartenaire</text>
+        
+        <!-- Attributs -->
+        <text x="12" y="54" fill="#000000" font-size="11.5">- code_service : texte [ClePrimaire]</text>
+        <text x="12" y="72" fill="#000000" font-size="11.5">- nom_service : texte</text>
+        <text x="12" y="90" fill="#000000" font-size="11.5">- categorie : CategorieService</text>
+        <text x="12" y="108" fill="#000000" font-size="11.5">- adresse_test_sante : texte</text>
+        <text x="12" y="126" fill="#000000" font-size="11.5">- statut_actuel : StatutService</text>
+        <text x="12" y="144" fill="#000000" font-size="11.5">- taux_disponibilite : decimal</text>
+        <text x="12" y="162" fill="#000000" font-size="11.5">- nombre_pannes_actives : entier</text>
+
+        <!-- Séparateur -->
+        <line x1="0" y1="172" x2="310" y2="172" stroke="#cbd5e1" stroke-width="1.2"/>
+
+        <!-- Méthodes -->
+        <text x="12" y="192" fill="#000000" font-size="11.5">+ testerSanteAutomatique() : StatutService</text>
+        <text x="12" y="211" fill="#000000" font-size="11.5">+ calculerDisponibilite(periode: texte) : decimal</text>
+        <text x="12" y="230" fill="#000000" font-size="11.5">+ getListeIncidents() : ListeIncidents</text>
+        <text x="12" y="249" fill="#000000" font-size="11.5">+ getHistoriqueCoupures() : Collection</text>
+        <text x="12" y="268" fill="#000000" font-size="11.5">+ mettreAJourStatut(s: Statut) : void</text>
+    </g>
+
+
+    <!-- ========================================================================= -->
+    <!-- 3. CLASSE : BoiteNoireDiagnostic (Diagnostic d'Incident)                  -->
+    <!-- Position: X=1010, Y=70 | L=320, H=270                                     -->
+    <!-- ========================================================================= -->
+    <g transform="translate(1010, 70)" filter="url(#shadow-pamc)">
+        <rect x="0" y="0" width="320" height="270" rx="6" fill="#ffffff" stroke="#0020B2" stroke-width="2"/>
+        <rect x="0" y="0" width="320" height="34" rx="6" fill="#0020B2"/>
+        <rect x="0" y="24" width="320" height="10" fill="#0020B2"/>
+        <text x="160" y="23" fill="#ffffff" font-size="13.5" font-weight="bold" text-anchor="middle">BoiteNoireDiagnostic</text>
+        
+        <!-- Attributs -->
+        <text x="12" y="54" fill="#000000" font-size="11.5">- id_diagnostic : entier [ClePrimaire]</text>
+        <text x="12" y="72" fill="#000000" font-size="11.5">- code_erreur : texte</text>
+        <text x="12" y="90" fill="#000000" font-size="11.5">- code_http : entier</text>
+        <text x="12" y="108" fill="#000000" font-size="11.5">- cause_racine : texte</text>
+        <text x="12" y="126" fill="#000000" font-size="11.5">- points_acces_touches : Liste&lt;texte&gt;</text>
+        <text x="12" y="144" fill="#000000" font-size="11.5">- adresse_serveur : texte</text>
+        <text x="12" y="162" fill="#000000" font-size="11.5">- donnees_brutes : texte</text>
+
+        <!-- Séparateur -->
+        <line x1="0" y1="172" x2="320" y2="172" stroke="#cbd5e1" stroke-width="1.2"/>
+
+        <!-- Méthodes -->
+        <text x="12" y="192" fill="#000000" font-size="11.5">+ capturerRequete() : void</text>
+        <text x="12" y="211" fill="#000000" font-size="11.5">+ analyserDonneesJson() : tableau</text>
+        <text x="12" y="230" fill="#000000" font-size="11.5">+ extraireCauseRacine() : texte</text>
+        <text x="12" y="249" fill="#000000" font-size="11.5">+ scellerPreuveSha256() : texte</text>
+    </g>
+
+
+    <!-- ========================================================================= -->
+    <!-- 4. CLASSE : ScenarioSimulation                                            -->
+    <!-- Position: X=50, Y=540 | L=320, H=260                                      -->
+    <!-- ========================================================================= -->
+    <g transform="translate(50, 540)" filter="url(#shadow-pamc)">
+        <rect x="0" y="0" width="320" height="260" rx="6" fill="#ffffff" stroke="#0020B2" stroke-width="2"/>
+        <rect x="0" y="0" width="320" height="34" rx="6" fill="#0020B2"/>
+        <rect x="0" y="24" width="320" height="10" fill="#0020B2"/>
+        <text x="160" y="23" fill="#ffffff" font-size="13.5" font-weight="bold" text-anchor="middle">ScenarioSimulation</text>
+        
+        <!-- Attributs -->
+        <text x="12" y="54" fill="#000000" font-size="11.5">- id_scenario : texte [ClePrimaire]</text>
+        <text x="12" y="72" fill="#000000" font-size="11.5">- titre_scenario : texte</text>
+        <text x="12" y="90" fill="#000000" font-size="11.5">- code_service_cible : texte [CleEtrangere]</text>
+        <text x="12" y="108" fill="#000000" font-size="11.5">- code_erreur_simule : texte</text>
+        <text x="12" y="126" fill="#000000" font-size="11.5">- type_simulation : TypeSimulation</text>
+        <text x="12" y="144" fill="#000000" font-size="11.5">- duree_estimee_sec : entier</text>
+
+        <!-- Séparateur -->
+        <line x1="0" y1="156" x2="320" y2="156" stroke="#cbd5e1" stroke-width="1.2"/>
+
+        <!-- Méthodes -->
+        <text x="12" y="176" fill="#000000" font-size="11.5">+ injecterPanneTest() : Incident</text>
+        <text x="12" y="195" fill="#000000" font-size="11.5">+ reinitialiserEtat() : booleen</text>
+        <text x="12" y="214" fill="#000000" font-size="11.5">+ getCatalogueScenarios() : Collection</text>
+        <text x="12" y="233" fill="#000000" font-size="11.5">+ validerReactionSysteme() : booleen</text>
+    </g>
+
+
+    <!-- ========================================================================= -->
+    <!-- 5. CLASSE CENTRALE : Incident                                             -->
+    <!-- Position: X=530, Y=430 | L=330, H=480                                     -->
+    <!-- ========================================================================= -->
+    <g transform="translate(530, 430)" filter="url(#shadow-pamc)">
+        <rect x="0" y="0" width="330" height="480" rx="6" fill="#ffffff" stroke="#0020B2" stroke-width="2"/>
+        <rect x="0" y="0" width="330" height="34" rx="6" fill="#0020B2"/>
+        <rect x="0" y="24" width="330" height="10" fill="#0020B2"/>
+        <text x="165" y="23" fill="#ffffff" font-size="13.5" font-weight="bold" text-anchor="middle">Incident</text>
+        
+        <!-- Attributs -->
+        <text x="12" y="52" fill="#000000" font-size="11.5">- id : entier [ClePrimaire]</text>
+        <text x="12" y="69" fill="#000000" font-size="11.5">- titre : texte</text>
+        <text x="12" y="86" fill="#000000" font-size="11.5">- service_concerne : texte [CleEtrangere]</text>
+        <text x="12" y="103" fill="#000000" font-size="11.5">- degre_gravite : [INFO / ALERTE / CRITIQUE]</text>
+        <text x="12" y="120" fill="#000000" font-size="11.5">- etat_avancement : [en_analyse .. resolu]</text>
+        <text x="12" y="137" fill="#000000" font-size="11.5">- source_detection : texte</text>
+        <text x="12" y="154" fill="#000000" font-size="11.5">- serveur_hote : texte</text>
+        <text x="12" y="171" fill="#000000" font-size="11.5">- est_resolu : booleen</text>
+        <text x="12" y="188" fill="#000000" font-size="11.5">- date_declenchement : DateHeure</text>
+        <text x="12" y="205" fill="#000000" font-size="11.5">- date_resolution : DateHeure?</text>
+        <text x="12" y="222" fill="#000000" font-size="11.5">- id_incident_page_web : texte?</text>
+        <text x="12" y="239" fill="#000000" font-size="11.5">- donnees_brutes : texte</text>
+
+        <!-- Séparateur -->
+        <line x1="0" y1="249" x2="330" y2="249" stroke="#cbd5e1" stroke-width="1.2"/>
+
+        <!-- Méthodes -->
+        <text x="12" y="268" fill="#000000" font-size="11.5">+ getDureeCoupureFormattee() : texte</text>
+        <text x="12" y="286" fill="#000000" font-size="11.5">+ getCodeErreur() : texte</text>
+        <text x="12" y="304" fill="#000000" font-size="11.5">+ getCauseRacine() : texte</text>
+        <text x="12" y="322" fill="#000000" font-size="11.5">+ getNoteResolution() : texte</text>
+        <text x="12" y="340" fill="#000000" font-size="11.5">+ getPointsAccesTouches() : texte</text>
+        <text x="12" y="358" fill="#000000" font-size="11.5">+ getDateDeclenchement() : texte</text>
+        <text x="12" y="376" fill="#000000" font-size="11.5">+ getDateResolution() : texte</text>
+        <text x="12" y="394" fill="#000000" font-size="11.5">+ marquerCommeResolu(note: texte) : void</text>
+        <text x="12" y="412" fill="#000000" font-size="11.5">+ mettreAJourEtat(e: EtatAvancement) : void</text>
+        <text x="12" y="430" fill="#000000" font-size="11.5">+ getServicePartenaire() : ServicePartenaire</text>
+    </g>
+
+
+    <!-- ========================================================================= -->
+    <!-- 6. CLASSE : NotificationAlerte                                            -->
+    <!-- Position: X=1010, Y=390 | L=320, H=265                                    -->
+    <!-- ========================================================================= -->
+    <g transform="translate(1010, 390)" filter="url(#shadow-pamc)">
+        <rect x="0" y="0" width="320" height="265" rx="6" fill="#ffffff" stroke="#0020B2" stroke-width="2"/>
+        <rect x="0" y="0" width="320" height="34" rx="6" fill="#0020B2"/>
+        <rect x="0" y="24" width="320" height="10" fill="#0020B2"/>
+        <text x="160" y="23" fill="#ffffff" font-size="13.5" font-weight="bold" text-anchor="middle">NotificationAlerte</text>
+        
+        <!-- Attributs -->
+        <text x="12" y="54" fill="#000000" font-size="11.5">- id : entier [ClePrimaire]</text>
+        <text x="12" y="72" fill="#000000" font-size="11.5">- canal_diffusion : [WhatsApp / Page Web]</text>
+        <text x="12" y="90" fill="#000000" font-size="11.5">- destinataire : texte</text>
+        <text x="12" y="108" fill="#000000" font-size="11.5">- corps_message : texte</text>
+        <text x="12" y="126" fill="#000000" font-size="11.5">- statut_envoi : StatutLivraison</text>
+        <text x="12" y="144" fill="#000000" font-size="11.5">- date_envoi : DateHeure</text>
+
+        <!-- Séparateur -->
+        <line x1="0" y1="156" x2="320" y2="156" stroke="#cbd5e1" stroke-width="1.2"/>
+
+        <!-- Méthodes -->
+        <text x="12" y="176" fill="#000000" font-size="11.5">+ diffuserAlerte() : booleen</text>
+        <text x="12" y="196" fill="#000000" font-size="11.5">+ formaterMessage(i: Incident) : texte</text>
+        <text x="12" y="216" fill="#000000" font-size="11.5">+ acquitterReception() : void</text>
+        <text x="12" y="236" fill="#000000" font-size="11.5">+ reessayerEnvoi() : booleen</text>
+    </g>
+
+
+    <!-- ========================================================================= -->
+    <!-- 7. CLASSE : RapportAuditDisponibilite                                     -->
+    <!-- Position: X=1010, Y=700 | L=330, H=285                                    -->
+    <!-- ========================================================================= -->
+    <g transform="translate(1010, 700)" filter="url(#shadow-pamc)">
+        <rect x="0" y="0" width="330" height="285" rx="6" fill="#ffffff" stroke="#0020B2" stroke-width="2"/>
+        <rect x="0" y="0" width="330" height="34" rx="6" fill="#0020B2"/>
+        <rect x="0" y="24" width="330" height="10" fill="#0020B2"/>
+        <text x="165" y="23" fill="#ffffff" font-size="13.5" font-weight="bold" text-anchor="middle">RapportAuditDisponibilite</text>
+        
+        <!-- Attributs -->
+        <text x="12" y="54" fill="#000000" font-size="11.5">- id : entier [ClePrimaire]</text>
+        <text x="12" y="72" fill="#000000" font-size="11.5">- reference_audit : texte</text>
+        <text x="12" y="90" fill="#000000" font-size="11.5">- date_debut : DateHeure</text>
+        <text x="12" y="108" fill="#000000" font-size="11.5">- date_fin : DateHeure</text>
+        <text x="12" y="126" fill="#000000" font-size="11.5">- nombre_incidents : entier</text>
+        <text x="12" y="144" fill="#000000" font-size="11.5">- duree_totale_coupure_sec : entier</text>
+        <text x="12" y="162" fill="#000000" font-size="11.5">- taux_disponibilite_mensuel : decimal</text>
+        <text x="12" y="180" fill="#000000" font-size="11.5">- duree_moyenne_panne_sec : decimal</text>
+        <text x="12" y="198" fill="#000000" font-size="11.5">- empreinte_sha256 : texte</text>
+
+        <!-- Séparateur -->
+        <line x1="0" y1="208" x2="330" y2="208" stroke="#cbd5e1" stroke-width="1.2"/>
+
+        <!-- Méthodes -->
+        <text x="12" y="228" fill="#000000" font-size="11.5">+ genererRegistreExcel12Col() : Fichier</text>
+        <text x="12" y="247" fill="#000000" font-size="11.5">+ genererFichePdfPaysage() : Fichier</text>
+        <text x="12" y="266" fill="#000000" font-size="11.5">+ calculerTauxDisponibilite() : void</text>
+        <text x="12" y="280" fill="#000000" font-size="11.5">+ certifierRapport() : booleen</text>
+    </g>
+
+
+    <!-- ========================================================================= -->
+    <!-- RELATIONS ENTRE LES 7 CLASSES                                             -->
+    <!-- ========================================================================= -->
+
+    <!-- 1. Utilisateur (1) ==== (0..*) ScenarioSimulation -->
+    <line x1="210" y1="400" x2="210" y2="540" stroke="#000000" stroke-width="1.6"/>
+    <text x="220" y="425" fill="#000000" font-size="11.5" font-weight="bold">1</text>
+    <text x="220" y="525" fill="#000000" font-size="11.5" font-weight="bold">0..*</text>
+    <text x="145" y="475" fill="#0020B2" font-size="11" font-style="italic" font-weight="bold">exécute &gt;</text>
+
+    <!-- 2. Utilisateur (1) ==== (0..*) RapportAuditDisponibilite -->
+    <path d="M 210 800 L 210 950 L 1010 950" fill="none" stroke="#000000" stroke-width="1.6"/>
+    <text x="220" y="825" fill="#000000" font-size="11.5" font-weight="bold">1</text>
+    <text x="975" y="942" fill="#000000" font-size="11.5" font-weight="bold">0..*</text>
+    <text x="460" y="942" fill="#0020B2" font-size="11" font-style="italic" font-weight="bold">génère &amp; certifie &gt;</text>
+
+    <!-- 3. ScenarioSimulation (0..*) ==== (1) ServicePartenaire -->
+    <path d="M 370 630 L 460 630 L 460 210 L 540 210" fill="none" stroke="#000000" stroke-width="1.6"/>
+    <text x="385" y="620" fill="#000000" font-size="11.5" font-weight="bold">0..*</text>
+    <text x="515" y="200" fill="#000000" font-size="11.5" font-weight="bold">1</text>
+    <text x="390" y="410" fill="#0020B2" font-size="11" font-style="italic" font-weight="bold">cible &gt;</text>
+
+    <!-- 4. ServicePartenaire (1) ==== (0..*) Incident -->
+    <line x1="695" y1="360" x2="695" y2="430" stroke="#000000" stroke-width="1.6"/>
+    <text x="705" y="385" fill="#000000" font-size="11.5" font-weight="bold">1</text>
+    <text x="705" y="415" fill="#000000" font-size="11.5" font-weight="bold">0..*</text>
+    <text x="630" y="395" fill="#0020B2" font-size="11" font-style="italic" font-weight="bold">concerne &gt;</text>
+
+    <!-- 5. Incident (1) ◆==== (1) BoiteNoireDiagnostic (COMPOSITION) -->
+    <path d="M 860 460 L 935 460 L 935 190 L 1010 190" fill="none" stroke="#000000" stroke-width="1.6" marker-start="url(#diamond-comp)"/>
+    <text x="880" y="450" fill="#000000" font-size="11.5" font-weight="bold">1</text>
+    <text x="985" y="180" fill="#000000" font-size="11.5" font-weight="bold">1</text>
+    <text x="880" y="480" fill="#0020B2" font-size="11" font-style="italic" font-weight="bold">encapsule &gt;</text>
+
+    <!-- 6. Incident (1) ◆==== (0..*) NotificationAlerte (COMPOSITION) -->
+    <line x1="860" y1="540" x2="1010" y2="540" stroke="#000000" stroke-width="1.6" marker-start="url(#diamond-comp)"/>
+    <text x="880" y="530" fill="#000000" font-size="11.5" font-weight="bold">1</text>
+    <text x="975" y="530" fill="#000000" font-size="11.5" font-weight="bold">0..*</text>
+    <text x="895" y="565" fill="#0020B2" font-size="11" font-style="italic" font-weight="bold">déclenche &gt;</text>
+
+    <!-- 7. Incident (0..*) ==== (1) RapportAuditDisponibilite (ASSOCIATION) -->
+    <line x1="860" y1="800" x2="1010" y2="800" stroke="#000000" stroke-width="1.6"/>
+    <text x="880" y="790" fill="#000000" font-size="11.5" font-weight="bold">0..*</text>
+    <text x="985" y="790" fill="#000000" font-size="11.5" font-weight="bold">1</text>
+    <text x="890" y="825" fill="#0020B2" font-size="11" font-style="italic" font-weight="bold">consolidé dans &gt;</text>
+
+</svg>
+
+        </div>
+
+        <!-- DICTIONNAIRE DES CLASSES DU DOMAINE VIGILCORE -->
+        <p class="section-subtitle">Dictionnaire des classes du projet VigilCore :</p>
+
+        <table class="dict-table">
+            <thead>
+                <tr>
+                    <th style="width: 22%;">Classe</th>
+                    <th style="width: 48%;">Rôle et Description Fonctionnelle</th>
+                    <th style="width: 30%;">Relations &amp; Héritage</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>User (Utilisateur)</strong></td>
+                    <td>Classe mère abstraite gérant les comptes, les identifiants de connexion, l'authentification et les niveaux d'accès RBAC.</td>
+                    <td>Classe parente de <code>Operateur</code> et <code>Administrateur</code> (Généralisation).</td>
+                </tr>
+                <tr>
+                    <td><strong>Operateur</strong></td>
+                    <td>Représente le personnel technique effectuant la supervision en temps réel des 20 services, l'inspection de la boîte noire et le test de crise.</td>
+                    <td>Hérite de <code>User</code>. Exécute <code>ScenarioSimulation</code> (1 &rarr; 0..*).</td>
+                </tr>
+                <tr>
+                    <td><strong>Administrateur</strong></td>
+                    <td>Responsable de la conformité des SLA bancaires, de la certification des audits et de l'export des registres 12 colonnes.</td>
+                    <td>Hérite de <code>User</code>. Génère et certifie <code>RapportAuditSla</code> (1 &rarr; 0..*).</td>
+                </tr>
+                <tr>
+                    <td><strong>ServicePartenaire</strong></td>
+                    <td>Modélise chacun des 20 services financiers et marchands surveillés (MoMo, Wave, Visa, Orange Money, etc.) avec son endpoint de santé et son taux de disponibilité.</td>
+                    <td>Associé à <code>Incident</code> (1 &rarr; 0..*). Cible de <code>ScenarioSimulation</code> (1 &larr; 0..*).</td>
+                </tr>
+                <tr>
+                    <td><strong>Incident</strong></td>
+                    <td>Cœur transactionnel du système : enregistre chaque rupture de service, le statut de traitement (investigating &rarr; resolved), le calcul exact du MTTR et l'horodatage WAT.</td>
+                    <td>Concerne <code>ServicePartenaire</code>. Compose <code>BoiteNoireDiagnostic</code> et <code>NotificationAlerte</code>. Consolidé dans <code>RapportAuditSla</code>.</td>
+                </tr>
+                <tr>
+                    <td><strong>BoiteNoireDiagnostic</strong></td>
+                    <td>Encapsule les données forensiques complètes (payload brut JSON, code HTTP 500/504, cause racine, serveur hôte, endpoints API affectés).</td>
+                    <td>Composition forte avec <code>Incident</code> (1 &harr; 1, détruit avec l'incident).</td>
+                </tr>
+                <tr>
+                    <td><strong>NotificationAlerte</strong></td>
+                    <td>Gère la diffusion multi-canal (Bot WhatsApp, Statuspage publique) et le statut de délivrabilité des alertes de crise.</td>
+                    <td>Composition avec <code>Incident</code> (1 &rarr; 0..*).</td>
+                </tr>
+                <tr>
+                    <td><strong>RapportAuditSla</strong></td>
+                    <td>Produit le registre certifié des 12 colonnes techniques opposables aux banques et génère les fiches de reporting périodique en PDF Paysage.</td>
+                    <td>Consolide les <code>Incident</code> (1 &larr; 0..*). Généré par <code>Administrateur</code>.</td>
+                </tr>
+                <tr>
+                    <td><strong>ScenarioSimulation</strong></td>
+                    <td>Fournit le catalogue d'injection de fausses pannes pour entraîner les équipes et valider le temps de réaction automatique du pipeline d'alerte.</td>
+                    <td>Exécuté par <code>Operateur</code>. Cible un <code>ServicePartenaire</code>.</td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+    <!-- Scripts pour l'export haute fidélité -->
+    <script>
+        function getSvgElement() {
+            return document.querySelector('.diagram-container svg') || document.querySelector('svg');
+        }
+
+        function getSvgString() {
+            const svg = getSvgElement();
+            if (!svg) {
+                console.error("Élément SVG introuvable");
+                return "";
+            }
+            return new XMLSerializer().serializeToString(svg);
+        }
+
+        function downloadSvg() {
+            const svgString = getSvgString();
+            const blob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
+            const link = document.createElement('a');
+            link.download = 'Diagramme_Classes_VigilCore_.svg';
+            link.href = URL.createObjectURL(blob);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        function downloadPngHd() {
+            const svgString = getSvgString();
+            const blob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
+            const URLObj = window.URL || window.webkitURL || window;
+            const blobURL = URLObj.createObjectURL(blob);
+
+            const image = new Image();
+            image.onload = function() {
+                const canvas = document.createElement('canvas');
+                canvas.width = 4350;
+                canvas.height = 3060;
+                const ctx = canvas.getContext('2d');
+                ctx.fillStyle = '#ffffff';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.drawImage(image, 0, 0, 4350, 3060);
+
+                canvas.toBlob(function(pngBlob) {
+                    const link = document.createElement('a');
+                    link.download = 'Diagramme_Classes_VigilCore__8K.png';
+                    link.href = URLObj.createObjectURL(pngBlob);
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    URLObj.revokeObjectURL(blobURL);
+                }, 'image/png', 1.0);
+            };
+            image.src = blobURL;
+        }
+
+        function copyProjectDiagramImage() {
+            const svgString = getSvgString();
+            const blob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
+            const URLObj = window.URL || window.webkitURL || window;
+            const blobURL = URLObj.createObjectURL(blob);
+
+            const image = new Image();
+            image.onload = function() {
+                const canvas = document.createElement('canvas');
+                canvas.width = 2900;
+                canvas.height = 2040;
+                const ctx = canvas.getContext('2d');
+                ctx.fillStyle = '#ffffff';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.drawImage(image, 0, 0, 2900, 2040);
+
+                canvas.toBlob(function(pngBlob) {
+                    if (navigator.clipboard && window.ClipboardItem) {
+                        navigator.clipboard.write([new ClipboardItem({ 'image/png': pngBlob })]).then(function() {
+                            alert('✅ Image du Diagramme de Classes copiée dans le presse-papier !\nVous pouvez maintenant coller directement (Ctrl+V) dans Microsoft Word.');
+                        }).catch(function() {
+                            downloadPngHd();
+                        });
+                    } else {
+                        downloadPngHd();
+                    }
+                }, 'image/png', 1.0);
+            };
+            image.src = blobURL;
+        }
+    </script>
+</body>
+</html>

@@ -12,9 +12,9 @@
 
         <title>{{ config('app.name', 'VigilCore') }} — Connexion</title>
 
-        <!-- Favicon -->
-        <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon-32x32.png') }}">
-        <link rel="shortcut icon" href="{{ asset('favicon.ico') }}">
+        <!-- Favicon Officiel VigilCore -->
+        <link rel="icon" type="image/svg+xml" href="{{ asset('images/logo.svg') }}?v=3">
+        <link rel="shortcut icon" type="image/svg+xml" href="{{ asset('images/logo.svg') }}?v=3">
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])

@@ -1,0 +1,167 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 700" width="100%" height="100%" style="background-color: #ffffff; font-family: 'Segoe UI', Calibri, Arial, sans-serif;">
+    <defs>
+        <!-- Filtre ombre douce  -->
+        <filter id="shadow-state" x="-10%" y="-10%" width="130%" height="130%">
+            <feDropShadow dx="2" dy="3" stdDeviation="3" flood-color="#000000" flood-opacity="0.12"/>
+        </filter>
+
+        <!-- Marqueur Flèche de Transition Normée UML -->
+        <marker id="arrow-tr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M 0 1.5 L 9 5 L 0 8.5 z" fill="#000000"/>
+        </marker>
+        <marker id="arrow-tr-red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M 0 1.5 L 9 5 L 0 8.5 z" fill="#dc2626"/>
+        </marker>
+    </defs>
+
+    <!-- CADRE GÉNÉRAL DU DIAGRAMME D'ÉTATS-TRANSITIONS POWERAMC -->
+    <rect x="20" y="20" width="1160" height="660" rx="10" ry="10" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5" filter="url(#shadow-state)"/>
+    
+    <!-- BANDEAU DE TITRE UML POWERAMC -->
+    <path d="M 20 20 L 580 20 L 605 48 L 580 48 L 20 48 Z" fill="#0020B2"/>
+    <text x="35" y="37" fill="#ffffff" font-size="15" font-weight="bold" letter-spacing="0.5">
+        stm : Cycle de Vie d'un Incident dans VigilCore
+    </text>
+
+    <!-- ========================================================================= -->
+    <!-- 1. ÉTAT INITIAL (Disque noir plein)                                       -->
+    <!-- Position: cx=65, cy=170, r=15                                             -->
+    <!-- ========================================================================= -->
+    <circle cx="65" cy="170" r="15" fill="#000000"/>
+
+    <!-- Transition Initiale vers État 1 (TRAIT PLEIN) -->
+    <line x1="80" y1="170" x2="168" y2="170" stroke="#000000" stroke-width="2" marker-end="url(#arrow-tr)"/>
+    <text x="80" y="140" fill="#0020B2" font-size="12.5" font-weight="bold">anomalieDetectee</text>
+    <text x="80" y="158" fill="#334155" font-size="11" font-weight="bold">[3_echecs_consecutifs ou HTTP 500/504]</text>
+
+
+    <!-- ========================================================================= -->
+    <!-- 2. ÉTAT 1 : En cours d'analyse & Diagnostic (Vert)                        -->
+    <!-- Position: X=170, Y=110 | L=245, H=125                                     -->
+    <!-- ========================================================================= -->
+    <g transform="translate(170, 110)" filter="url(#shadow-state)">
+        <rect x="0" y="0" width="245" height="125" rx="12" fill="#f0fdf4" stroke="#16a34a" stroke-width="2"/>
+        <rect x="0" y="0" width="245" height="30" rx="12" fill="#16a34a"/>
+        <rect x="0" y="18" width="245" height="12" fill="#16a34a"/>
+        <text x="122" y="21" fill="#ffffff" font-size="13.5" font-weight="bold" text-anchor="middle">En cours d'analyse</text>
+        
+        <text x="12" y="52" fill="#000000" font-size="12" font-weight="bold">entree / horodaterDebut() &amp; setId()</text>
+        <text x="12" y="72" fill="#000000" font-size="12" font-weight="bold">faire / capturerBoiteNoireJSON()</text>
+        <text x="12" y="92" fill="#000000" font-size="12" font-weight="bold">faire / actualiserPageWeb('en_cours')</text>
+        <text x="12" y="112" fill="#000000" font-size="12" font-weight="bold">sortie / figerDiagnosticInitial()</text>
+    </g>
+
+
+    <!-- Transition État 1 -> État 2 (TRAIT PLEIN) -->
+    <line x1="415" y1="170" x2="478" y2="170" stroke="#000000" stroke-width="2" marker-end="url(#arrow-tr)"/>
+    <text x="420" y="140" fill="#0020B2" font-size="12.5" font-weight="bold">causeIdentifiee</text>
+    <text x="420" y="158" fill="#334155" font-size="11" font-weight="bold">[diagnostic_valide]</text>
+
+    <!-- Transition d'Annulation Fausse Alerte État 1 -> État 5 (TRAIT PLEIN) -->
+    <path d="M 290 235 L 290 390 L 368 390" fill="none" stroke="#000000" stroke-width="2" marker-end="url(#arrow-tr)"/>
+    <text x="205" y="305" fill="#0020B2" font-size="12" font-weight="bold">annulationFausseAlerte</text>
+    <text x="205" y="323" fill="#334155" font-size="11" font-weight="bold">[sonde_reussie_immediatement]</text>
+    <text x="205" y="340" fill="#334155" font-size="11" font-weight="bold">/ marquerFausseAlerte()</text>
+
+
+    <!-- ========================================================================= -->
+    <!-- 3. ÉTAT 2 : Cause Racine Identifiée (Bleu)                                -->
+    <!-- Position: X=480, Y=110 | L=245, H=125                                     -->
+    <!-- ========================================================================= -->
+    <g transform="translate(480, 110)" filter="url(#shadow-state)">
+        <rect x="0" y="0" width="245" height="125" rx="12" fill="#eff6ff" stroke="#2563eb" stroke-width="2"/>
+        <rect x="0" y="0" width="245" height="30" rx="12" fill="#2563eb"/>
+        <rect x="0" y="18" width="245" height="12" fill="#2563eb"/>
+        <text x="122" y="21" fill="#ffffff" font-size="13.5" font-weight="bold" text-anchor="middle">Cause Racine Identifiée</text>
+        
+        <text x="12" y="52" fill="#000000" font-size="12" font-weight="bold">entree / envoyerAlerteWhatsApp()</text>
+        <text x="12" y="72" fill="#000000" font-size="12" font-weight="bold">faire / notifierEquipeTechnique()</text>
+        <text x="12" y="92" fill="#000000" font-size="12" font-weight="bold">faire / actualiserPageWeb('identifie')</text>
+        <text x="12" y="112" fill="#000000" font-size="12" font-weight="bold">sortie / noterHeurePriseEnCharge()</text>
+    </g>
+
+
+    <!-- Transition État 2 -> État 3 (TRAIT PLEIN) -->
+    <line x1="725" y1="170" x2="788" y2="170" stroke="#000000" stroke-width="2" marker-end="url(#arrow-tr)"/>
+    <text x="730" y="140" fill="#0020B2" font-size="12.5" font-weight="bold">actionCorrective</text>
+    <text x="730" y="158" fill="#334155" font-size="11" font-weight="bold">[bascule_secours]</text>
+
+
+    <!-- ========================================================================= -->
+    <!-- 4. ÉTAT 3 : Surveillance & Tests Post-Correctif (Jaune)                   -->
+    <!-- Position: X=790, Y=110 | L=245, H=125                                     -->
+    <!-- ========================================================================= -->
+    <g transform="translate(790, 110)" filter="url(#shadow-state)">
+        <rect x="0" y="0" width="245" height="125" rx="12" fill="#fefce8" stroke="#ca8a04" stroke-width="2"/>
+        <rect x="0" y="0" width="245" height="30" rx="12" fill="#ca8a04"/>
+        <rect x="0" y="18" width="245" height="12" fill="#ca8a04"/>
+        <text x="122" y="21" fill="#ffffff" font-size="13.5" font-weight="bold" text-anchor="middle">Surveillance &amp; Tests</text>
+        
+        <text x="12" y="52" fill="#000000" font-size="12" font-weight="bold">entree / lancerSondesSante30s()</text>
+        <text x="12" y="72" fill="#000000" font-size="12" font-weight="bold">faire / testerDisponibilite()</text>
+        <text x="12" y="92" fill="#000000" font-size="12" font-weight="bold">faire / actualiserPageWeb('surveillance')</text>
+        <text x="12" y="112" fill="#000000" font-size="12" font-weight="bold">sortie / compilerMetriquesTest()</text>
+    </g>
+
+
+    <!-- Transition de Rechute État 3 -> État 2 (TRAIT PLEIN) -->
+    <path d="M 870 235 L 870 290 L 590 290 L 590 237" fill="none" stroke="#dc2626" stroke-width="2" marker-end="url(#arrow-tr-red)"/>
+    <text x="730" y="280" fill="#dc2626" font-size="12" font-weight="bold" text-anchor="middle">rechuteAnomalie [re-echec_sonde] / reouvrirDiagnostic()</text>
+
+
+    <!-- Transition de Résolution État 3 -> État 4 (TRAIT PLEIN) -->
+    <path d="M 920 235 L 920 378" fill="none" stroke="#000000" stroke-width="2" marker-end="url(#arrow-tr)"/>
+    <text x="930" y="295" fill="#16a34a" font-size="12.5" font-weight="bold">retablissementValide</text>
+    <text x="930" y="315" fill="#334155" font-size="11" font-weight="bold">[3_succes_consecutifs]</text>
+    <text x="930" y="335" fill="#334155" font-size="11" font-weight="bold">/ marquerResolu()</text>
+
+
+    <!-- ========================================================================= -->
+    <!-- 5. ÉTAT 4 : Résolu & Clôturé (Violet)                                     -->
+    <!-- Position: X=760, Y=380 | L=275, H=135                                     -->
+    <!-- ========================================================================= -->
+    <g transform="translate(760, 380)" filter="url(#shadow-state)">
+        <rect x="0" y="0" width="275" height="135" rx="12" fill="#faf5ff" stroke="#7c3aed" stroke-width="2"/>
+        <rect x="0" y="0" width="275" height="30" rx="12" fill="#7c3aed"/>
+        <rect x="0" y="18" width="275" height="12" fill="#7c3aed"/>
+        <text x="137" y="21" fill="#ffffff" font-size="13.5" font-weight="bold" text-anchor="middle">Résolu &amp; Clôturé</text>
+        
+        <text x="12" y="52" fill="#000000" font-size="12" font-weight="bold">entree / horodaterFinWAT()</text>
+        <text x="12" y="72" fill="#000000" font-size="12" font-weight="bold">faire / calculerDureeCoupureSec()</text>
+        <text x="12" y="92" fill="#000000" font-size="12" font-weight="bold">faire / recalculerSlaDisponibilite()</text>
+        <text x="12" y="112" fill="#000000" font-size="12" font-weight="bold">faire / publierRetourNominalPageWeb()</text>
+        <text x="12" y="130" fill="#000000" font-size="11" font-weight="bold">sortie / archiverPourAuditSLA()</text>
+    </g>
+
+
+    <!-- ========================================================================= -->
+    <!-- 6. ÉTAT 5 : Fausse Alerte Annulée (Gris)                                  -->
+    <!-- Position: X=370, Y=380 | L=230, H=115                                     -->
+    <!-- ========================================================================= -->
+    <g transform="translate(370, 380)" filter="url(#shadow-state)">
+        <rect x="0" y="0" width="230" height="115" rx="12" fill="#f8fafc" stroke="#64748b" stroke-width="2"/>
+        <rect x="0" y="0" width="230" height="30" rx="12" fill="#64748b"/>
+        <rect x="0" y="18" width="230" height="12" fill="#64748b"/>
+        <text x="115" y="21" fill="#ffffff" font-size="13.5" font-weight="bold" text-anchor="middle">Fausse Alerte Annulée</text>
+        
+        <text x="12" y="52" fill="#000000" font-size="12" font-weight="bold">entree / annulerIncident()</text>
+        <text x="12" y="72" fill="#000000" font-size="12" font-weight="bold">faire / supprimerDePageWeb()</text>
+        <text x="12" y="92" fill="#000000" font-size="12" font-weight="bold">sortie / classerSansSuite()</text>
+    </g>
+
+
+    <!-- Transition État 5 -> Nœud Final (TRAIT PLEIN) -->
+    <line x1="600" y1="440" x2="688" y2="440" stroke="#000000" stroke-width="2" marker-end="url(#arrow-tr)"/>
+
+    <!-- Transition État 4 -> Nœud Final (TRAIT PLEIN) -->
+    <line x1="760" y1="440" x2="728" y2="440" stroke="#000000" stroke-width="2" marker-end="url(#arrow-tr)"/>
+
+
+    <!-- ========================================================================= -->
+    <!-- 7. ÉTAT FINAL (Disque cible avec anneau extérieur)                        -->
+    <!-- Position: cx=708, cy=440, r=16                                            -->
+    <!-- ========================================================================= -->
+    <circle cx="708" cy="440" r="16" fill="none" stroke="#000000" stroke-width="2.2"/>
+    <circle cx="708" cy="440" r="10" fill="#000000"/>
+
+</svg>

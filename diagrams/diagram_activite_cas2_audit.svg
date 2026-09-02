@@ -1,0 +1,174 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 940" width="100%" height="100%" style="background-color: #ffffff; font-family: 'Segoe UI', Calibri, Arial, sans-serif;">
+    <defs>
+        <!-- Filtre ombre douce  -->
+        <filter id="shadow-act2" x="-10%" y="-10%" width="130%" height="130%">
+            <feDropShadow dx="2" dy="2" stdDeviation="2.5" flood-color="#000000" flood-opacity="0.12"/>
+        </filter>
+
+        <!-- Marqueur Flèche de Flux d'Activité -->
+        <marker id="arrow-act2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse">
+            <path d="M 0 1.5 L 9 5 L 0 8.5 z" fill="#000000"/>
+        </marker>
+    </defs>
+
+    <!-- CADRE GÉNÉRAL DU DIAGRAMME D'ACTIVITÉ POWERAMC -->
+    <rect x="20" y="20" width="1160" height="900" rx="8" ry="8" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5" filter="url(#shadow-act2)"/>
+    
+    <!-- BANDEAU DE TITRE UML POWERAMC -->
+    <path d="M 20 20 L 640 20 L 665 48 L 640 48 L 20 48 Z" fill="#0020B2"/>
+    <text x="35" y="37" fill="#ffffff" font-size="15" font-weight="bold" letter-spacing="0.5">
+        act : Activité — Audit de Disponibilité &amp; Export 12 Colonnes
+    </text>
+
+    <!-- ========================================================================= -->
+    <!-- COULOIRS (SWIMLANES / PARTITIONS)                                         -->
+    <!-- ========================================================================= -->
+    <!-- Couloir 1 : Utilisateur Interne (Support / SLA / Direction) -->
+    <rect x="30" y="55" width="340" height="35" fill="#f0fdf4" stroke="#cbd5e1" stroke-width="1.2"/>
+    <text x="200" y="78" fill="#16a34a" font-size="13.5" font-weight="bold" text-anchor="middle">Utilisateur Interne (Support / SLA / Direction)</text>
+    <line x1="30" y1="90" x2="30" y2="905" stroke="#cbd5e1" stroke-width="1.2"/>
+
+    <!-- Couloir 2 : Moteur VigilCore (Calculateur & Agrégation) -->
+    <rect x="370" y="55" width="410" height="35" fill="#eff6ff" stroke="#cbd5e1" stroke-width="1.2"/>
+    <text x="575" y="78" fill="#0020B2" font-size="13.5" font-weight="bold" text-anchor="middle">Moteur VigilCore (Agrégation &amp; Calculs)</text>
+    <line x1="370" y1="55" x2="370" y2="905" stroke="#cbd5e1" stroke-width="1.2"/>
+
+    <!-- Couloir 3 : Générateur de Rapports (Moteur XLSX / PDF) -->
+    <rect x="780" y="55" width="390" height="35" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.2"/>
+    <text x="975" y="78" fill="#0020B2" font-size="13.5" font-weight="bold" text-anchor="middle">Générateur d'Audit (Excel 12 Col &amp; PDF Scellé)</text>
+    <line x1="780" y1="55" x2="780" y2="905" stroke="#cbd5e1" stroke-width="1.2"/>
+    <line x1="1170" y1="55" x2="1170" y2="905" stroke="#cbd5e1" stroke-width="1.2"/>
+
+
+    <!-- ========================================================================= -->
+    <!-- FLOT D'ACTIVITÉ POWERAMC                                                  -->
+    <!-- ========================================================================= -->
+
+    <!-- NŒUD INITIAL (Couloir 1) -->
+    <circle cx="200" cy="115" r="14" fill="#000000"/>
+    <line x1="200" y1="129" x2="200" y2="158" stroke="#000000" stroke-width="1.8" marker-end="url(#arrow-act2)"/>
+
+    <!-- Activité 1 (Couloir 1) : Sélectionner Critères d'Audit -->
+    <g transform="translate(75, 160)" filter="url(#shadow-act2)">
+        <rect x="0" y="0" width="250" height="50" rx="20" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.8"/>
+        <text x="125" y="23" fill="#000000" font-size="13" font-weight="bold" text-anchor="middle">Sélectionner Critères d'Audit</text>
+        <text x="125" y="40" fill="#334155" font-size="11" font-weight="bold" text-anchor="middle">Période (Mois) &amp; 20 Services Partenaires</text>
+    </g>
+
+    <line x1="200" y1="210" x2="200" y2="243" stroke="#000000" stroke-width="1.8" marker-end="url(#arrow-act2)"/>
+
+    <!-- Activité 2 (Couloir 1) : Cliquer "Générer Rapport d'Audit" -->
+    <g transform="translate(75, 245)" filter="url(#shadow-act2)">
+        <rect x="0" y="0" width="250" height="50" rx="20" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.8"/>
+        <text x="125" y="23" fill="#000000" font-size="13" font-weight="bold" text-anchor="middle">Cliquer "Générer Rapport"</text>
+        <text x="125" y="40" fill="#334155" font-size="11" font-weight="bold" text-anchor="middle">Soumettre requête d'audit consolidée</text>
+    </g>
+
+    <!-- TRANSITION VERS LE CENTRE DE L'ACTIVITÉ 3 (Couloir 2) -->
+    <path d="M 325 270 L 575 270 L 575 318" fill="none" stroke="#000000" stroke-width="1.8" marker-end="url(#arrow-act2)"/>
+
+    <!-- Activité 3 (Couloir 2) : Extraction Données Base -->
+    <g transform="translate(435, 320)" filter="url(#shadow-act2)">
+        <rect x="0" y="0" width="280" height="52" rx="22" fill="#eff6ff" stroke="#0020B2" stroke-width="1.8"/>
+        <text x="140" y="23" fill="#000000" font-size="13" font-weight="bold" text-anchor="middle">Extraire Incidents &amp; Coupures</text>
+        <text x="140" y="41" fill="#334155" font-size="11" font-weight="bold" text-anchor="middle">Jointure 20 Services &amp; Boîte Noire</text>
+    </g>
+
+    <line x1="575" y1="372" x2="575" y2="408" stroke="#000000" stroke-width="1.8" marker-end="url(#arrow-act2)"/>
+
+    <!-- Activité 4 (Couloir 2) : Calcul % Disponibilité & Taux -->
+    <g transform="translate(435, 410)" filter="url(#shadow-act2)">
+        <rect x="0" y="0" width="280" height="52" rx="22" fill="#eff6ff" stroke="#0020B2" stroke-width="1.8"/>
+        <text x="140" y="23" fill="#000000" font-size="13" font-weight="bold" text-anchor="middle">Calculer Disponibilité Mensuelle</text>
+        <text x="140" y="41" fill="#334155" font-size="11" font-weight="bold" text-anchor="middle">Formule : (Temps_Total - Coupures) / Total</text>
+    </g>
+
+    <line x1="575" y1="462" x2="575" y2="496" stroke="#000000" stroke-width="1.8" marker-end="url(#arrow-act2)"/>
+
+    <!-- DÉCISION (Couloir 2) : Disponibilité >= 99.9% ? -->
+    <g transform="translate(550, 498)">
+        <polygon points="25 0, 50 20, 25 40, 0 20" fill="#ffffff" stroke="#0020B2" stroke-width="1.8"/>
+    </g>
+
+    <!-- Branche Conforme (Disponibilité >= 99.9%) -->
+    <line x1="550" y1="518" x2="430" y2="518" stroke="#000000" stroke-width="1.8"/>
+    <line x1="430" y1="518" x2="430" y2="558" stroke="#000000" stroke-width="1.8" marker-end="url(#arrow-act2)"/>
+    <text x="465" y="510" fill="#16a34a" font-size="11.5" font-weight="bold">[Disponibilité &gt;= 99.9%]</text>
+
+    <g transform="translate(360, 560)" filter="url(#shadow-act2)">
+        <rect x="0" y="0" width="140" height="44" rx="16" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.8"/>
+        <text x="70" y="21" fill="#16a34a" font-size="12" font-weight="bold" text-anchor="middle">Statut Conforme</text>
+        <text x="70" y="36" fill="#334155" font-size="10.5" font-weight="bold" text-anchor="middle">0 Pénalité</text>
+    </g>
+
+    <!-- Branche Non Conforme (Disponibilité < 99.9%) -->
+    <line x1="600" y1="518" x2="720" y2="518" stroke="#000000" stroke-width="1.8"/>
+    <line x1="720" y1="518" x2="720" y2="558" stroke="#000000" stroke-width="1.8" marker-end="url(#arrow-act2)"/>
+    <text x="615" y="510" fill="#dc2626" font-size="11.5" font-weight="bold">[Disponibilité &lt; 99.9%]</text>
+
+    <g transform="translate(640, 560)" filter="url(#shadow-act2)">
+        <rect x="0" y="0" width="160" height="44" rx="16" fill="#fef2f2" stroke="#dc2626" stroke-width="1.8"/>
+        <text x="80" y="21" fill="#dc2626" font-size="12" font-weight="bold" text-anchor="middle">Calculer Pénalités</text>
+        <text x="80" y="36" fill="#334155" font-size="10.5" font-weight="bold" text-anchor="middle">Pénalité financière</text>
+    </g>
+
+    <!-- FUSION / MERGE DIAMOND -->
+    <line x1="430" y1="604" x2="430" y2="625" stroke="#000000" stroke-width="1.8"/>
+    <line x1="720" y1="604" x2="720" y2="625" stroke="#000000" stroke-width="1.8"/>
+    <line x1="430" y1="625" x2="550" y2="625" stroke="#000000" stroke-width="1.8"/>
+    <line x1="720" y1="625" x2="600" y2="625" stroke="#000000" stroke-width="1.8"/>
+    <g transform="translate(550, 613)">
+        <polygon points="25 0, 50 12, 25 24, 0 12" fill="#ffffff" stroke="#0020B2" stroke-width="1.8"/>
+    </g>
+
+    <line x1="575" y1="637" x2="575" y2="673" stroke="#000000" stroke-width="1.8" marker-end="url(#arrow-act2)"/>
+
+    <!-- Activité 5 (Couloir 2) : Générer Empreinte SHA-256 -->
+    <g transform="translate(435, 675)" filter="url(#shadow-act2)">
+        <rect x="0" y="0" width="280" height="52" rx="22" fill="#eff6ff" stroke="#0020B2" stroke-width="1.8"/>
+        <text x="140" y="23" fill="#000000" font-size="13" font-weight="bold" text-anchor="middle">Sceller Preuve Numérique</text>
+        <text x="140" y="41" fill="#334155" font-size="11" font-weight="bold" text-anchor="middle">Empreinte SHA-256 Inviolable &amp; Heure</text>
+    </g>
+
+    <!-- Vers Couloir 3 : Division Parallèle (FORK) -->
+    <line x1="715" y1="701" x2="808" y2="701" stroke="#000000" stroke-width="1.8" marker-end="url(#arrow-act2)"/>
+    <rect x="810" y="640" width="6" height="120" fill="#000000" rx="2"/>
+
+    <!-- Branche Parallèle 1 : Génération Excel 12 Colonnes (Couloir 3) -->
+    <path d="M 816 670 L 853 670" fill="none" stroke="#000000" stroke-width="1.8" marker-end="url(#arrow-act2)"/>
+    <g transform="translate(855, 645)" filter="url(#shadow-act2)">
+        <rect x="0" y="0" width="240" height="50" rx="20" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.8"/>
+        <text x="120" y="23" fill="#000000" font-size="13" font-weight="bold" text-anchor="middle">Générer Fichier Excel</text>
+        <text x="120" y="41" fill="#334155" font-size="10.5" font-weight="bold" text-anchor="middle">Structure 12 Colonnes &amp; Formules</text>
+    </g>
+
+    <!-- Branche Parallèle 2 : Génération PDF Paysage (Couloir 3) -->
+    <path d="M 816 730 L 853 730" fill="none" stroke="#000000" stroke-width="1.8" marker-end="url(#arrow-act2)"/>
+    <g transform="translate(855, 710)" filter="url(#shadow-act2)">
+        <rect x="0" y="0" width="240" height="50" rx="20" fill="#fef2f2" stroke="#dc2626" stroke-width="1.8"/>
+        <text x="120" y="23" fill="#000000" font-size="13" font-weight="bold" text-anchor="middle">Générer Rapport PDF Paysage</text>
+        <text x="120" y="41" fill="#334155" font-size="10.5" font-weight="bold" text-anchor="middle">En-tête Officiel &amp; Sceau</text>
+    </g>
+
+    <!-- BARRE DE SYNCHRONISATION (JOIN - CONVERGENCE) -->
+    <line x1="1095" y1="670" x2="1120" y2="670" stroke="#000000" stroke-width="1.8"/>
+    <line x1="1095" y1="730" x2="1120" y2="730" stroke="#000000" stroke-width="1.8"/>
+    <rect x="1120" y="640" width="6" height="120" fill="#000000" rx="2"/>
+
+    <!-- Vers Couloir 1 : Téléchargement et Clôture -->
+    <path d="M 1126 700 L 1150 700 L 1150 820 L 333 820" fill="none" stroke="#000000" stroke-width="1.8" marker-end="url(#arrow-act2)"/>
+
+    <!-- Activité 6 (Couloir 1) : Télécharger Registre Certifié -->
+    <g transform="translate(75, 795)" filter="url(#shadow-act2)">
+        <rect x="0" y="0" width="255" height="52" rx="22" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.8"/>
+        <text x="127" y="23" fill="#000000" font-size="13" font-weight="bold" text-anchor="middle">Télécharger Registre Certifié</text>
+        <text x="127" y="41" fill="#334155" font-size="11" font-weight="bold" text-anchor="middle">Présenter aux réunions de suivi</text>
+    </g>
+
+    <line x1="200" y1="847" x2="200" y2="883" stroke="#000000" stroke-width="1.8" marker-end="url(#arrow-act2)"/>
+
+    <!-- NŒUD FINAL (Couloir 1) -->
+    <circle cx="200" cy="895" r="14" fill="none" stroke="#000000" stroke-width="2.2"/>
+    <circle cx="200" cy="895" r="8" fill="#000000"/>
+
+</svg>

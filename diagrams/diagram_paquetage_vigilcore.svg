@@ -1,0 +1,183 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1380 900" width="100%" height="100%" style="background-color: #ffffff; font-family: 'Segoe UI', Calibri, Arial, sans-serif;">
+    <defs>
+        <!-- Filtre ombre douce  -->
+        <filter id="shadow-pkg" x="-10%" y="-10%" width="130%" height="130%">
+            <feDropShadow dx="2" dy="3" stdDeviation="3" flood-color="#000000" flood-opacity="0.12"/>
+        </filter>
+
+        <!-- Marqueur Flèche de Dépendance UML -->
+        <marker id="arrow-dep" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M 0 1.5 L 9 5 L 0 8.5" fill="none" stroke="#000000" stroke-width="1.8" stroke-linecap="round"/>
+        </marker>
+    </defs>
+
+    <!-- CADRE GÉNÉRAL DU DIAGRAMME DE PAQUETAGE POWERAMC -->
+    <rect x="20" y="20" width="1340" height="860" rx="10" ry="10" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5" filter="url(#shadow-pkg)"/>
+    
+    <!-- BANDEAU DE TITRE UML POWERAMC -->
+    <path d="M 20 20 L 590 20 L 615 48 L 590 48 L 20 48 Z" fill="#0020B2"/>
+    <text x="35" y="37" fill="#ffffff" font-size="15" font-weight="bold" letter-spacing="0.5">
+        pkg : Diagramme de Paquetages du Système VigilCore
+    </text>
+
+    <!-- ========================================================================= -->
+    <!-- 1. PAQUETAGE : SecuriteEtAcces (Sécurité & Authentification)               -->
+    <!-- Position: X=50, Y=75 | L=360, H=185                                       -->
+    <!-- ========================================================================= -->
+    <g transform="translate(50, 75)" filter="url(#shadow-pkg)">
+        <!-- Onglet du dossier -->
+        <path d="M 0 0 L 160 0 L 175 26 L 0 26 Z" fill="#dbeafe" stroke="#0020B2" stroke-width="1.8"/>
+        <text x="12" y="18" fill="#0020B2" font-size="13" font-weight="bold">SecuriteEtAcces</text>
+        <!-- Corps du paquetage -->
+        <rect x="0" y="25" width="360" height="160" rx="0" fill="#f8fafc" stroke="#0020B2" stroke-width="1.8"/>
+        <rect x="0" y="25" width="360" height="28" fill="#eff6ff"/>
+        <text x="180" y="44" fill="#0020B2" font-size="13.5" font-weight="bold" text-anchor="middle">Couche Sécurité &amp; Contrôle d'Accès</text>
+        
+        <!-- Contenu / Classes -->
+        <text x="15" y="76" fill="#000000" font-size="12" font-weight="bold">📦 Utilisateur (Modèle &amp; Authentification)</text>
+        <text x="15" y="98" fill="#000000" font-size="12" font-weight="bold">📦 ControleurAuthentification (Connexion / Déconnexion)</text>
+        <text x="15" y="120" fill="#000000" font-size="12" font-weight="bold">📦 FiltreSecuriteSession (Protection des accès)</text>
+        <text x="15" y="142" fill="#000000" font-size="12" font-weight="bold">📦 ChiffrementMotDePasse (Bcrypt)</text>
+        <text x="15" y="166" fill="#334155" font-size="11" font-weight="bold" font-style="italic">Gère l'authentification sécurisée des techniciens</text>
+    </g>
+
+
+    <!-- ========================================================================= -->
+    <!-- 2. PAQUETAGE : CouchePresentation (Interface Web & Tableau de Bord)       -->
+    <!-- Position: X=480, Y=75 | L=460, H=185                                      -->
+    <!-- ========================================================================= -->
+    <g transform="translate(480, 75)" filter="url(#shadow-pkg)">
+        <!-- Onglet du dossier -->
+        <path d="M 0 0 L 180 0 L 195 26 L 0 26 Z" fill="#dbeafe" stroke="#0020B2" stroke-width="1.8"/>
+        <text x="12" y="18" fill="#0020B2" font-size="13" font-weight="bold">CouchePresentation</text>
+        <!-- Corps du paquetage -->
+        <rect x="0" y="25" width="460" height="160" rx="0" fill="#f8fafc" stroke="#0020B2" stroke-width="1.8"/>
+        <rect x="0" y="25" width="460" height="28" fill="#eff6ff"/>
+        <text x="230" y="44" fill="#0020B2" font-size="13.5" font-weight="bold" text-anchor="middle">Couche Présentation &amp; Tableau de Bord</text>
+        
+        <!-- Contenu / Classes -->
+        <text x="15" y="76" fill="#000000" font-size="12" font-weight="bold">📦 TableauDeBordDirect (Matrice des 20 Services en direct)</text>
+        <text x="15" y="98" fill="#000000" font-size="12" font-weight="bold">📦 FenetreInspectionBoiteNoire (Console de diagnostic JSON)</text>
+        <text x="15" y="120" fill="#000000" font-size="12" font-weight="bold">📦 VuePubliqueEtatServices (Portail partenaires &amp; banques)</text>
+        <text x="15" y="142" fill="#000000" font-size="12" font-weight="bold">📦 ControleurExportAudit (Téléchargement Excel / PDF)</text>
+        <text x="15" y="164" fill="#000000" font-size="12" font-weight="bold">📦 ConsoleSimulationPannes (Module d'injection de test)</text>
+    </g>
+
+
+    <!-- Dépendance CouchePresentation -> SecuriteEtAcces -->
+    <line x1="480" y1="145" x2="412" y2="145" stroke="#000000" stroke-width="1.8" stroke-dasharray="5 4" marker-end="url(#arrow-dep)"/>
+    <text x="445" y="136" fill="#0020B2" font-size="12" font-weight="bold" text-anchor="middle">&lt;&lt;importe&gt;&gt;</text>
+
+
+    <!-- ========================================================================= -->
+    <!-- 3. PAQUETAGE : SurveillanceServices (Santé des 20 Passerelles)            -->
+    <!-- Position: X=50, Y=335 | L=400, H=230                                      -->
+    <!-- ========================================================================= -->
+    <g transform="translate(50, 335)" filter="url(#shadow-pkg)">
+        <!-- Onglet du dossier -->
+        <path d="M 0 0 L 230 0 L 245 26 L 0 26 Z" fill="#dbeafe" stroke="#0020B2" stroke-width="1.8"/>
+        <text x="12" y="18" fill="#0020B2" font-size="13" font-weight="bold">SurveillanceServices</text>
+        <!-- Corps du paquetage -->
+        <rect x="0" y="25" width="400" height="205" rx="0" fill="#f8fafc" stroke="#0020B2" stroke-width="1.8"/>
+        <rect x="0" y="25" width="400" height="28" fill="#eff6ff"/>
+        <text x="200" y="44" fill="#0020B2" font-size="13.5" font-weight="bold" text-anchor="middle">Supervision &amp; Santé des 20 Services Partenaires</text>
+        
+        <!-- Contenu / Classes -->
+        <text x="15" y="76" fill="#000000" font-size="12" font-weight="bold">📦 ServicePartenaire (Catalogue MoMo, Orange, Eneo...)</text>
+        <text x="15" y="99" fill="#000000" font-size="12" font-weight="bold">📦 MoteurSondesAutomatiques (Requêtes de santé 30s)</text>
+        <text x="15" y="122" fill="#000000" font-size="12" font-weight="bold">📦 CalculateurDisponibilite (Calcul % Disponibilité)</text>
+        <text x="15" y="145" fill="#000000" font-size="12" font-weight="bold">📦 StatutServiceEnum (OPERATIONNEL / DEGRADE / PANNE)</text>
+        <text x="15" y="168" fill="#000000" font-size="12" font-weight="bold">📦 ScenarioSimulation (Injection de pannes de test)</text>
+        <text x="15" y="196" fill="#334155" font-size="11" font-weight="bold" font-style="italic">Gère l'état de santé temps réel des services de paiement</text>
+    </g>
+
+
+    <!-- Dépendance CouchePresentation -> SurveillanceServices -->
+    <path d="M 530 260 L 530 295 L 250 295 L 250 333" fill="none" stroke="#000000" stroke-width="1.8" stroke-dasharray="5 4" marker-end="url(#arrow-dep)"/>
+    <text x="390" y="286" fill="#0020B2" font-size="12" font-weight="bold" text-anchor="middle">&lt;&lt;importe&gt;&gt;</text>
+
+
+    <!-- ========================================================================= -->
+    <!-- 4. PAQUETAGE : GestionIncidents (Cœur Moteur & Boîte Noire)               -->
+    <!-- Position: X=510, Y=335 | L=430, H=230                                     -->
+    <!-- ========================================================================= -->
+    <g transform="translate(510, 335)" filter="url(#shadow-pkg)">
+        <!-- Onglet du dossier -->
+        <path d="M 0 0 L 190 0 L 205 26 L 0 26 Z" fill="#dbeafe" stroke="#0020B2" stroke-width="1.8"/>
+        <text x="12" y="18" fill="#0020B2" font-size="13" font-weight="bold">GestionIncidents</text>
+        <!-- Corps du paquetage -->
+        <rect x="0" y="25" width="430" height="205" rx="0" fill="#f8fafc" stroke="#0020B2" stroke-width="1.8"/>
+        <rect x="0" y="25" width="430" height="28" fill="#eff6ff"/>
+        <text x="215" y="44" fill="#0020B2" font-size="13.5" font-weight="bold" text-anchor="middle">Cycle de Vie &amp; Traçabilité des Incidents</text>
+        
+        <!-- Contenu / Classes -->
+        <text x="15" y="76" fill="#000000" font-size="12" font-weight="bold">📦 Incident (Entité centrale de coupure)</text>
+        <text x="15" y="99" fill="#000000" font-size="12" font-weight="bold">📦 BoiteNoireDiagnostic (Données brutes JSON &amp; WAT)</text>
+        <text x="15" y="122" fill="#000000" font-size="12" font-weight="bold">📦 ControleurIncidents (Ouverture, analyse, clôture)</text>
+        <text x="15" y="145" fill="#000000" font-size="12" font-weight="bold">📦 CalculateurTempsCoupure (Horodatage WAT &amp; MTTR)</text>
+        <text x="15" y="168" fill="#000000" font-size="12" font-weight="bold">📦 EtatAvancementEnum (4 étapes du cycle de vie)</text>
+        <text x="15" y="196" fill="#334155" font-size="11" font-weight="bold" font-style="italic">Trace chaque événement avec sa preuve numérique infalsifiable</text>
+    </g>
+
+
+    <!-- Dépendance GestionIncidents -> SurveillanceServices -->
+    <line x1="510" y1="440" x2="452" y2="440" stroke="#000000" stroke-width="1.8" stroke-dasharray="5 4" marker-end="url(#arrow-dep)"/>
+    <text x="480" y="430" fill="#0020B2" font-size="12" font-weight="bold" text-anchor="middle">&lt;&lt;importe&gt;&gt;</text>
+
+
+    <!-- ========================================================================= -->
+    <!-- 5. PAQUETAGE : NotificationEtDiffusion (WhatsApp & Statuspage)             -->
+    <!-- Position: X=980, Y=335 | L=360, H=230                                     -->
+    <!-- ========================================================================= -->
+    <g transform="translate(980, 335)" filter="url(#shadow-pkg)">
+        <!-- Onglet du dossier -->
+        <path d="M 0 0 L 230 0 L 245 26 L 0 26 Z" fill="#dbeafe" stroke="#0020B2" stroke-width="1.8"/>
+        <text x="12" y="18" fill="#0020B2" font-size="13" font-weight="bold">NotificationEtDiffusion</text>
+        <!-- Corps du paquetage -->
+        <rect x="0" y="25" width="360" height="205" rx="0" fill="#f8fafc" stroke="#0020B2" stroke-width="1.8"/>
+        <rect x="0" y="25" width="360" height="28" fill="#eff6ff"/>
+        <text x="180" y="44" fill="#0020B2" font-size="13.5" font-weight="bold" text-anchor="middle">Diffusion Multi-Canal des Alertes</text>
+        
+        <!-- Contenu / Classes -->
+        <text x="15" y="76" fill="#000000" font-size="12" font-weight="bold">📦 NotificationAlerte (Entité de message)</text>
+        <text x="15" y="99" fill="#000000" font-size="12" font-weight="bold">📦 ServiceWhatsAppCloud (Evolution API (Baileys / Docker))</text>
+        <text x="15" y="122" fill="#000000" font-size="12" font-weight="bold">📦 ConnecteurPageWebEtat (Statuspage)</text>
+        <text x="15" y="145" fill="#000000" font-size="12" font-weight="bold">📦 FormateurMessagesAlerte (Templates)</text>
+        <text x="15" y="168" fill="#000000" font-size="12" font-weight="bold">📦 RobotAlerteN8n (Orchestration flux)</text>
+        <text x="15" y="196" fill="#334155" font-size="11" font-weight="bold" font-style="italic">Transmet les alertes WhatsApp aux techniciens d'astreinte</text>
+    </g>
+
+
+    <!-- Dépendance NotificationEtDiffusion -> GestionIncidents -->
+    <line x1="980" y1="440" x2="942" y2="440" stroke="#000000" stroke-width="1.8" stroke-dasharray="5 4" marker-end="url(#arrow-dep)"/>
+    <text x="960" y="430" fill="#0020B2" font-size="12" font-weight="bold" text-anchor="middle">&lt;&lt;importe&gt;&gt;</text>
+
+
+    <!-- ========================================================================= -->
+    <!-- 6. PAQUETAGE : AuditEtRapports (Génération Excel 12 Col & PDF)            -->
+    <!-- Position: X=350, Y=630 | L=650, H=210                                     -->
+    <!-- ========================================================================= -->
+    <g transform="translate(350, 630)" filter="url(#shadow-pkg)">
+        <!-- Onglet du dossier -->
+        <path d="M 0 0 L 190 0 L 205 26 L 0 26 Z" fill="#dbeafe" stroke="#0020B2" stroke-width="1.8"/>
+        <text x="12" y="18" fill="#0020B2" font-size="13" font-weight="bold">AuditEtRapports</text>
+        <!-- Corps du paquetage -->
+        <rect x="0" y="25" width="650" height="185" rx="0" fill="#f8fafc" stroke="#0020B2" stroke-width="1.8"/>
+        <rect x="0" y="25" width="650" height="28" fill="#eff6ff"/>
+        <text x="325" y="44" fill="#0020B2" font-size="13.5" font-weight="bold" text-anchor="middle">Moteur d'Audit SLA &amp; Certification des Données</text>
+        
+        <!-- Contenu / Classes -->
+        <text x="15" y="76" fill="#000000" font-size="12" font-weight="bold">📦 RapportAuditDisponibilite (Entité d'audit mensuel / hebdomadaire)</text>
+        <text x="15" y="99" fill="#000000" font-size="12" font-weight="bold">📦 GenerateurRegistreExcel12Colonnes (Moteur PhpSpreadsheet avec formules temps réel)</text>
+        <text x="15" y="122" fill="#000000" font-size="12" font-weight="bold">📦 GenerateurFichePdfPaysage (Moteur DomPDF / Snappy avec en-tête et sceau)</text>
+        <text x="15" y="145" fill="#000000" font-size="12" font-weight="bold">📦 ScellementCryptographiqueSha256 (Génération empreinte numérique de non-répudiation)</text>
+        <text x="15" y="168" fill="#000000" font-size="12" font-weight="bold">📦 CalculateurPenalitesFinancieres (Application du barème contractuel de pénalités)</text>
+        <text x="15" y="196" fill="#334155" font-size="11" font-weight="bold" font-style="italic">Produit les livrables d'audit opposables aux partenaires et conformes aux normes bancaires</text>
+    </g>
+
+
+    <!-- Dépendance AuditEtRapports -> GestionIncidents -->
+    <line x1="670" y1="630" x2="670" y2="567" stroke="#000000" stroke-width="1.8" stroke-dasharray="5 4" marker-end="url(#arrow-dep)"/>
+    <text x="685" y="598" fill="#0020B2" font-size="12" font-weight="bold">&lt;&lt;importe&gt;&gt;</text>
+
+</svg>

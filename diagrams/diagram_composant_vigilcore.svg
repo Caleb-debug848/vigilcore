@@ -1,0 +1,205 @@
+<svg id="svg-composant" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1580 820" width="100%" height="100%" style="background-color: #ffffff; font-family: 'Segoe UI', Calibri, Arial, sans-serif;">
+    <defs>
+        <filter id="shadow-poweramc-card" x="-5%" y="-5%" width="115%" height="115%">
+            <feDropShadow dx="2" dy="2" stdDeviation="2.5" flood-color="#0f172a" flood-opacity="0.12"/>
+        </filter>
+    </defs>
+
+    <!-- CADRE GÉNÉRAL DU DIAGRAMME POWERAMC -->
+    <rect x="15" y="15" width="1550" height="790" rx="6" ry="6" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5" filter="url(#shadow-poweramc-card)"/>
+    
+    <!-- BANDEAU DE TITRE UML POWERAMC -->
+    <path d="M 15 15 L 750 15 L 775 48 L 750 48 L 15 48 Z" fill="#0020B2"/>
+    <text x="30" y="36" fill="#ffffff" font-size="15" font-weight="bold" letter-spacing="0.5">
+        cmp : Diagramme de Composants Logiciels du Système VigilCore
+    </text>
+
+
+    <!-- ================================================================= -->
+    <!-- TIER 1 : COUCHE PRÉSENTATION & ALERTES (HAUT, Y = 80, H = 90)     -->
+    <!-- ================================================================= -->
+
+    <!-- C3 : Cmp_ServiceAlertes (HAUT GAUCHE) -->
+    <g transform="translate(50, 80)" filter="url(#shadow-poweramc-card)">
+        <rect x="0" y="0" width="260" height="90" rx="5" ry="5" fill="#74abf8" stroke="#000000" stroke-width="1.4"/>
+        <g transform="translate(226, 10)">
+            <rect x="5" y="0" width="18" height="15" rx="1.5" fill="#74abf8" stroke="#000000" stroke-width="1.1"/>
+            <rect x="0" y="3" width="7" height="3.5" rx="0.5" fill="#74abf8" stroke="#000000" stroke-width="0.9"/>
+            <rect x="0" y="8.5" width="7" height="3.5" rx="0.5" fill="#74abf8" stroke="#000000" stroke-width="0.9"/>
+        </g>
+        <text x="120" y="34" fill="#000000" font-size="12" text-anchor="middle">«composant»</text>
+        <text x="120" y="55" fill="#000000" font-size="14.5" font-weight="bold" text-anchor="middle">Cmp_ServiceAlertes</text>
+        <text x="120" y="74" fill="#1e293b" font-size="11" text-anchor="middle">Envoi alertes WhatsApp</text>
+    </g>
+
+    <!-- C1 : Cmp_InterfaceSupervision (HAUT CENTRE-GAUCHE) -->
+    <g transform="translate(430, 80)" filter="url(#shadow-poweramc-card)">
+        <rect x="0" y="0" width="280" height="90" rx="5" ry="5" fill="#74abf8" stroke="#000000" stroke-width="1.4"/>
+        <g transform="translate(246, 10)">
+            <rect x="5" y="0" width="18" height="15" rx="1.5" fill="#74abf8" stroke="#000000" stroke-width="1.1"/>
+            <rect x="0" y="3" width="7" height="3.5" rx="0.5" fill="#74abf8" stroke="#000000" stroke-width="0.9"/>
+            <rect x="0" y="8.5" width="7" height="3.5" rx="0.5" fill="#74abf8" stroke="#000000" stroke-width="0.9"/>
+        </g>
+        <text x="130" y="34" fill="#000000" font-size="12" text-anchor="middle">«composant»</text>
+        <text x="130" y="55" fill="#000000" font-size="14.5" font-weight="bold" text-anchor="middle">Cmp_InterfaceSupervision</text>
+        <text x="130" y="74" fill="#1e293b" font-size="11" text-anchor="middle">Tableau de bord en direct</text>
+    </g>
+
+    <!-- C2 : Cmp_PortailConsultation (HAUT CENTRE-DROITE) -->
+    <g transform="translate(870, 80)" filter="url(#shadow-poweramc-card)">
+        <rect x="0" y="0" width="280" height="90" rx="5" ry="5" fill="#74abf8" stroke="#000000" stroke-width="1.4"/>
+        <g transform="translate(246, 10)">
+            <rect x="5" y="0" width="18" height="15" rx="1.5" fill="#74abf8" stroke="#000000" stroke-width="1.1"/>
+            <rect x="0" y="3" width="7" height="3.5" rx="0.5" fill="#74abf8" stroke="#000000" stroke-width="0.9"/>
+            <rect x="0" y="8.5" width="7" height="3.5" rx="0.5" fill="#74abf8" stroke="#000000" stroke-width="0.9"/>
+        </g>
+        <text x="130" y="34" fill="#000000" font-size="12" text-anchor="middle">«composant»</text>
+        <text x="130" y="55" fill="#000000" font-size="14.5" font-weight="bold" text-anchor="middle">Cmp_PortailConsultation</text>
+        <text x="130" y="74" fill="#1e293b" font-size="11" text-anchor="middle">Consultation &amp; Audit</text>
+    </g>
+
+
+    <!-- ================================================================= -->
+    <!-- TIER 2 : CŒUR APPLICATIF & LIVRABLES (MILIEU, Y = 380, H = 95)    -->
+    <!-- ================================================================= -->
+
+    <!-- C4 : Cmp_MoteurSurveillance (MILIEU GAUCHE) -->
+    <g transform="translate(50, 380)" filter="url(#shadow-poweramc-card)">
+        <rect x="0" y="0" width="260" height="95" rx="5" ry="5" fill="#74abf8" stroke="#000000" stroke-width="1.4"/>
+        <g transform="translate(226, 10)">
+            <rect x="5" y="0" width="18" height="15" rx="1.5" fill="#74abf8" stroke="#000000" stroke-width="1.1"/>
+            <rect x="0" y="3" width="7" height="3.5" rx="0.5" fill="#74abf8" stroke="#000000" stroke-width="0.9"/>
+            <rect x="0" y="8.5" width="7" height="3.5" rx="0.5" fill="#74abf8" stroke="#000000" stroke-width="0.9"/>
+        </g>
+        <text x="120" y="36" fill="#000000" font-size="12" text-anchor="middle">«composant»</text>
+        <text x="120" y="57" fill="#000000" font-size="14.5" font-weight="bold" text-anchor="middle">Cmp_MoteurSurveillance</text>
+        <text x="120" y="77" fill="#1e293b" font-size="11" text-anchor="middle">Test des 20 passerelles (30s)</text>
+    </g>
+
+    <!-- C5 : Cmp_GestionIncidents (MILIEU CENTRE-GAUCHE - CŒUR) -->
+    <g transform="translate(430, 380)" filter="url(#shadow-poweramc-card)">
+        <rect x="0" y="0" width="280" height="95" rx="5" ry="5" fill="#74abf8" stroke="#000000" stroke-width="1.6"/>
+        <g transform="translate(246, 10)">
+            <rect x="5" y="0" width="18" height="15" rx="1.5" fill="#74abf8" stroke="#000000" stroke-width="1.1"/>
+            <rect x="0" y="3" width="7" height="3.5" rx="0.5" fill="#74abf8" stroke="#000000" stroke-width="0.9"/>
+            <rect x="0" y="8.5" width="7" height="3.5" rx="0.5" fill="#74abf8" stroke="#000000" stroke-width="0.9"/>
+        </g>
+        <text x="130" y="36" fill="#000000" font-size="12" text-anchor="middle">«composant»</text>
+        <text x="130" y="57" fill="#000000" font-size="14.5" font-weight="bold" text-anchor="middle">Cmp_GestionIncidents</text>
+        <text x="130" y="77" fill="#1e293b" font-size="11" text-anchor="middle">Détection pannes &amp; calcul arrêt</text>
+    </g>
+
+    <!-- C6 : Cmp_CalculateurDisponibilite (MILIEU CENTRE-DROITE) -->
+    <g transform="translate(870, 380)" filter="url(#shadow-poweramc-card)">
+        <rect x="0" y="0" width="280" height="95" rx="5" ry="5" fill="#74abf8" stroke="#000000" stroke-width="1.4"/>
+        <g transform="translate(246, 10)">
+            <rect x="5" y="0" width="18" height="15" rx="1.5" fill="#74abf8" stroke="#000000" stroke-width="1.1"/>
+            <rect x="0" y="3" width="7" height="3.5" rx="0.5" fill="#74abf8" stroke="#000000" stroke-width="0.9"/>
+            <rect x="0" y="8.5" width="7" height="3.5" rx="0.5" fill="#74abf8" stroke="#000000" stroke-width="0.9"/>
+        </g>
+        <text x="130" y="36" fill="#000000" font-size="12" text-anchor="middle">«composant»</text>
+        <text x="130" y="57" fill="#000000" font-size="14.5" font-weight="bold" text-anchor="middle">Cmp_CalculDisponibilite</text>
+        <text x="130" y="77" fill="#1e293b" font-size="11" text-anchor="middle">Calcul du taux de 99.9%</text>
+    </g>
+
+    <!-- C7 : Cmp_GenerateurRapports (MILIEU DROITE) -->
+    <g transform="translate(1270, 380)" filter="url(#shadow-poweramc-card)">
+        <rect x="0" y="0" width="260" height="95" rx="5" ry="5" fill="#74abf8" stroke="#000000" stroke-width="1.4"/>
+        <g transform="translate(226, 10)">
+            <rect x="5" y="0" width="18" height="15" rx="1.5" fill="#74abf8" stroke="#000000" stroke-width="1.1"/>
+            <rect x="0" y="3" width="7" height="3.5" rx="0.5" fill="#74abf8" stroke="#000000" stroke-width="0.9"/>
+            <rect x="0" y="8.5" width="7" height="3.5" rx="0.5" fill="#74abf8" stroke="#000000" stroke-width="0.9"/>
+        </g>
+        <text x="120" y="36" fill="#000000" font-size="12" text-anchor="middle">«composant»</text>
+        <text x="120" y="57" fill="#000000" font-size="14.5" font-weight="bold" text-anchor="middle">Cmp_GenerateurRapports</text>
+        <text x="120" y="77" fill="#1e293b" font-size="11" text-anchor="middle">Export Excel 12 col &amp; PDF</text>
+    </g>
+
+
+    <!-- ================================================================= -->
+    <!-- TIER 3 : PERSISTANCE & PREUVES D'AUDIT (BAS, Y = 670, H = 90)     -->
+    <!-- ================================================================= -->
+
+    <!-- C8 : Cmp_ArchivagePreuves (BAS CENTRE-GAUCHE) -->
+    <g transform="translate(430, 670)" filter="url(#shadow-poweramc-card)">
+        <rect x="0" y="0" width="280" height="90" rx="5" ry="5" fill="#74abf8" stroke="#000000" stroke-width="1.4"/>
+        <g transform="translate(246, 10)">
+            <rect x="5" y="0" width="18" height="15" rx="1.5" fill="#74abf8" stroke="#000000" stroke-width="1.1"/>
+            <rect x="0" y="3" width="7" height="3.5" rx="0.5" fill="#74abf8" stroke="#000000" stroke-width="0.9"/>
+            <rect x="0" y="8.5" width="7" height="3.5" rx="0.5" fill="#74abf8" stroke="#000000" stroke-width="0.9"/>
+        </g>
+        <text x="130" y="34" fill="#000000" font-size="12" text-anchor="middle">«composant»</text>
+        <text x="130" y="55" fill="#000000" font-size="14.5" font-weight="bold" text-anchor="middle">Cmp_ArchivagePreuves</text>
+        <text x="130" y="74" fill="#1e293b" font-size="11" text-anchor="middle">Historique des preuves SHA-256</text>
+    </g>
+
+    <!-- C9 : Cmp_BaseDeDonnees (BAS CENTRE-DROITE) -->
+    <g transform="translate(870, 670)" filter="url(#shadow-poweramc-card)">
+        <rect x="0" y="0" width="280" height="90" rx="5" ry="5" fill="#74abf8" stroke="#000000" stroke-width="1.4"/>
+        <g transform="translate(246, 10)">
+            <rect x="5" y="0" width="18" height="15" rx="1.5" fill="#74abf8" stroke="#000000" stroke-width="1.1"/>
+            <rect x="0" y="3" width="7" height="3.5" rx="0.5" fill="#74abf8" stroke="#000000" stroke-width="0.9"/>
+            <rect x="0" y="8.5" width="7" height="3.5" rx="0.5" fill="#74abf8" stroke="#000000" stroke-width="0.9"/>
+        </g>
+        <text x="130" y="34" fill="#000000" font-size="12" text-anchor="middle">«composant»</text>
+        <text x="130" y="55" fill="#000000" font-size="14.5" font-weight="bold" text-anchor="middle">Cmp_BaseDeDonnees</text>
+        <text x="130" y="74" fill="#1e293b" font-size="11" text-anchor="middle">Base PostgreSQL &amp; Redis</text>
+    </g>
+
+
+    <!-- ================================================================= -->
+    <!-- ASSEMBLAGES EXACTS POWERAMC : BALL-AND-SOCKET (——○)——)            -->
+    <!-- ================================================================= -->
+
+    <!-- 1. ISondeSurveillance (Horizontale pure entre Cmp_MoteurSurveillance et Cmp_GestionIncidents) -->
+    <line x1="310" y1="427" x2="365" y2="427" stroke="#000000" stroke-width="1.6"/>
+    <circle cx="365" cy="427" r="7" fill="#ffffff" stroke="#000000" stroke-width="2"/>
+    <path d="M 365 415 A 12 12 0 0 1 365 439" fill="none" stroke="#000000" stroke-width="2.2"/>
+    <line x1="430" y1="427" x2="377" y2="427" stroke="#000000" stroke-width="1.6"/>
+    <text x="370" y="405" fill="#000000" font-size="12.5" font-weight="bold" text-anchor="middle">ISondeSurveillance</text>
+
+    <!-- 2. IGestionIncidents (Verticale pure entre Cmp_GestionIncidents et Cmp_InterfaceSupervision) -->
+    <line x1="570" y1="380" x2="570" y2="280" stroke="#000000" stroke-width="1.6"/>
+    <circle cx="570" cy="280" r="7" fill="#ffffff" stroke="#000000" stroke-width="2"/>
+    <path d="M 558 280 A 12 12 0 0 1 582 280" fill="none" stroke="#000000" stroke-width="2.2"/>
+    <line x1="570" y1="170" x2="570" y2="268" stroke="#000000" stroke-width="1.6"/>
+    <text x="595" y="285" fill="#000000" font-size="13" font-weight="bold">IGestionIncidents</text>
+
+    <!-- 3. ICalculDisponibilite (Verticale pure entre Cmp_CalculDisponibilite et Cmp_PortailConsultation) -->
+    <line x1="1010" y1="380" x2="1010" y2="280" stroke="#000000" stroke-width="1.6"/>
+    <circle cx="1010" cy="280" r="7" fill="#ffffff" stroke="#000000" stroke-width="2"/>
+    <path d="M 998 280 A 12 12 0 0 1 1022 280" fill="none" stroke="#000000" stroke-width="2.2"/>
+    <line x1="1010" y1="170" x2="1010" y2="268" stroke="#000000" stroke-width="1.6"/>
+    <text x="1035" y="285" fill="#000000" font-size="13" font-weight="bold">ICalculDisponibilite</text>
+
+    <!-- 4. IExportRapports (Horizontale pure entre Cmp_GenerateurRapports et Cmp_CalculDisponibilite) -->
+    <line x1="1270" y1="427" x2="1215" y2="427" stroke="#000000" stroke-width="1.6"/>
+    <circle cx="1215" cy="427" r="7" fill="#ffffff" stroke="#000000" stroke-width="2"/>
+    <path d="M 1215 415 A 12 12 0 0 0 1215 439" fill="none" stroke="#000000" stroke-width="2.2"/>
+    <line x1="1150" y1="427" x2="1203" y2="427" stroke="#000000" stroke-width="1.6"/>
+    <text x="1210" y="405" fill="#000000" font-size="12.5" font-weight="bold" text-anchor="middle">IExportRapports (Excel / PDF)</text>
+
+    <!-- 5. INotifAlerte (Orthogonale parfaite sans croisement entre Cmp_ServiceAlertes et Cmp_GestionIncidents) -->
+    <path d="M 180 170 L 180 275 L 340 275" fill="none" stroke="#000000" stroke-width="1.6"/>
+    <circle cx="340" cy="275" r="7" fill="#ffffff" stroke="#000000" stroke-width="2"/>
+    <path d="M 340 263 A 12 12 0 0 1 340 287" fill="none" stroke="#000000" stroke-width="2.2"/>
+    <path d="M 450 380 L 450 275 L 352 275" fill="none" stroke="#000000" stroke-width="1.6"/>
+    <text x="340" y="252" fill="#000000" font-size="12.5" font-weight="bold" text-anchor="middle">INotifAlerte (WhatsApp)</text>
+
+    <!-- 6. IPreuvesIncidents (Verticale pure entre Cmp_ArchivagePreuves et Cmp_GestionIncidents) -->
+    <line x1="510" y1="670" x2="510" y2="560" stroke="#000000" stroke-width="1.6"/>
+    <circle cx="510" cy="560" r="7" fill="#ffffff" stroke="#000000" stroke-width="2"/>
+    <path d="M 498 560 A 12 12 0 0 1 522 560" fill="none" stroke="#000000" stroke-width="2.2"/>
+    <line x1="510" y1="475" x2="510" y2="548" stroke="#000000" stroke-width="1.6"/>
+    <text x="530" y="565" fill="#000000" font-size="13" font-weight="bold">IPreuvesIncidents</text>
+
+    <!-- 7. IAccesDonnees (Verticale + Raccordement propre en T au-dessus de la prise) -->
+    <line x1="1010" y1="670" x2="1010" y2="560" stroke="#000000" stroke-width="1.6"/>
+    <circle cx="1010" cy="560" r="7" fill="#ffffff" stroke="#000000" stroke-width="2"/>
+    <path d="M 998 560 A 12 12 0 0 1 1022 560" fill="none" stroke="#000000" stroke-width="2.2"/>
+    <line x1="1010" y1="475" x2="1010" y2="548" stroke="#000000" stroke-width="1.6"/>
+    <path d="M 660 475 L 660 515 L 1010 515" fill="none" stroke="#000000" stroke-width="1.6"/>
+    <circle cx="1010" cy="515" r="2.5" fill="#000000"/>
+    <text x="1035" y="565" fill="#000000" font-size="13" font-weight="bold">IAccesDonnees</text>
+
+</svg>

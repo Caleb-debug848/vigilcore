@@ -21,8 +21,6 @@
 
     <!-- Favicon Officiel VigilCore -->
     <link rel="icon" type="image/svg+xml" href="{{ asset('images/logo.svg') }}?v=3">
-    <link rel="alternate icon" type="image/png" href="{{ asset('images/logo.png') }}?v=3">
-    <link rel="apple-touch-icon" href="{{ asset('images/logo.png') }}?v=3">
     <link rel="shortcut icon" type="image/svg+xml" href="{{ asset('images/logo.svg') }}?v=3">
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])

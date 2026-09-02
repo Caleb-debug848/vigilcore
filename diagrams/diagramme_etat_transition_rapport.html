@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2. Diagramme d'états-transitions — VigilCore</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;600;700&display=swap');
+
+        body {
+            font-family: 'Segoe UI', Calibri, Arial, sans-serif;
+            color: #1e293b;
+            background-color: #f1f5f9;
+            margin: 0;
+            padding: 30px 15px;
+            line-height: 1.6;
+        }
+
+        .action-bar {
+            max-width: 1000px;
+            margin: 0 auto 25px auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #0f172a;
+            padding: 14px 20px;
+            border-radius: 12px;
+            color: #ffffff;
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.3);
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .action-bar h2 {
+            margin: 0;
+            font-size: 16px;
+            color: #60a5fa;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-group {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            background: #2563eb;
+            color: #ffffff;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-size: 12.5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn:hover {
+            background: #1d4ed8;
+            transform: translateY(-1px);
+        }
+        .btn-green { background: #059669; }
+        .btn-green:hover { background: #047857; }
+        .btn-purple { background: #7c3aed; }
+        .btn-purple:hover { background: #6d28d9; }
+        .btn-secondary { background: #475569; }
+        .btn-secondary:hover { background: #334155; }
+
+        .doc-page {
+            max-width: 1000px;
+            margin: 0 auto 40px auto;
+            background: #ffffff;
+            padding: 60px 70px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        h1.chap-title {
+            color: #1e40af;
+            font-size: 26px;
+            font-weight: 700;
+            text-align: center;
+            margin-top: 0;
+            margin-bottom: 28px;
+        }
+
+        p.text-body {
+            font-size: 14.5px;
+            text-align: justify;
+            margin-bottom: 16px;
+            color: #1f2937;
+        }
+
+        ul.concept-list {
+            margin: 16px 0 24px 20px;
+            padding-left: 15px;
+            font-size: 14.5px;
+        }
+        ul.concept-list li {
+            margin-bottom: 12px;
+            text-align: justify;
+        }
+
+        /* Tableau de Formalisme */
+        table.formalism-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+            font-size: 13.5px;
+        }
+        table.formalism-table th {
+            background-color: #3b82f6;
+            color: #ffffff;
+            font-weight: 700;
+            text-align: left;
+            padding: 10px 16px;
+            border: 1px solid #2563eb;
+        }
+        table.formalism-table td {
+            border: 1px solid #cbd5e1;
+            padding: 12px 16px;
+            vertical-align: middle;
+            background-color: #f8fafc;
+        }
+        table.formalism-table tr:nth-child(even) td {
+            background-color: #ffffff;
+        }
+        table.formalism-table td.elem-name {
+            font-weight: 700;
+            color: #0f172a;
+            width: 22%;
+        }
+        table.formalism-table td.elem-desc {
+            width: 50%;
+            text-align: justify;
+        }
+        table.formalism-table td.elem-rep {
+            width: 28%;
+            text-align: center;
+        }
+
+        .section-subtitle {
+            font-size: 15px;
+            font-weight: 700;
+            color: #0f172a;
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+
+        .example-box {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0 35px 0;
+            padding: 20px;
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+        }
+
+        .diagram-container {
+            width: 100%;
+            margin: 20px 0 35px 0;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            background: #ffffff;
+        }
+        .diagram-container svg {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* Dictionnaire de données */
+        table.dict-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            margin-bottom: 30px;
+            font-size: 13px;
+        }
+        table.dict-table th {
+            background-color: #1e40af;
+            color: #ffffff;
+            padding: 8px 12px;
+            text-align: left;
+            border: 1px solid #1e3a8a;
+        }
+        table.dict-table td {
+            border: 1px solid #cbd5e1;
+            padding: 8px 12px;
+            vertical-align: top;
+        }
+        table.dict-table tr:nth-child(even) {
+            background-color: #f8fafc;
+        }
+
+        @media print {
+            body { background: white; padding: 0; }
+            .action-bar { display: none; }
+            .doc-page { box-shadow: none; padding: 20px 30px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Barre d'outils d'exportation pour Word & PDF -->
+    <div class="action-bar">
+        <h2>🔄 Chapitre Officiel : 2. Diagramme d'États-Transitions (VigilCore)</h2>
+        <div class="btn-group">
+            <button class="btn btn-green" onclick="copyDiagram1()">
+                📋 Copier Diag 1 (Incident) pour Word
+            </button>
+            <button class="btn btn-green" onclick="copyDiagram2()">
+                📋 Copier Diag 2 (Services) pour Word
+            </button>
+            <button class="btn btn-purple" onclick="downloadAllSvg()">
+                📥 Télécharger SVG
+            </button>
+            <button class="btn" onclick="downloadPngHd('svg-incident', 'Diagramme_Etat_Transition_Incident_VigilCore_8K.png')">
+                📥 Télécharger PNG 8K
+            </button>
+            <button class="btn btn-secondary" onclick="window.print()">
+                🖨️ Imprimer / PDF
+            </button>
+        </div>
+    </div>
+
+    <!-- DOCUMENT DU RAPPORT / THÈSE -->
+    <div class="doc-page" id="report-content">
+        
+        <h1 class="chap-title">2. Diagramme d'états-transitions</h1>
+
+        <p class="text-body">
+            Les diagrammes d'états-transitions permettent justement de spécifier les réactions d'une partie du système à des événements discrets. Un événement se produit à un instant précis et est dépourvu de durée.
+        </p>
+
+        <ul class="concept-list">
+            <li>
+                Le diagramme d'états-transition décrit l'état ou le comportement d'un objet à un événement précis du système. À cet effet il est composé des éléments suivants :
+            </li>
+        </ul>
+
+        <!-- TABLEAU DU FORMALISME CONFORME POWERAMC -->
+        <table class="formalism-table">
+            <thead>
+                <tr>
+                    <th class="elem-name">Élément</th>
+                    <th class="elem-desc">Description</th>
+                    <th class="elem-rep">Représentation</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- 1. État initial -->
+                <tr>
+                    <td class="elem-name">État initial</td>
+                    <td class="elem-desc">
+                        Il s'agit de l'état dans lequel il se trouve lors de sa création. Est représenté par un point noir.
+                    </td>
+                    <td class="elem-rep">
+                        <svg width="60" height="60" viewBox="0 0 60 60">
+                            <circle cx="30" cy="30" r="16" fill="#0f172a"/>
+                        </svg>
+                    </td>
+                </tr>
+
+                <!-- 2. État final -->
+                <tr>
+                    <td class="elem-name">État final</td>
+                    <td class="elem-desc">
+                        Correspond à une étape où l'objet n'est plus nécessaire dans le système et où il est détruit. Il se représente par un point entouré d'un cercle.
+                    </td>
+                    <td class="elem-rep">
+                        <svg width="60" height="60" viewBox="0 0 60 60">
+                            <circle cx="30" cy="30" r="18" fill="none" stroke="#0f172a" stroke-width="2"/>
+                            <circle cx="30" cy="30" r="11" fill="#0f172a"/>
+                        </svg>
+                    </td>
+                </tr>
+
+                <!-- 3. État intermédiaire -->
+                <tr>
+                    <td class="elem-name">État intermédiaire</td>
+                    <td class="elem-desc">
+                        Est une situation stable qui possède une certaine durée pendant laquelle un objet exécute une activité ou attend un Événement. Il est représenté par un rectangle arrondi contenant son nom.
+                    </td>
+                    <td class="elem-rep">
+                        <svg width="150" height="65" viewBox="0 0 150 65">
+                            <rect x="10" y="8" width="130" height="48" rx="8" fill="#ffffff" stroke="#0020B2" stroke-width="1.8"/>
+                            <line x1="10" y1="28" x2="140" y2="28" stroke="#cbd5e1" stroke-width="1"/>
+                            <text x="75" y="22" fill="#0020B2" font-size="11" font-weight="bold" text-anchor="middle">État</text>
+                        </svg>
+                    </td>
+                </tr>
+
+                <!-- 4. Transition -->
+                <tr>
+                    <td class="elem-name">Transition</td>
+                    <td class="elem-desc">
+                        Une transition définit la réponse d'un objet à l'arrivée d'un événement. Elle est représentée par une flèche.
+                    </td>
+                    <td class="elem-rep">
+                        <svg width="150" height="40" viewBox="0 0 150 40">
+                            <line x1="15" y1="20" x2="135" y2="20" stroke="#0f172a" stroke-width="1.6"/>
+                            <polygon points="125 15, 135 20, 125 25" fill="#0f172a"/>
+                        </svg>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- SECTION EXEMPLE DE COURS -->
+        <p class="section-subtitle">Exemple de diagramme d'état transition :</p>
+
+        <div class="example-box">
+            <svg width="580" height="320" viewBox="0 0 580 320" style="font-family: 'Segoe UI', Arial, sans-serif;">
+                <!-- Cadre interne -->
+                <rect x="5" y="5" width="570" height="310" fill="#ffffff" stroke="#0f172a" stroke-width="1.2"/>
+
+                <!-- État Initial -->
+                <circle cx="95" cy="35" r="11" fill="#0f172a"/>
+                <line x1="95" y1="46" x2="95" y2="78" stroke="#0f172a" stroke-width="1.4"/>
+                <polygon points="91 70, 95 78, 99 70" fill="#0f172a"/>
+                <text x="95" y="65" fill="#0f172a" font-size="9.5" font-style="italic" text-anchor="middle">Événement</text>
+
+                <!-- État 1 (Haut Gauche) -->
+                <g transform="translate(45, 80)">
+                    <rect x="0" y="0" width="100" height="40" rx="8" fill="#60a5fa" stroke="#2563eb" stroke-width="1.4"/>
+                    <text x="50" y="24" fill="#ffffff" font-size="11" font-weight="bold" text-anchor="middle">État</text>
+                </g>
+
+                <!-- Transition Aller & Retour entre État 1 et État 2 -->
+                <line x1="145" y1="92" x2="343" y2="92" stroke="#0f172a" stroke-width="1.4"/>
+                <polygon points="335 88, 343 92, 335 96" fill="#0f172a"/>
+                <text x="245" y="85" fill="#0f172a" font-size="9.5" font-style="italic" text-anchor="middle">Transition</text>
+
+                <line x1="345" y1="108" x2="147" y2="108" stroke="#0f172a" stroke-width="1.4"/>
+                <polygon points="155 104, 147 108, 155 112" fill="#0f172a"/>
+
+                <!-- État 2 (Haut Droite) -->
+                <g transform="translate(345, 80)">
+                    <rect x="0" y="0" width="100" height="40" rx="8" fill="#60a5fa" stroke="#2563eb" stroke-width="1.4"/>
+                    <text x="50" y="24" fill="#ffffff" font-size="11" font-weight="bold" text-anchor="middle">État</text>
+                </g>
+
+                <!-- Transition vers État 3 -->
+                <path d="M 395 120 L 395 145 L 180 145 L 180 168" fill="none" stroke="#0f172a" stroke-width="1.4"/>
+                <polygon points="176 160, 180 168, 184 160" fill="#0f172a"/>
+
+                <!-- État 3 (Milieu Gauche) -->
+                <g transform="translate(130, 170)">
+                    <rect x="0" y="0" width="100" height="40" rx="8" fill="#93c5fd" stroke="#3b82f6" stroke-width="1.4"/>
+                </g>
+
+                <!-- Transition vers État 4 -->
+                <line x1="230" y1="190" x2="343" y2="190" stroke="#0f172a" stroke-width="1.4"/>
+                <polygon points="335 186, 343 190, 335 194" fill="#0f172a"/>
+
+                <!-- État 4 (Milieu Droite) -->
+                <g transform="translate(345, 170)">
+                    <rect x="0" y="0" width="100" height="40" rx="8" fill="#93c5fd" stroke="#3b82f6" stroke-width="1.4"/>
+                </g>
+
+                <!-- Transition vers État 5 -->
+                <line x1="395" y1="210" x2="395" y2="248" stroke="#0f172a" stroke-width="1.4"/>
+                <polygon points="391 240, 395 248, 399 240" fill="#0f172a"/>
+
+                <!-- État 5 (Bas) -->
+                <g transform="translate(345, 250)">
+                    <rect x="0" y="0" width="100" height="40" rx="8" fill="#dbeafe" stroke="#60a5fa" stroke-width="1.4"/>
+                </g>
+
+                <!-- Transition vers État Final -->
+                <line x1="395" y1="290" x2="395" y2="300" stroke="#0f172a" stroke-width="1.4"/>
+                
+                <!-- Boucle vers État 1 -->
+                <path d="M 395 298 L 95 298 L 95 122" fill="none" stroke="#0f172a" stroke-width="1.4"/>
+                <polygon points="91 130, 95 122, 99 130" fill="#0f172a"/>
+
+                <!-- État Final -->
+                <circle cx="395" cy="300" r="9" fill="none" stroke="#0f172a" stroke-width="1.5"/>
+                <circle cx="395" cy="300" r="5" fill="#0f172a"/>
+            </svg>
+        </div>
+
+        <!-- SECTION DU PROJET VIGILCORE -->
+        <p class="section-subtitle">Quelques diagrammes d'état-transition de notre projet ci-dessous :</p>
+
+        <!-- 1. DIAGRAMME D'ÉTATS DU CYCLE DE VIE D'UN INCIDENT -->
+        <p style="font-size: 14.5px; font-weight: 700; color: #1e40af; margin-top: 25px; margin-bottom: 10px;">
+            A. Diagramme d'états-transitions : Cycle de vie d'un Incident (Incident Lifecycle)
+        </p>
+
+        <div class="diagram-container">
+            <svg id="svg-incident" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 680" width="100%" height="100%" style="background-color: #ffffff; font-family: 'Segoe UI', Arial, sans-serif;">
+                <defs>
+                    <filter id="shadow-st-rep" x="-10%" y="-10%" width="130%" height="130%">
+                        <feDropShadow dx="2" dy="3" stdDeviation="3" flood-color="#000000" flood-opacity="0.12"/>
+                    </filter>
+                    <marker id="arrow-tr-rep" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse">
+                        <path d="M 0 1.5 L 9 5 L 0 8.5 z" fill="#0f172a"/>
+                    </marker>
+                </defs>
+
+                <!-- Cadre -->
+                <rect x="20" y="20" width="1160" height="640" rx="10" ry="10" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5" filter="url(#shadow-st-rep)"/>
+                
+                <!-- Header Bar -->
+                <path d="M 20 20 L 520 20 L 545 46 L 520 46 L 20 46 Z" fill="#0020B2"/>
+                <text x="35" y="37" fill="#ffffff" font-size="12.5" font-weight="bold" letter-spacing="0.5">
+                    stm : Diagramme d'États-Transitions — Cycle de Vie d'un Incident (VigilCore)
+                </text>
+
+                <!-- État Initial -->
+                <circle cx="65" cy="170" r="13" fill="#0f172a"/>
+
+                <line x1="78" y1="170" x2="168" y2="170" stroke="#0f172a" stroke-width="1.6" marker-end="url(#arrow-tr-rep)"/>
+                <text x="80" y="145" fill="#0020B2" font-size="10.5" font-weight="bold">anomalieDetectee</text>
+                <text x="80" y="160" fill="#475569" font-size="9.5">[seuil &gt; 5% ou HTTP 504] / initIncident()</text>
+
+                <!-- État 1 : Investigating -->
+                <g transform="translate(170, 115)" filter="url(#shadow-st-rep)">
+                    <rect x="0" y="0" width="235" height="110" rx="12" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.8"/>
+                    <rect x="0" y="0" width="235" height="28" rx="12" fill="#16a34a"/>
+                    <rect x="0" y="16" width="235" height="12" fill="#16a34a"/>
+                    <text x="117" y="19" fill="#ffffff" font-size="12" font-weight="bold" text-anchor="middle">Investigating (Enquête)</text>
+                    <text x="10" y="46" fill="#0f172a" font-size="10">entry / horodaterWAT() &amp; setId()</text>
+                    <text x="10" y="64" fill="#0f172a" font-size="10">do / capturerPayloadBoiteNoire()</text>
+                    <text x="10" y="82" fill="#0f172a" font-size="10">do / publierStatuspage('investigating')</text>
+                    <text x="10" y="100" fill="#0f172a" font-size="10">exit / verrouillerDiagnosticInitial()</text>
+                </g>
+
+                <line x1="405" y1="170" x2="473" y2="170" stroke="#0f172a" stroke-width="1.6" marker-end="url(#arrow-tr-rep)"/>
+                <text x="415" y="145" fill="#0020B2" font-size="10.5" font-weight="bold">causeIdentifiee</text>
+                <text x="415" y="160" fill="#475569" font-size="9.5">[diagnostic_valide] / classifier()</text>
+
+                <!-- État 2 : Identified -->
+                <g transform="translate(475, 115)" filter="url(#shadow-st-rep)">
+                    <rect x="0" y="0" width="235" height="110" rx="12" fill="#eff6ff" stroke="#2563eb" stroke-width="1.8"/>
+                    <rect x="0" y="0" width="235" height="28" rx="12" fill="#2563eb"/>
+                    <rect x="0" y="16" width="235" height="12" fill="#2563eb"/>
+                    <text x="117" y="19" fill="#ffffff" font-size="12" font-weight="bold" text-anchor="middle">Identified (Identifié)</text>
+                    <text x="10" y="46" fill="#0f172a" font-size="10">entry / envoyerAlerteWhatsApp()</text>
+                    <text x="10" y="64" fill="#0f172a" font-size="10">do / notifierCelluleCrise()</text>
+                    <text x="10" y="82" fill="#0f172a" font-size="10">do / actualiserStatuspage('identified')</text>
+                    <text x="10" y="100" fill="#0f172a" font-size="10">exit / enregistrerHeurePriseEnCharge()</text>
+                </g>
+
+                <line x1="710" y1="170" x2="778" y2="170" stroke="#0f172a" stroke-width="1.6" marker-end="url(#arrow-tr-rep)"/>
+                <text x="718" y="145" fill="#0020B2" font-size="10.5" font-weight="bold">actionCorrective</text>
+                <text x="718" y="160" fill="#475569" font-size="9.5">[patch_ou_failover] / deploy()</text>
+
+                <!-- État 3 : Monitoring -->
+                <g transform="translate(780, 115)" filter="url(#shadow-st-rep)">
+                    <rect x="0" y="0" width="240" height="110" rx="12" fill="#fefce8" stroke="#ca8a04" stroke-width="1.8"/>
+                    <rect x="0" y="0" width="240" height="28" rx="12" fill="#ca8a04"/>
+                    <rect x="0" y="16" width="240" height="12" fill="#ca8a04"/>
+                    <text x="120" y="19" fill="#ffffff" font-size="12" font-weight="bold" text-anchor="middle">Monitoring (Surveillance)</text>
+                    <text x="10" y="46" fill="#0f172a" font-size="10">entry / declencherSondesPingSante()</text>
+                    <text x="10" y="64" fill="#0f172a" font-size="10">do / analyserTauxSuccesTrafic()</text>
+                    <text x="10" y="82" fill="#0f172a" font-size="10">do / publierStatuspage('monitoring')</text>
+                    <text x="10" y="100" fill="#0f172a" font-size="10">exit / validerStabiliteSLA()</text>
+                </g>
+
+                <!-- Rechute -->
+                <path d="M 850 115 L 850 70 L 630 70 L 630 113" fill="none" stroke="#dc2626" stroke-width="1.6" stroke-dasharray="4 3" marker-end="url(#arrow-tr-rep)"/>
+                <text x="740" y="60" fill="#dc2626" font-size="10" font-weight="bold" text-anchor="middle">rechuteDetectee [erreurs &gt; 0] / escalader()</text>
+
+                <!-- Vers Résolu -->
+                <path d="M 900 225 L 900 378" fill="none" stroke="#0f172a" stroke-width="1.6" marker-end="url(#arrow-tr-rep)"/>
+                <text x="910" y="295" fill="#0020B2" font-size="10.5" font-weight="bold">serviceRetabli</text>
+                <text x="910" y="310" fill="#475569" font-size="9.5">[latence &lt; 500ms &amp; err == 0]</text>
+                <text x="910" y="325" fill="#475569" font-size="9.5">/ declencherCloture()</text>
+
+                <!-- État 4 : Resolved -->
+                <g transform="translate(780, 380)" filter="url(#shadow-st-rep)">
+                    <rect x="0" y="0" width="240" height="115" rx="12" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.8"/>
+                    <rect x="0" y="0" width="240" height="28" rx="12" fill="#16a34a"/>
+                    <rect x="0" y="16" width="240" height="12" fill="#16a34a"/>
+                    <text x="120" y="19" fill="#ffffff" font-size="12" font-weight="bold" text-anchor="middle">Resolved (Résolu &amp; Rétabli)</text>
+                    <text x="10" y="46" fill="#0f172a" font-size="10">entry / setResolvedAtWAT()</text>
+                    <text x="10" y="64" fill="#0f172a" font-size="10">entry / calculerMTTRExact()</text>
+                    <text x="10" y="82" fill="#0f172a" font-size="10">do / diffuserResolutionWhatsApp()</text>
+                    <text x="10" y="100" fill="#0f172a" font-size="10">exit / verrouillerIncidentStatus()</text>
+                </g>
+
+                <line x1="780" y1="437" x2="622" y2="437" stroke="#0f172a" stroke-width="1.6" marker-end="url(#arrow-tr-rep)"/>
+                <text x="700" y="415" fill="#0020B2" font-size="10.5" font-weight="bold" text-anchor="middle">integrerAudit</text>
+                <text x="700" y="430" fill="#475569" font-size="9.5" text-anchor="middle">/ preparerRegistre12Col()</text>
+
+                <!-- État 5 : Archived -->
+                <g transform="translate(370, 380)" filter="url(#shadow-st-rep)">
+                    <rect x="0" y="0" width="250" height="115" rx="12" fill="#f8fafc" stroke="#475569" stroke-width="1.8"/>
+                    <rect x="0" y="0" width="250" height="28" rx="12" fill="#475569"/>
+                    <rect x="0" y="16" width="250" height="12" fill="#475569"/>
+                    <text x="125" y="19" fill="#ffffff" font-size="12" font-weight="bold" text-anchor="middle">Archived (Archivé &amp; Audité)</text>
+                    <text x="10" y="46" fill="#0f172a" font-size="10">entry / consoliderLigneExcel12Col()</text>
+                    <text x="10" y="64" fill="#0f172a" font-size="10">entry / genererHashCertification()</text>
+                    <text x="10" y="82" fill="#0f172a" font-size="10">do / actualiserDisponibiliteMensuelle()</text>
+                    <text x="10" y="100" fill="#0f172a" font-size="10">exit / scellerDossierTechnique()</text>
+                </g>
+
+                <!-- Vers Final -->
+                <line x1="370" y1="437" x2="202" y2="437" stroke="#0f172a" stroke-width="1.6" marker-end="url(#arrow-tr-rep)"/>
+                <text x="285" y="415" fill="#0020B2" font-size="10.5" font-weight="bold" text-anchor="middle">auditValideBanques</text>
+                <text x="285" y="430" fill="#475569" font-size="9.5" text-anchor="middle">/ archiverDossier()</text>
+
+                <!-- État Final -->
+                <circle cx="185" cy="437" r="15" fill="none" stroke="#0f172a" stroke-width="2"/>
+                <circle cx="185" cy="437" r="9" fill="#0f172a"/>
+
+                <!-- Fausse Alerte -->
+                <path d="M 230 225 L 230 350 L 185 350 L 185 418" fill="none" stroke="#64748b" stroke-width="1.4" stroke-dasharray="4 3" marker-end="url(#arrow-tr-rep)"/>
+                <text x="238" y="285" fill="#64748b" font-size="9.5" font-style="italic">fausseAlerte [bruit_reseau] / annuler()</text>
+            </svg>
+        </div>
+
+
+        <!-- 2. DIAGRAMME D'ÉTATS DE LA DISPONIBILITÉ D'UN SERVICE -->
+        <p style="font-size: 14.5px; font-weight: 700; color: #1e40af; margin-top: 35px; margin-bottom: 10px;">
+            B. Diagramme d'états-transitions : Disponibilité d'un Service Partenaire (Service Health &amp; SLA)
+        </p>
+
+        <div class="diagram-container">
+            <svg id="svg-service" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 680" width="100%" height="100%" style="background-color: #ffffff; font-family: 'Segoe UI', Arial, sans-serif;">
+                <defs>
+                    <filter id="shadow-st-srv" x="-10%" y="-10%" width="130%" height="130%">
+                        <feDropShadow dx="2" dy="3" stdDeviation="3" flood-color="#000000" flood-opacity="0.12"/>
+                    </filter>
+                    <marker id="arrow-tr-srv" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse">
+                        <path d="M 0 1.5 L 9 5 L 0 8.5 z" fill="#0f172a"/>
+                    </marker>
+                </defs>
+
+                <rect x="20" y="20" width="1160" height="640" rx="10" ry="10" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5" filter="url(#shadow-st-srv)"/>
+                
+                <path d="M 20 20 L 560 20 L 585 46 L 560 46 L 20 46 Z" fill="#0020B2"/>
+                <text x="35" y="37" fill="#ffffff" font-size="12.5" font-weight="bold" letter-spacing="0.5">
+                    stm : Diagramme d'États-Transitions — Disponibilité d'un Service Partenaire (VigilCore)
+                </text>
+
+                <!-- Initial -->
+                <circle cx="65" cy="180" r="13" fill="#0f172a"/>
+
+                <line x1="78" y1="180" x2="168" y2="180" stroke="#0f172a" stroke-width="1.6" marker-end="url(#arrow-tr-srv)"/>
+                <text x="80" y="155" fill="#0020B2" font-size="10.5" font-weight="bold">deployService</text>
+                <text x="80" y="170" fill="#475569" font-size="9.5">/ initSondesHealth()</text>
+
+                <!-- Opérationnel -->
+                <g transform="translate(170, 125)" filter="url(#shadow-st-srv)">
+                    <rect x="0" y="0" width="260" height="115" rx="12" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.8"/>
+                    <rect x="0" y="0" width="260" height="28" rx="12" fill="#16a34a"/>
+                    <rect x="0" y="16" width="260" height="12" fill="#16a34a"/>
+                    <text x="130" y="19" fill="#ffffff" font-size="12" font-weight="bold" text-anchor="middle">Opérationnel (Nominale - Vert)</text>
+                    <text x="10" y="46" fill="#0f172a" font-size="10">entry / setStatus('OPERATIONAL')</text>
+                    <text x="10" y="64" fill="#0f172a" font-size="10">do / executerHealthcheck30s()</text>
+                    <text x="10" y="82" fill="#0f172a" font-size="10">do / incrementerDisponibiliteSLA()</text>
+                    <text x="10" y="100" fill="#0f172a" font-size="10">exit / logDebutPerturbation()</text>
+                </g>
+
+                <path d="M 430 160 L 598 160" fill="none" stroke="#0f172a" stroke-width="1.6" marker-end="url(#arrow-tr-srv)"/>
+                <text x="515" y="138" fill="#ca8a04" font-size="10" font-weight="bold" text-anchor="middle">hausseLatence</text>
+                <text x="515" y="152" fill="#475569" font-size="9" text-anchor="middle">[latence &gt; 2000ms]</text>
+
+                <path d="M 600 205 L 432 205" fill="none" stroke="#16a34a" stroke-width="1.6" marker-end="url(#arrow-tr-srv)"/>
+                <text x="515" y="222" fill="#16a34a" font-size="10" font-weight="bold" text-anchor="middle">normalisationLatence</text>
+                <text x="515" y="235" fill="#475569" font-size="9" text-anchor="middle">[latence &lt; 500ms]</text>
+
+                <!-- Dégradé -->
+                <g transform="translate(600, 125)" filter="url(#shadow-st-srv)">
+                    <rect x="0" y="0" width="260" height="115" rx="12" fill="#fefce8" stroke="#ca8a04" stroke-width="1.8"/>
+                    <rect x="0" y="0" width="260" height="28" rx="12" fill="#ca8a04"/>
+                    <rect x="0" y="16" width="260" height="12" fill="#ca8a04"/>
+                    <text x="130" y="19" fill="#ffffff" font-size="12" font-weight="bold" text-anchor="middle">Dégradé (Ralentissement - Jaune)</text>
+                    <text x="10" y="46" fill="#0f172a" font-size="10">entry / setStatus('DEGRADED')</text>
+                    <text x="10" y="64" fill="#0f172a" font-size="10">do / emettreAlertePreventive()</text>
+                    <text x="10" y="82" fill="#0f172a" font-size="10">do / resserrerIntervalleSonde10s()</text>
+                    <text x="10" y="100" fill="#0f172a" font-size="10">exit / evaluerImpactSLA()</text>
+                </g>
+
+                <path d="M 730 240 L 730 388" fill="none" stroke="#dc2626" stroke-width="1.6" marker-end="url(#arrow-tr-srv)"/>
+                <text x="740" y="295" fill="#dc2626" font-size="10.5" font-weight="bold">ruptureTotale</text>
+                <text x="740" y="310" fill="#475569" font-size="9.5">[erreurs_500 &gt; 20% ou timeout_504]</text>
+                <text x="740" y="325" fill="#475569" font-size="9.5">/ declencherIncidentCritique()</text>
+
+                <path d="M 300 240 L 300 440 L 598 440" fill="none" stroke="#dc2626" stroke-width="1.6" marker-end="url(#arrow-tr-srv)"/>
+                <text x="310" y="340" fill="#dc2626" font-size="10" font-weight="bold">crashBrutal [reponse_nulle]</text>
+
+                <!-- Panne Majeure -->
+                <g transform="translate(600, 390)" filter="url(#shadow-st-srv)">
+                    <rect x="0" y="0" width="270" height="125" rx="12" fill="#fef2f2" stroke="#dc2626" stroke-width="1.8"/>
+                    <rect x="0" y="0" width="270" height="28" rx="12" fill="#dc2626"/>
+                    <rect x="0" y="16" width="270" height="12" fill="#dc2626"/>
+                    <text x="135" y="19" fill="#ffffff" font-size="12" font-weight="bold" text-anchor="middle">Panne Majeure (Outage - Rouge)</text>
+                    <text x="10" y="46" fill="#0f172a" font-size="10">entry / setStatus('OUTAGE')</text>
+                    <text x="10" y="64" fill="#0f172a" font-size="10">entry / incrementerCompteurCoupures()</text>
+                    <text x="10" y="82" fill="#0f172a" font-size="10">do / actualiserStatuspage('major_outage')</text>
+                    <text x="10" y="100" fill="#0f172a" font-size="10">do / diffuserWhatsAppCrise()</text>
+                    <text x="10" y="118" fill="#0f172a" font-size="10">exit / recalculerIndisponibiliteSec()</text>
+                </g>
+
+                <path d="M 600 480 L 220 480 L 220 242" fill="none" stroke="#16a34a" stroke-width="1.6" marker-end="url(#arrow-tr-srv)"/>
+                <text x="370" y="470" fill="#16a34a" font-size="10.5" font-weight="bold" text-anchor="middle">serviceRetabli [healthcheck_ok_3x]</text>
+                <text x="370" y="495" fill="#475569" font-size="9.5" text-anchor="middle">/ cloreIncident() &amp; publierRetourNominale()</text>
+
+                <!-- Maintenance -->
+                <g transform="translate(930, 260)" filter="url(#shadow-st-srv)">
+                    <rect x="0" y="0" width="230" height="115" rx="12" fill="#f0f9ff" stroke="#0284c7" stroke-width="1.8"/>
+                    <rect x="0" y="0" width="230" height="28" rx="12" fill="#0284c7"/>
+                    <rect x="0" y="16" width="230" height="12" fill="#0284c7"/>
+                    <text x="115" y="19" fill="#ffffff" font-size="12" font-weight="bold" text-anchor="middle">Maintenance (Bleu)</text>
+                    <text x="10" y="46" fill="#0f172a" font-size="10">entry / setStatus('MAINTENANCE')</text>
+                    <text x="10" y="64" fill="#0f172a" font-size="10">entry / gelerPenalitesSLA()</text>
+                    <text x="10" y="82" fill="#0f172a" font-size="10">do / afficherBannierePlanifiee()</text>
+                    <text x="10" y="100" fill="#0f172a" font-size="10">exit / reactiverCalculSLA()</text>
+                </g>
+
+                <path d="M 400 125 L 400 90 L 1040 90 L 1040 258" fill="none" stroke="#0284c7" stroke-width="1.6" marker-end="url(#arrow-tr-srv)"/>
+                <text x="720" y="80" fill="#0284c7" font-size="10" font-weight="bold" text-anchor="middle">debutFenetreMaintenance [heure_wat == planifiee] / suspendreAlertes()</text>
+
+                <path d="M 1000 375 L 1000 580 L 190 580 L 190 242" fill="none" stroke="#16a34a" stroke-width="1.6" marker-end="url(#arrow-tr-srv)"/>
+                <text x="590" y="570" fill="#16a34a" font-size="10" font-weight="bold" text-anchor="middle">finMaintenance / validerSanityCheck() &amp; repasserEnNominale()</text>
+
+                <!-- Final -->
+                <circle cx="1060" cy="480" r="15" fill="none" stroke="#0f172a" stroke-width="2"/>
+                <circle cx="1060" cy="480" r="9" fill="#0f172a"/>
+
+                <line x1="870" y1="460" x2="1042" y2="475" stroke="#64748b" stroke-width="1.4" stroke-dasharray="4 3" marker-end="url(#arrow-tr-srv)"/>
+                <text x="960" y="450" fill="#64748b" font-size="9.5" text-anchor="middle">decommissionnerPartenaire()</text>
+            </svg>
+        </div>
+
+
+        <!-- DICTIONNAIRE DES ÉTATS ET DÉCLENCHEURS -->
+        <p class="section-subtitle">Dictionnaire des états et déclencheurs (VigilCore) :</p>
+
+        <table class="dict-table">
+            <thead>
+                <tr>
+                    <th style="width: 20%;">État</th>
+                    <th style="width: 45%;">Description Fonctionnelle &amp; Actions Internes</th>
+                    <th style="width: 35%;">Événements Déclencheurs / Sorties</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Investigating</strong></td>
+                    <td>Phase d'ouverture immédiate dès dépassement des seuils de logs Elastic (HTTP 500 / 504). Capture du payload brut et horodatage WAT de début de crise.</td>
+                    <td><code>causeIdentifiee</code> &rarr; Passage à l'état <em>Identified</em>.<br><code>fausseAlerte</code> &rarr; Annulation et fin.</td>
+                </tr>
+                <tr>
+                    <td><strong>Identified</strong></td>
+                    <td>La cause racine est isolée (ex : saturation passerelle MoMo). Diffusion de la notification WhatsApp d'alerte et publication sur Statuspage.</td>
+                    <td><code>actionCorrective</code> &rarr; Déploiement de patch ou failover vers route de secours &rarr; Passage à <em>Monitoring</em>.</td>
+                </tr>
+                <tr>
+                    <td><strong>Monitoring</strong></td>
+                    <td>Surveillance intensive du trafic et analyse du taux de succès des transactions suite à l'application du correctif.</td>
+                    <td><code>serviceStable</code> &rarr; Validation SLA &rarr; <em>Resolved</em>.<br><code>rechuteDetectee</code> &rarr; Retour en <em>Identified</em>.</td>
+                </tr>
+                <tr>
+                    <td><strong>Resolved</strong></td>
+                    <td>Rétablissement effectif confirmé. Calcul définitif du MTTR (durée exacte de coupure), verrouillage de la fiche et notification WhatsApp de clôture.</td>
+                    <td><code>integrerAudit</code> &rarr; Consolidation pour le registre opposable aux banques &rarr; <em>Archived</em>.</td>
+                </tr>
+                <tr>
+                    <td><strong>Archived &amp; Certified</strong></td>
+                    <td>Dossier d'incident scellé avec son empreinte cryptographique de conformité et exporté dans le registre d'audit des 12 colonnes techniques.</td>
+                    <td><code>auditValideBanques</code> &rarr; Archivage définitif (État final).</td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+    <!-- Scripts pour l'exportation -->
+    <script>
+        function downloadPngHd(svgId, filename) {
+            const svgElement = document.getElementById(svgId) || document.querySelector('.diagram-container svg') || document.querySelector('svg');
+            const svgString = new XMLSerializer().serializeToString(svgElement);
+            const svgBlob = new Blob([svgString], {type: 'image/svg+xml;charset=utf-8'});
+            const URLObj = window.URL || window.webkitURL || window;
+            const blobURL = URLObj.createObjectURL(svgBlob);
+
+            const image = new Image();
+            image.onload = function() {
+                const canvas = document.createElement('canvas');
+                canvas.width = 3600;
+                canvas.height = 2040;
+                const ctx = canvas.getContext('2d');
+                ctx.fillStyle = '#ffffff';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.drawImage(image, 0, 0, 3600, 2040);
+
+                canvas.toBlob(function(pngBlob) {
+                    const link = document.createElement('a');
+                    link.download = filename;
+                    link.href = URLObj.createObjectURL(pngBlob);
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    URLObj.revokeObjectURL(blobURL);
+                }, 'image/png', 1.0);
+            };
+            image.src = blobURL;
+        }
+
+        function copySvgToClipboard(svgId) {
+            const svgElement = document.getElementById(svgId) || document.querySelector('.diagram-container svg') || document.querySelector('svg');
+            const svgString = new XMLSerializer().serializeToString(svgElement);
+            const svgBlob = new Blob([svgString], {type: 'image/svg+xml;charset=utf-8'});
+            const URLObj = window.URL || window.webkitURL || window;
+            const blobURL = URLObj.createObjectURL(svgBlob);
+
+            const image = new Image();
+            image.onload = function() {
+                const canvas = document.createElement('canvas');
+                canvas.width = 2400;
+                canvas.height = 1360;
+                const ctx = canvas.getContext('2d');
+                ctx.fillStyle = '#ffffff';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.drawImage(image, 0, 0, 2400, 1360);
+
+                canvas.toBlob(function(pngBlob) {
+                    if (navigator.clipboard && window.ClipboardItem) {
+                        navigator.clipboard.write([new ClipboardItem({ 'image/png': pngBlob })]).then(function() {
+                            alert('✅ Image copiée dans le presse-papier ! Vous pouvez coller (Ctrl+V) dans Word.');
+                        }).catch(function() {
+                            downloadPngHd(svgId, 'Diagramme_Etat_Transition.png');
+                        });
+                    } else {
+                        downloadPngHd(svgId, 'Diagramme_Etat_Transition.png');
+                    }
+                }, 'image/png', 1.0);
+            };
+            image.src = blobURL;
+        }
+
+        function copyDiagram1() { copySvgToClipboard('svg-incident'); }
+        function copyDiagram2() { copySvgToClipboard('svg-service'); }
+
+        function downloadAllSvg() {
+            const link1 = document.createElement('a');
+            link1.download = 'diagram_etat_incident.svg';
+            link1.href = 'diagram_etat_incident.svg';
+            document.body.appendChild(link1);
+            link1.click();
+            document.body.removeChild(link1);
+        }
+    </script>
+</body>
+</html>
