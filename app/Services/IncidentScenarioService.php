@@ -420,7 +420,6 @@ class IncidentScenarioService
             'status'       => 'open',
             'source'       => 'Kibana Logs Engine',
             'component'    => $scenario['key'],
-            'server'       => $hostName,
             'raw_payload'  => array_merge($payload, [
                 'n8n_dispatched' => $n8nSent,
                 'scenario_key'   => $key,
@@ -437,4 +436,19 @@ class IncidentScenarioService
         return $incident;
     }
 
+    /**
+     * Déclenche une simulation simultanée sur plusieurs services (ex: pack de 6 pannes)
+     */
+    public static function triggerMulti(array $keys, bool $sendToN8n = true): array
+    {
+        $incidents = [];
+        foreach ($keys as $key) {
+            $incident = self::trigger($key, $sendToN8n);
+            if ($incident) {
+                $incidents[] = $incident;
+            }
+        }
+        return $incidents;
+    }
 }
+
