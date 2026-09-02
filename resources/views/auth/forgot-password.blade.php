@@ -21,17 +21,18 @@
     <!-- Styles & Scripts Vite -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="bg-[#f8fafc] dark:bg-[#090d16] text-slate-900 dark:text-slate-100 font-sans antialiased min-h-screen flex items-center justify-center p-4 selection:bg-[#0020B2] selection:text-white transition-colors duration-200">
+<body class="bg-[#f8fafc] dark:bg-[#090d16] text-slate-900 dark:text-slate-100 font-sans antialiased min-h-screen flex items-center justify-center p-4 selection:bg-[#0020B2] selection:text-white transition-colors duration-200" style="min-height: 100vh; display: flex; align-items: center; justify-content: center;">
 
     <!-- ==================================================== -->
-    <!-- CARTE DE RÉCUPÉRATION D'ACCÈS SÉCURISÉE              -->
+    <!-- CARTE DE RÉCUPÉRATION D'ACCÈS SÉCURISÉE (COMPACTE)   -->
     <!-- ==================================================== -->
-    <div class="w-full max-w-[440px] bg-white dark:bg-[#111827] rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xl shadow-slate-200/50 dark:shadow-none p-6 sm:p-8 space-y-6">
+    <div style="max-width: 440px; width: 100%; margin: 0 auto;"
+         class="bg-white dark:bg-[#111827] rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xl shadow-slate-200/50 dark:shadow-none p-6 sm:p-8 space-y-5">
 
         <!-- En-tête Logo & Marque -->
         <div class="flex flex-col items-center text-center space-y-2.5">
             <a href="/" class="flex items-center gap-2.5 group">
-                <img src="{{ asset('images/logo.svg') }}" alt="VigilCore Logo" class="h-10 w-10 object-contain group-hover:scale-105 transition-transform">
+                <img src="{{ asset('images/logo.svg') }}" alt="VigilCore Logo" style="height: 40px; width: 40px;" class="object-contain group-hover:scale-105 transition-transform">
                 <div class="text-left">
                     <div class="flex items-center gap-2">
                         <span class="font-extrabold text-xl tracking-tight text-slate-900 dark:text-white">VigilCore</span>
@@ -45,12 +46,12 @@
         </div>
 
         <!-- Titre et Explication en Français -->
-        <div class="space-y-1.5 text-center">
+        <div class="space-y-1 text-center">
             <h1 class="text-base font-bold text-slate-900 dark:text-white tracking-tight">
                 {{ __('Récupération du mot de passe') }}
             </h1>
             <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-                {{ __('Saisissez votre adresse e-mail professionnelle Maviance. Un lien de réinitialisation sécurisé à usage unique vous sera envoyé.') }}
+                {{ __('Saisissez votre e-mail professionnel Maviance pour recevoir un lien éphémère.') }}
             </p>
         </div>
 
@@ -60,8 +61,8 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
             </svg>
             <div class="space-y-0.5 font-mono text-[11px]">
-                <p class="font-bold">{{ __('Sécurité OWASP & FinTech') }}</p>
-                <p class="text-blue-700 dark:text-blue-300">{{ __('Le lien généré est cryptographiquement signé et expire au bout de 15 minutes.') }}</p>
+                <p class="font-bold">{{ __('Sécurité OWASP / FinTech') }}</p>
+                <p class="text-blue-700 dark:text-blue-300">{{ __('Le lien généré expire automatiquement au bout de 15 minutes.') }}</p>
             </div>
         </div>
 
