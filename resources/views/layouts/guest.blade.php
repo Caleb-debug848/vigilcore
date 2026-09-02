@@ -34,7 +34,8 @@
                 </a>
             </div>
 
-            <div class="w-full sm:max-w-md px-6 py-6 bg-white dark:bg-[#0d1322] border border-slate-200 dark:border-slate-800/90 shadow-xl rounded-2xl">
+            <div style="width: 100% !important; max-width: 420px !important; margin: 0 auto !important;"
+                 class="w-full sm:max-w-md px-6 py-6 bg-white dark:bg-[#0d1322] border border-slate-200 dark:border-slate-800/90 shadow-xl rounded-2xl">
                 {{ $slot }}
             </div>
         </div>
