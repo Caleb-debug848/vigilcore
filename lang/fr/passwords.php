@@ -4,7 +4,7 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Password Reset Language Lines (French Default for VigilCore)
+    | Lignes de langue pour la réinitialisation de mot de passe (VigilCore)
     |--------------------------------------------------------------------------
     */
 
