@@ -477,6 +477,7 @@ EOF
   "component": "$KEY",
   "service_name": "$NAME",
   "http": { "response": { "status_code": $HTTP_CODE } },
+  "http.response.status_code": $HTTP_CODE,
   "log": { "level": "error" },
   "message": "$ERR_CODE on endpoint /api/v2/$KEY/validate - $TITLE",
   "host": { "name": "$HOST_NAME" },
