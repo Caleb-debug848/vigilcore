@@ -60,24 +60,32 @@
             <!-- Token de Réinitialisation -->
             <input type="hidden" name="token" value="{{ $request->route('token') }}">
 
-            <!-- Email Address -->
+            <!-- Email Address (Grisé et Verrouillé) -->
             <div class="space-y-1.5">
-                <label for="email" class="block text-xs font-semibold text-slate-700 dark:text-slate-300">
-                    {{ __('Email professionnel') }}
-                </label>
+                <div class="flex items-center justify-between">
+                    <label for="email" class="block text-xs font-semibold text-slate-700 dark:text-slate-300">
+                        {{ __('Adresse e-mail') }}
+                    </label>
+                    <span class="inline-flex items-center gap-1 text-[10px] font-mono text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/60 px-1.5 py-0.5 rounded border border-emerald-200 dark:border-emerald-800">
+                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                        </svg>
+                        <span>{{ __('Compte vérifié') }}</span>
+                    </span>
+                </div>
                 <input id="email" 
                        type="email" 
                        name="email" 
                        value="{{ old('email', $request->email) }}" 
-                       required 
-                       autofocus 
-                       class="w-full px-3.5 py-2.5 text-xs rounded-xl bg-slate-50 dark:bg-[#0c101a] border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#0020B2] dark:focus:ring-blue-500 focus:border-transparent transition">
+                       readonly
+                       tabindex="-1"
+                       class="w-full px-3.5 py-2.5 text-xs rounded-xl bg-slate-100 dark:bg-[#151c2c] border border-slate-200 dark:border-slate-800 text-slate-500 dark:text-slate-400 font-mono cursor-not-allowed select-none focus:outline-none transition">
                 @error('email')
                     <p class="text-[11px] font-mono text-red-600 dark:text-red-400">{{ $message }}</p>
                 @enderror
             </div>
 
-            <!-- Password -->
+            <!-- Password (Nouveau mot de passe avec autofocus) -->
             <div class="space-y-1.5">
                 <label for="password" class="block text-xs font-semibold text-slate-700 dark:text-slate-300">
                     {{ __('Nouveau mot de passe') }}
@@ -86,6 +94,7 @@
                        type="password" 
                        name="password" 
                        required 
+                       autofocus
                        autocomplete="new-password"
                        placeholder="Min. 8 caractères"
                        class="w-full px-3.5 py-2.5 text-xs rounded-xl bg-slate-50 dark:bg-[#0c101a] border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#0020B2] dark:focus:ring-blue-500 focus:border-transparent transition">
