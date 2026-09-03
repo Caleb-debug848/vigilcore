@@ -68,11 +68,11 @@
         <text x="0" y="5" fill="#000000" font-size="12" font-weight="bold" text-anchor="middle">S'authentifier</text>
     </g>
 
-    <!-- CUS 1.2 : Acquitter l'incident -->
+    <!-- CUS 1.2 : Suivre la prise en charge -->
     <g transform="translate(440, 260)" filter="url(#drop-shadow-s1)">
         <ellipse cx="0" cy="0" rx="145" ry="30" fill="#ffffff" stroke="#000000" stroke-width="2"/>
-        <text x="0" y="-3" fill="#000000" font-size="12" font-weight="bold" text-anchor="middle">Acquitter et consigner</text>
-        <text x="0" y="14" fill="#000000" font-size="12" font-weight="bold" text-anchor="middle">la prise en charge</text>
+        <text x="0" y="-3" fill="#000000" font-size="12" font-weight="bold" text-anchor="middle">Consulter le diagnostic</text>
+        <text x="0" y="14" fill="#000000" font-size="12" font-weight="bold" text-anchor="middle">et la qualification</text>
     </g>
 
     <!-- CUS 1.3 : Inspecter boîte noire JSON -->
@@ -82,11 +82,11 @@
         <text x="0" y="14" fill="#000000" font-size="12" font-weight="bold" text-anchor="middle">de la boîte noire JSON</text>
     </g>
 
-    <!-- CUS 1.4 : Valider la résolution -->
+    <!-- CUS 1.4 : Suivre la résolution -->
     <g transform="translate(440, 640)" filter="url(#drop-shadow-s1)">
         <ellipse cx="0" cy="0" rx="145" ry="30" fill="#ffffff" stroke="#000000" stroke-width="2"/>
-        <text x="0" y="-3" fill="#000000" font-size="12" font-weight="bold" text-anchor="middle">Valider la résolution</text>
-        <text x="0" y="14" fill="#000000" font-size="12" font-weight="bold" text-anchor="middle">et clore l'incident</text>
+        <text x="0" y="-3" fill="#000000" font-size="12" font-weight="bold" text-anchor="middle">Suivre la résolution</text>
+        <text x="0" y="14" fill="#000000" font-size="12" font-weight="bold" text-anchor="middle">et le rétablissement</text>
     </g>
 
 

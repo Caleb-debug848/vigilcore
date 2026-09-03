@@ -172,7 +172,7 @@ La supervision des 20 passerelles de paiement interconnectées à la plateforme 
 
 #### 2. Modélisation des Cas d'Utilisation (Conformité UML 2.5 & Directives Académiques)
 * **Acteurs Humains (À gauche)** :
-  * `Opérateur / Technicien de Supervision` (Surveiller en direct, simuler des pannes sur banc d'essai, acquitter les incidents).
+  * `Opérateur / Collaborateur de Supervision` (Surveiller en direct, simuler des pannes sur banc d'essai, consulter la boîte noire et suivre la résolution automatisée des incidents).
   * `Utilisateur Interne (Tout collaborateur connecté / Responsable SLA / Direction)` (Consulter le dashboard, **générer et télécharger les rapports d'audit SLA** — ouvert à tout utilisateur interne connecté).
   * `Administrateur Système` (Configurer les seuils de sondes et les passerelles).
   * `Partenaire Marchand / Client Externe` (Consulter la page publique d'état Statuspage).

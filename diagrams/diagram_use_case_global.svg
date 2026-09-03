@@ -101,11 +101,11 @@
         <text x="0" y="15" fill="#000000" font-size="13" font-weight="bold" text-anchor="middle">20 passerelles en direct</text>
     </g>
 
-    <!-- CU 2 : Acquitter et consigner la résolution d'un incident -->
+    <!-- CU 2 : Consulter le diagnostic et suivre la résolution -->
     <g transform="translate(460, 320)" filter="url(#shadow-pamc-g)">
         <ellipse cx="0" cy="0" rx="155" ry="32" fill="#ffffff" stroke="#000000" stroke-width="2.2"/>
-        <text x="0" y="-3" fill="#000000" font-size="13" font-weight="bold" text-anchor="middle">Acquitter et consigner</text>
-        <text x="0" y="15" fill="#000000" font-size="13" font-weight="bold" text-anchor="middle">la résolution d'un incident</text>
+        <text x="0" y="-3" fill="#000000" font-size="13" font-weight="bold" text-anchor="middle">Consulter la boîte noire</text>
+        <text x="0" y="15" fill="#000000" font-size="13" font-weight="bold" text-anchor="middle">et suivre la résolution</text>
     </g>
 
     <!-- CU 3 : Simuler une panne sur banc d'essai -->

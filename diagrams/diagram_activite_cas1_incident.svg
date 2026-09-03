@@ -122,20 +122,20 @@
     <!-- Vers Couloir 4 : Intervention Technique -->
     <line x1="936" y1="550" x2="968" y2="550" stroke="#000000" stroke-width="1.8" marker-end="url(#arrow-act1)"/>
 
-    <!-- Activité 4 (Couloir 4) : Acquitter et Diagnostiquer -->
+    <!-- Activité 4 (Couloir 4) : Consulter et Diagnostiquer -->
     <g transform="translate(970, 525)" filter="url(#shadow-act1)">
         <rect x="0" y="0" width="185" height="52" rx="22" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.8"/>
-        <text x="92" y="23" fill="#000000" font-size="13" font-weight="bold" text-anchor="middle">Acquitter &amp; Diagnostiquer</text>
+        <text x="92" y="23" fill="#000000" font-size="13" font-weight="bold" text-anchor="middle">Consulter &amp; Diagnostiquer</text>
         <text x="92" y="41" fill="#334155" font-size="11" font-weight="bold" text-anchor="middle">Analyse Cause Racine</text>
     </g>
 
     <line x1="1062" y1="577" x2="1062" y2="613" stroke="#000000" stroke-width="1.8" marker-end="url(#arrow-act1)"/>
 
-    <!-- Activité 5 (Couloir 4) : Valider la Résolution -->
+    <!-- Activité 5 (Couloir 4) : Suivre la Résolution -->
     <g transform="translate(970, 615)" filter="url(#shadow-act1)">
         <rect x="0" y="0" width="185" height="52" rx="22" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.8"/>
-        <text x="92" y="23" fill="#000000" font-size="13" font-weight="bold" text-anchor="middle">Valider la Résolution</text>
-        <text x="92" y="41" fill="#334155" font-size="11" font-weight="bold" text-anchor="middle">Saisir note de clôture</text>
+        <text x="92" y="23" fill="#000000" font-size="13" font-weight="bold" text-anchor="middle">Suivre la Résolution</text>
+        <text x="92" y="41" fill="#334155" font-size="11" font-weight="bold" text-anchor="middle">Confirmation Rétablissement</text>
     </g>
 
     <!-- Vers Couloir 2 : Calcul Automatique MTTR & Clôture -->

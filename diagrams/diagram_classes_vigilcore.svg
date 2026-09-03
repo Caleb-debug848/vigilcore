@@ -48,7 +48,7 @@
         <text x="12" y="238" fill="#000000" font-size="12" font-weight="bold">+ surveillerServices() : void</text>
         <text x="12" y="258" fill="#000000" font-size="12" font-weight="bold">+ inspecterBoiteNoire(id: entier) : Diagnostic</text>
         <text x="12" y="278" fill="#000000" font-size="12" font-weight="bold">+ demanderRapportAudit(periode: texte) : void</text>
-        <text x="12" y="298" fill="#000000" font-size="12" font-weight="bold">+ acquitterIncident(id: entier) : void</text>
+        <text x="12" y="298" fill="#000000" font-size="12" font-weight="bold">+ suivreIncident(id: entier) : void</text>
         <text x="12" y="318" fill="#000000" font-size="12" font-weight="bold">+ declencherSimulation(id: texte) : void</text>
     </g>
 
