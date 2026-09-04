@@ -24,3 +24,7 @@ _ide_helper.php
 Homestead.json
 Homestead.yaml
 Thumbs.db
+
+# Documents et rapports de stage
+DOCUMENT_DE_REFERENCE_RAPPORT_STAGE_VIGILCORE.*
+/diagrams/
