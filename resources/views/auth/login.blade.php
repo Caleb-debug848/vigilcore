@@ -21,13 +21,27 @@
     <!-- ==================================================== -->
     <div class="w-full max-w-[420px] bg-white dark:bg-[#111827] rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xl shadow-slate-200/50 dark:shadow-none p-6 sm:p-8 space-y-6">
 
-        <!-- En-tête Logo & Marque Haute Fidélité -->
-        <div class="flex flex-col items-center text-center space-y-2">
-            <div class="flex items-center justify-center">
-                <img src="{{ asset('images/logo_vigilcore_full_transparent.png') }}" alt="VigilCore" class="h-11 sm:h-12 w-auto object-contain dark:hidden drop-shadow-xs">
-                <img src="{{ asset('images/logo_vigilcore_full_dark_transparent.png') }}" alt="VigilCore" class="h-11 sm:h-12 w-auto object-contain hidden dark:block drop-shadow-xs">
+        <!-- En-tête Logo & Marque Haute Fidélité (Style Zabbix/Datadog) -->
+        <div class="flex flex-col items-center text-center space-y-3">
+            <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#0020B2]/15 to-blue-600/20 dark:from-blue-500/20 dark:to-blue-900/40 border border-blue-500/30 dark:border-blue-400/30 shadow-lg shadow-blue-500/10 flex items-center justify-center p-2">
+                <img src="{{ asset('images/logo.svg') }}" alt="VigilCore" class="w-full h-full object-contain">
             </div>
-            <div class="flex items-center justify-center gap-2 pt-1">
+            
+            <div class="space-y-1">
+                <div class="flex items-center justify-center gap-2">
+                    <span class="font-black text-2xl tracking-tight text-slate-900 dark:text-white uppercase font-sans">
+                        VIGIL<span class="text-[#2563EB] dark:text-[#38BDF8]">CORE</span>
+                    </span>
+                    <span class="px-1.5 py-0.5 rounded text-[9.5px] font-mono font-black bg-[#0020B2] text-white dark:bg-[#2563EB] tracking-wider uppercase shadow-xs">
+                        NOC
+                    </span>
+                </div>
+                <p class="text-xs font-mono font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+                    Supervision & Surveillance Passerelles
+                </p>
+            </div>
+            
+            <div class="flex items-center justify-center gap-2 pt-0.5">
                 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[9.5px] font-mono font-bold bg-blue-50 dark:bg-blue-950/80 text-[#0020B2] dark:text-blue-300 border border-blue-200 dark:border-blue-800">
                     ENTERPRISE CONSOLE
                 </span>

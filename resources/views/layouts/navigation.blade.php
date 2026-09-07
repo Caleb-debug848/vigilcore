@@ -3,11 +3,20 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
             <div class="flex">
-                <!-- Logo Officiel VigilCore Complet -->
+                <!-- Logo Officiel VigilCore Complet (Style Zabbix/Datadog) -->
                 <div class="shrink-0 flex items-center">
-                    <a href="{{ route('dashboard') }}" class="flex items-center gap-2 group">
-                        <img src="{{ asset('images/logo_vigilcore_full_transparent.png') }}" alt="VigilCore" class="h-8 w-auto object-contain dark:hidden group-hover:scale-102 transition-transform">
-                        <img src="{{ asset('images/logo_vigilcore_full_dark_transparent.png') }}" alt="VigilCore" class="h-8 w-auto object-contain hidden dark:block group-hover:scale-102 transition-transform">
+                    <a href="{{ route('dashboard') }}" class="flex items-center gap-2.5 group">
+                        <div class="w-8 h-8 rounded-xl bg-gradient-to-br from-[#0020B2]/15 to-blue-600/20 dark:from-blue-500/20 dark:to-blue-900/40 border border-blue-500/30 dark:border-blue-400/30 flex items-center justify-center p-1 group-hover:scale-105 transition-transform">
+                            <img src="{{ asset('images/logo.svg') }}" alt="VigilCore" class="w-full h-full object-contain">
+                        </div>
+                        <div class="flex items-center gap-1.5">
+                            <span class="font-black text-base tracking-tight text-slate-900 dark:text-white uppercase font-sans">
+                                VIGIL<span class="text-[#2563EB] dark:text-[#38BDF8]">CORE</span>
+                            </span>
+                            <span class="px-1.5 py-0.5 rounded text-[8.5px] font-mono font-black bg-[#0020B2] text-white dark:bg-[#2563EB] tracking-wider uppercase">
+                                NOC
+                            </span>
+                        </div>
                     </a>
                 </div>
 

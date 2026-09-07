@@ -50,15 +50,27 @@
         <!-- ==================================================== -->
         <header class="sticky-glass-header no-print sticky top-2 sm:top-3 z-40 flex items-center justify-between gap-2 sm:gap-4 p-2.5 sm:px-4 rounded-xl sm:rounded-2xl shadow-sm transition-all duration-200">
 
-            <!-- Gauche : Logo & Horloge -->
-            <div class="flex items-center gap-2 sm:gap-3 min-w-0 flex-shrink-0">
-                <a href="{{ route('dashboard') }}" class="flex items-center gap-2 sm:gap-2.5 group">
-                    <img src="{{ asset('images/logo_vigilcore_full_transparent.png') }}" alt="VigilCore" class="h-8 sm:h-9 w-auto object-contain dark:hidden group-hover:scale-102 transition-transform">
-                    <img src="{{ asset('images/logo_vigilcore_full_dark_transparent.png') }}" alt="VigilCore" class="h-8 sm:h-9 w-auto object-contain hidden dark:block group-hover:scale-102 transition-transform">
-                    <div class="flex items-center gap-1.5 sm:gap-2">
-                        <span class="px-2 py-0.5 rounded-full text-[9px] sm:text-[10px] font-mono font-bold bg-blue-50 dark:bg-blue-950/80 text-[#0020B2] dark:text-blue-300 border border-blue-200 dark:border-blue-800 shadow-2xs">
-                            ANALYTICS
-                        </span>
+            <!-- Gauche : Marque VigilCore & Statut Analytics (Style Zabbix/Datadog Haute Précision) -->
+            <div class="flex items-center gap-3 sm:gap-4 min-w-0 flex-shrink-0">
+                <a href="{{ route('dashboard') }}" class="flex items-center gap-2.5 sm:gap-3 group">
+                    <!-- Bouclier Sentinel SVG Vectoriel Haute Définition -->
+                    <div class="w-8 h-8 sm:w-9 sm:h-9 shrink-0 rounded-xl bg-gradient-to-br from-[#0020B2]/15 to-blue-600/20 dark:from-blue-500/20 dark:to-blue-900/40 border border-blue-500/30 dark:border-blue-400/30 shadow-xs flex items-center justify-center p-1 group-hover:scale-105 transition-transform">
+                        <img src="{{ asset('images/logo.svg') }}" alt="VigilCore" class="w-full h-full object-contain">
+                    </div>
+                    
+                    <!-- Bloc Typographie Net & Haute Lisibilité (Zabbix-Style) -->
+                    <div class="flex flex-col">
+                        <div class="flex items-center gap-1.5 sm:gap-2">
+                            <span class="font-black text-base sm:text-lg tracking-tight text-slate-900 dark:text-white uppercase font-sans leading-none">
+                                VIGIL<span class="text-[#2563EB] dark:text-[#38BDF8]">CORE</span>
+                            </span>
+                            <span class="px-1.5 py-0.5 rounded text-[9px] sm:text-[9.5px] font-mono font-black bg-indigo-600 text-white dark:bg-indigo-500 tracking-wider uppercase shadow-xs">
+                                ANALYTICS
+                            </span>
+                        </div>
+                        <div class="flex items-center gap-1.5 text-[9.5px] sm:text-[10px] font-mono text-slate-500 dark:text-slate-400 font-semibold tracking-wide uppercase pt-0.5 leading-none">
+                            <span>Rapports & SLA Forensics</span>
+                        </div>
                     </div>
                 </a>
 
