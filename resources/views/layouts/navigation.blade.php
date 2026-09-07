@@ -3,13 +3,11 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
             <div class="flex">
-                <!-- Logo -->
+                <!-- Logo Officiel VigilCore Complet -->
                 <div class="shrink-0 flex items-center">
-                    <a href="{{ route('dashboard') }}" class="flex items-center gap-2.5 group">
-                        <x-application-logo class="block h-9 w-auto object-contain group-hover:scale-105 transition-transform" />
-                        <span class="font-extrabold text-lg tracking-tight text-slate-900 dark:text-white">
-                            Vigil<span class="text-[#2563EB] dark:text-blue-400">Core</span>
-                        </span>
+                    <a href="{{ route('dashboard') }}" class="flex items-center gap-2 group">
+                        <img src="{{ asset('images/logo_vigilcore_full_transparent.png') }}" alt="VigilCore" class="h-8 w-auto object-contain dark:hidden group-hover:scale-102 transition-transform">
+                        <img src="{{ asset('images/logo_vigilcore_full_dark_transparent.png') }}" alt="VigilCore" class="h-8 w-auto object-contain hidden dark:block group-hover:scale-102 transition-transform">
                     </a>
                 </div>
 

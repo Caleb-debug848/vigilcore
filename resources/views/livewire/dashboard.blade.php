@@ -22,18 +22,18 @@
         <!-- ==================================================== -->
         <header class="sticky-glass-header no-print sticky top-2 sm:top-3 z-40 flex items-center justify-between gap-2 sm:gap-4 p-2.5 sm:px-4 rounded-xl sm:rounded-2xl shadow-sm transition-all duration-200 animate-entrance-1">
             
-            <!-- Gauche : Logo & Badge Enterprise -->
+            <!-- Gauche : Logo Complet Horizontal & Badge LIVE NOC -->
             <div class="flex items-center gap-2 sm:gap-3 min-w-0 flex-shrink-0">
-                <a href="{{ route('dashboard') }}" class="flex items-center gap-2 group">
-                    <img src="{{ asset('images/logo.svg') }}" alt="VigilCore Logo" class="h-8 w-8 sm:h-9 sm:w-9 object-contain group-hover:scale-105 transition-transform">
+                <a href="{{ route('dashboard') }}" class="flex items-center gap-2 sm:gap-2.5 group">
+                    <!-- Logo Complet avec Bouclier + VIGILCORE + Slogan Proactive Monitoring & Forensics -->
+                    <img src="{{ asset('images/logo_vigilcore_full_transparent.png') }}" alt="VigilCore" class="h-8 sm:h-9 w-auto object-contain dark:hidden group-hover:scale-102 transition-transform">
+                    <img src="{{ asset('images/logo_vigilcore_full_dark_transparent.png') }}" alt="VigilCore" class="h-8 sm:h-9 w-auto object-contain hidden dark:block group-hover:scale-102 transition-transform">
+                    
                     <div class="flex items-center gap-1.5 sm:gap-2">
-                        <span class="font-extrabold text-base sm:text-lg tracking-tight text-slate-900 dark:text-white">
-                            Vigil<span class="text-[#2563EB] dark:text-blue-400">Core</span>
-                        </span>
-                        <span class="px-2 py-0.5 rounded-full text-[9px] sm:text-[10px] font-mono font-bold bg-blue-50 dark:bg-blue-950/80 text-[#0020B2] dark:text-blue-300 border border-blue-200 dark:border-blue-800">
+                        <span class="px-2 py-0.5 rounded-full text-[9px] sm:text-[10px] font-mono font-bold bg-blue-50 dark:bg-blue-950/80 text-[#0020B2] dark:text-blue-300 border border-blue-200 dark:border-blue-800 shadow-2xs">
                             LIVE NOC
                         </span>
-                        <span class="relative flex h-2 w-2">
+                        <span class="relative flex h-2 w-2" title="Système opérationnel en direct">
                             <span class="radar-live absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                             <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
                         </span>

@@ -22,26 +22,19 @@
     <div class="w-full max-w-[420px] bg-white dark:bg-[#111827] rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xl shadow-slate-200/50 dark:shadow-none p-6 sm:p-8 space-y-6">
 
         <!-- En-tête Logo & Marque Haute Fidélité -->
-        <div class="flex flex-col items-center text-center space-y-3">
-            <div class="flex items-center gap-3">
-                <img src="{{ asset('images/logo.svg') }}" alt="VigilCore Sentinel Shield" class="h-11 w-11 object-contain drop-shadow-sm">
-                <div class="text-left">
-                    <div class="flex items-center gap-2">
-                        <span class="font-extrabold text-2xl tracking-tight text-slate-900 dark:text-white">
-                            Vigil<span class="text-[#2563EB] dark:text-blue-400">Core</span>
-                        </span>
-                        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[9.5px] font-mono font-bold bg-blue-50 dark:bg-blue-950/80 text-[#0020B2] dark:text-blue-300 border border-blue-200 dark:border-blue-800">
-                            ENTERPRISE
-                        </span>
-                        <span class="relative flex h-2 w-2" title="Système opérationnel">
-                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                            <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-                        </span>
-                    </div>
-                    <p class="text-[11px] font-mono font-medium text-slate-500 dark:text-slate-400">
-                        Proactive Monitoring &amp; Forensic SLA
-                    </p>
-                </div>
+        <div class="flex flex-col items-center text-center space-y-2">
+            <div class="flex items-center justify-center">
+                <img src="{{ asset('images/logo_vigilcore_full_transparent.png') }}" alt="VigilCore" class="h-11 sm:h-12 w-auto object-contain dark:hidden drop-shadow-xs">
+                <img src="{{ asset('images/logo_vigilcore_full_dark_transparent.png') }}" alt="VigilCore" class="h-11 sm:h-12 w-auto object-contain hidden dark:block drop-shadow-xs">
+            </div>
+            <div class="flex items-center justify-center gap-2 pt-1">
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[9.5px] font-mono font-bold bg-blue-50 dark:bg-blue-950/80 text-[#0020B2] dark:text-blue-300 border border-blue-200 dark:border-blue-800">
+                    ENTERPRISE CONSOLE
+                </span>
+                <span class="relative flex h-2 w-2" title="Système opérationnel">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                </span>
             </div>
         </div>
 

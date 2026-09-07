@@ -21,20 +21,10 @@
     </head>
     <body class="font-sans antialiased bg-slate-100 dark:bg-[#070b14] text-slate-900 dark:text-slate-100 transition-colors duration-200 min-h-screen">
         <div class="min-h-screen flex flex-col sm:justify-center items-center p-4 sm:pt-0">
-            <div class="flex items-center gap-3 mb-4">
-                <a href="/" class="flex items-center gap-3 group">
-                    <x-application-logo class="w-12 h-12" />
-                    <div>
-                        <div class="flex items-center gap-2">
-                            <span class="font-extrabold text-2xl tracking-tight text-slate-900 dark:text-white">
-                                Vigil<span class="text-[#2563EB] dark:text-blue-400">Core</span>
-                            </span>
-                            <span class="px-2 py-0.5 rounded-full text-[9.5px] font-mono font-bold bg-blue-50 dark:bg-blue-950/70 text-[#0020B2] dark:text-blue-300 border border-blue-200 dark:border-blue-800">
-                                ENTERPRISE
-                            </span>
-                        </div>
-                        <p class="text-[11px] font-mono text-slate-400 dark:text-slate-500">Accès Sécurisé Supervision</p>
-                    </div>
+            <div class="flex items-center justify-center mb-6">
+                <a href="/" class="flex items-center justify-center group">
+                    <img src="{{ asset('images/logo_vigilcore_full_transparent.png') }}" alt="VigilCore" class="h-11 sm:h-12 w-auto object-contain dark:hidden group-hover:scale-102 transition-transform">
+                    <img src="{{ asset('images/logo_vigilcore_full_dark_transparent.png') }}" alt="VigilCore" class="h-11 sm:h-12 w-auto object-contain hidden dark:block group-hover:scale-102 transition-transform">
                 </a>
             </div>
 

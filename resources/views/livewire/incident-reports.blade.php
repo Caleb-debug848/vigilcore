@@ -52,13 +52,11 @@
 
             <!-- Gauche : Logo & Horloge -->
             <div class="flex items-center gap-2 sm:gap-3 min-w-0 flex-shrink-0">
-                <a href="{{ route('dashboard') }}" class="flex items-center gap-2 group">
-                    <img src="{{ asset('images/logo.svg') }}" alt="VigilCore Logo" class="h-8 w-8 sm:h-9 sm:w-9 object-contain group-hover:scale-105 transition-transform">
+                <a href="{{ route('dashboard') }}" class="flex items-center gap-2 sm:gap-2.5 group">
+                    <img src="{{ asset('images/logo_vigilcore_full_transparent.png') }}" alt="VigilCore" class="h-8 sm:h-9 w-auto object-contain dark:hidden group-hover:scale-102 transition-transform">
+                    <img src="{{ asset('images/logo_vigilcore_full_dark_transparent.png') }}" alt="VigilCore" class="h-8 sm:h-9 w-auto object-contain hidden dark:block group-hover:scale-102 transition-transform">
                     <div class="flex items-center gap-1.5 sm:gap-2">
-                        <span class="font-extrabold text-base sm:text-lg tracking-tight text-slate-900 dark:text-white">
-                            Vigil<span class="text-[#2563EB] dark:text-blue-400">Core</span>
-                        </span>
-                        <span class="px-2 py-0.5 rounded-full text-[9px] sm:text-[10px] font-mono font-bold bg-blue-50 dark:bg-blue-950/80 text-[#0020B2] dark:text-blue-300 border border-blue-200 dark:border-blue-800">
+                        <span class="px-2 py-0.5 rounded-full text-[9px] sm:text-[10px] font-mono font-bold bg-blue-50 dark:bg-blue-950/80 text-[#0020B2] dark:text-blue-300 border border-blue-200 dark:border-blue-800 shadow-2xs">
                             ANALYTICS
                         </span>
                     </div>
