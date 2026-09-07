@@ -411,7 +411,8 @@ process_service() {
     
     # Étape 4 : Webhook n8n & Diffusion Multicanal
     echo -e "${C_GRAY}└──${C_RESET} ${C_BOLD}${C_AMBER}[ÉTAPE 4/4 : ORCHESTRATION N8N & DIFFUSION MULTICANAL (<5s)]${C_RESET}"
-    echo -e "    ${C_GRAY}├─${C_RESET} Transmission Webhook vers : ${C_CYAN}${N8N_URL}${C_RESET}"
+    echo -e "    ${C_GRAY}├─${C_RESET} Moteur d'Aiguillage : ${C_WHITE}n8n Automation Engine (Protocole HTTP POST)${C_RESET}"
+    echo -e "    ${C_GRAY}├─${C_RESET} Endpoint Webhook : ${C_CYAN}/webhook/vigilcore-alert${C_RESET} ${C_GRAY}(Port 443 SSL)${C_RESET}"
 
     # Construction du Payload JSON officiel VigilCore
     JSON_PAYLOAD=$(cat <<EOF
@@ -432,7 +433,7 @@ process_service() {
 EOF
 )
 
-    # Transmission Réseau avec curl
+    # Transmission Réseau avec curl (Requête HTTP POST vers n8n)
     HTTP_RESP=$(curl -s -w "\n%{http_code}" -X POST "$N8N_URL" \
       -H "Content-Type: application/json" \
       -d "$JSON_PAYLOAD" 2>/dev/null)
@@ -440,10 +441,10 @@ EOF
     HTTP_STATUS=$(echo "$HTTP_RESP" | tail -n 1)
 
     if [ "$HTTP_STATUS" = "200" ] || [ "$HTTP_STATUS" = "201" ] || [ "$HTTP_STATUS" = "204" ]; then
-        echo -e "    ${C_GRAY}└─${C_RESET} Statut n8n : ${C_GREEN}[SUCCÈS 200]${C_RESET} — Alertes WhatsApp NOC & Status Page synchronisées !"
+        echo -e "    ${C_GRAY}└─${C_RESET} Statut Distribution : ${C_GREEN}[SUCCÈS 200 OK]${C_RESET} — Alertes WhatsApp NOC & Status Page synchronisées !"
         REPORT_STATUSES+=("[OK]")
     else
-        echo -e "    ${C_GRAY}└─${C_RESET} Statut n8n : ${C_AMBER}[TRANSMIS ${HTTP_STATUS}]${C_RESET}"
+        echo -e "    ${C_GRAY}└─${C_RESET} Statut Distribution : ${C_AMBER}[TRANSMIS HTTP ${HTTP_STATUS}]${C_RESET}"
         REPORT_STATUSES+=("[OK]")
     fi
 
@@ -481,7 +482,8 @@ done
 
 echo -e "${C_GRAY}════════════════════════════════════════════════════════════════════════════════${C_RESET}"
 echo -e " ${C_BOLD}${C_WHITE}PROTOCOLE DE DEMONSTRATION & SOUTENANCE :${C_RESET}"
-echo -e "  1. Consultez le Dashboard Live : ${C_CYAN}${DASHBOARD_URL}${C_RESET} pour observer les alertes en direct."
-echo -e "  2. Cliquez sur un incident pour inspecter le ${C_PURPLE}Payload JSON scellé par SHA-256${C_RESET} (Preuve SLA)."
-echo -e "  3. Rendez-vous sur ${C_CYAN}/reports${C_RESET} pour télécharger le ${C_GREEN}Rapport d'Audit & Analytics SLA (PDF/Excel)${C_RESET}."
+echo -e "  1. Tableau de bord Live : ${C_CYAN}${DASHBOARD_URL}${C_RESET} (Surveillance en direct des 20 services)"
+echo -e "  2. Inspection Forensique : Cliquez sur un incident pour voir le ${C_PURPLE}Payload JSON scellé par SHA-256${C_RESET}"
+echo -e "  3. Rapports d'exploitation : Rendez-vous sur ${C_CYAN}https://vigilcore.calebdevs.com/reports${C_RESET} (Export PDF / Excel)"
+echo -e "  4. Console n8n (Workflow Multicanal) : ${C_CYAN}https://n8n.srv901529.hstgr.cloud${C_RESET}"
 echo -e "${C_GRAY}────────────────────────────────────────────────────────────────────────────────${C_RESET}\n"
