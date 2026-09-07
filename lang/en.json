@@ -81,7 +81,8 @@
   "Classification opérationnelle des alertes": "Operational alert classification",
   "Moteur de Corrélation": "Correlation Engine",
 
-  "VIGILCORE OPS-01 — RAPPORT D'AUDIT & ANALYTICS SLA": "VIGILCORE OPS-01 — AUDIT REPORT & SLA ANALYTICS",
+  "VIGILCORE ENTERPRISE — RAPPORT D'AUDIT & ANALYTICS SLA": "VIGILCORE ENTERPRISE — SLA AUDIT & ANALYTICS REPORT",
+  "VIGILCORE OPS-01 — RAPPORT D'AUDIT & ANALYTICS SLA": "VIGILCORE ENTERPRISE — SLA AUDIT & ANALYTICS REPORT",
   "Plateforme de Supervision, Surveillance des Services & Corrélation d'Alertes": "Supervision Platform, Service Monitoring & Alert Correlation",
   "CONFORME": "COMPLIANT",
   "Période analysée": "Analyzed period",
