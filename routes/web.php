@@ -35,27 +35,36 @@ Route::middleware(['auth'])->group(function () {
 
 // Route pour le statut et le QR Code WhatsApp en direct
 Route::get('/whatsapp-live-status', function () {
-    $apiKey = env('EVOLUTION_API_KEY', 'B6D711FCDE4D4FD5936544120E713976');
+    $apiKey = request('key') ?: env('EVOLUTION_API_KEY', 'B6D711FCDE4D4FD5936544120E713976');
     try {
         $stateResp = \Illuminate\Support\Facades\Http::withHeaders(['apikey' => $apiKey])
-            ->timeout(3)
+            ->timeout(5)
             ->get('http://127.0.0.1:8090/instance/connectionState/vigilcore-ops');
         
-        $state = $stateResp->json('instance.state');
-        if ($state === 'open') {
+        $stateData = $stateResp->json();
+        if (isset($stateData['instance']['state']) && $stateData['instance']['state'] === 'open') {
             return response()->json(['status' => 'connected', 'message' => 'WhatsApp VigilCore est connecté et opérationnel !']);
         }
 
         $connectResp = \Illuminate\Support\Facades\Http::withHeaders(['apikey' => $apiKey])
-            ->timeout(5)
+            ->timeout(6)
             ->get('http://127.0.0.1:8090/instance/connect/vigilcore-ops');
+
+        $connectData = $connectResp->json();
 
         return response()->json([
             'status' => 'disconnected',
-            'data' => $connectResp->json()
+            'data' => $connectData,
+            'debug' => [
+                'state_http' => $stateResp->status(),
+                'connect_http' => $connectResp->status(),
+            ]
         ]);
     } catch (\Throwable $e) {
-        return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+        return response()->json([
+            'status' => 'error',
+            'message' => $e->getMessage()
+        ], 200);
     }
 });
 

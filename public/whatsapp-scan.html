@@ -175,9 +175,11 @@
             const qrWrapper = document.getElementById('qr-wrapper');
             const connectedBox = document.getElementById('connected-box');
             const instructionsBox = document.getElementById('instructions-box');
+            const urlParams = new URLSearchParams(window.location.search);
+            const keyParam = urlParams.get('key') ? `?key=${encodeURIComponent(urlParams.get('key'))}` : '';
 
             try {
-                const res = await fetch('/whatsapp-live-status');
+                const res = await fetch('/whatsapp-live-status' + keyParam);
                 const data = await res.json();
 
                 if (data.status === 'connected') {
@@ -185,7 +187,14 @@
                     qrWrapper.style.display = 'none';
                     instructionsBox.style.display = 'none';
                     connectedBox.style.display = 'block';
+                } else if (data.status === 'error') {
+                    badge.innerHTML = `<span style="color: #ef4444;">${data.message || 'Erreur de connexion Evolution API'}</span>`;
                 } else if (data.data) {
+                    if (data.data.status === 401 || data.data.error === 'Unauthorized') {
+                        badge.innerHTML = '<span style="color: #ef4444;">Clé API non autorisée (401). Vérifiez la clé sur le serveur.</span>';
+                        return;
+                    }
+
                     badge.innerHTML = '<span style="color: #ffb703;">● QR Code En Direct (Auto-actualisé)</span>';
                     qrWrapper.style.display = 'inline-block';
                     instructionsBox.style.display = 'block';
@@ -195,6 +204,8 @@
                         renderQR(data.data.base64);
                     } else if (data.data.code) {
                         renderQR(data.data.code);
+                    } else if (data.data.pairingCode) {
+                        badge.innerHTML = `<span style="color: #00a884;">Code d'appairage : ${data.data.pairingCode}</span>`;
                     }
                 }
             } catch (err) {
