@@ -9,6 +9,7 @@
 # ==============================================================================
 
 N8N_URL="https://n8n.srv901529.hstgr.cloud/webhook/vigilcore-alert"
+N8N_EXECUTIONS_URL="https://n8n.srv901529.hstgr.cloud/workflow/7m9jgiRmCyyiel4P/executions"
 HOST_NAME="srv901529"
 DASHBOARD_URL="https://vigilcore.calebdevs.com/dashboard"
 NOW_WAT=$(date "+%d/%m/%Y %H:%M:%S (WAT - Douala)")
@@ -496,7 +497,7 @@ echo -e " ${C_BOLD}${C_WHITE}PROTOCOLE DE DEMONSTRATION & SOUTENANCE :${C_RESET}
 echo -e "  1. Tableau de bord Live : ${C_CYAN}${DASHBOARD_URL}${C_RESET} (Surveillance en direct des 20 services)"
 echo -e "  2. Inspection Forensique : Cliquez sur un incident pour voir le ${C_PURPLE}Payload JSON scellé par SHA-256${C_RESET}"
 echo -e "  3. Rapports d'exploitation : Rendez-vous sur ${C_CYAN}https://vigilcore.calebdevs.com/reports${C_RESET} (Export PDF / Excel)"
-echo -e "  4. Console n8n (Workflow Multicanal) : ${C_CYAN}https://n8n.srv901529.hstgr.cloud${C_RESET}"
+echo -e "  4. Console n8n (Journal des Exécutions Live) : ${C_CYAN}${N8N_EXECUTIONS_URL}${C_RESET}"
 echo -e "${C_GRAY}────────────────────────────────────────────────────────────────────────────────${C_RESET}\n"
 
     echo -ne " ${C_BOLD}${C_WHITE}> Appuyez sur [Entrée] pour effectuer une autre simulation ou [0 / q] pour quitter : ${C_RESET}"
