@@ -87,13 +87,16 @@ class IncidentExportController extends Controller
         $avgMttrSec = $resolvedWithTime > 0 ? round($totalDurationSec / $resolvedWithTime) : 120;
         $mttrFormatted = ($avgMttrSec >= 60) ? (floor($avgMttrSec / 60) . 'm ' . ($avgMttrSec % 60) . 's') : ($avgMttrSec . 's');
 
-        return response()->streamDownload(function () use ($incidents, $totalCount, $resolvedCount, $critCount, $warnCount, $resRate, $mttrFormatted, $period, $isEn) {
+        $logoPath = public_path('images/logo.png');
+        $logoBase64 = file_exists($logoPath) ? base64_encode(file_get_contents($logoPath)) : '';
+
+        return response()->streamDownload(function () use ($incidents, $totalCount, $resolvedCount, $critCount, $warnCount, $resRate, $mttrFormatted, $period, $isEn, $logoBase64) {
             echo '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">';
             echo '<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">';
             echo '<!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>VigilCore SLA Report</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]-->';
             echo '<style>
                 body { font-family: "Segoe UI", Arial, sans-serif; font-size: 10pt; color: #1e293b; background-color: #ffffff; }
-                .title-banner { background-color: #0020B2; color: #ffffff; font-size: 14pt; font-weight: bold; padding: 12px 16px; vertical-align: middle; }
+                .title-banner { background-color: #0020B2; color: #ffffff; font-size: 13pt; font-weight: bold; padding: 12px 16px; vertical-align: middle; }
                 .subtitle { background-color: #0c154a; color: #cbd5e1; font-size: 9pt; padding: 6px 16px; }
                 .kpi-title { font-size: 8pt; font-weight: bold; color: #64748b; text-transform: uppercase; background-color: #f1f5f9; border: 1px solid #cbd5e1; padding: 6px; }
                 .kpi-val { font-size: 13pt; font-weight: bold; color: #0f172a; background-color: #ffffff; border: 1px solid #cbd5e1; padding: 8px; text-align: center; }
@@ -113,13 +116,14 @@ class IncidentExportController extends Controller
 
             echo '<table border="0" cellspacing="0" cellpadding="0" style="width:100%;">';
             
-            // Header Banner
+            // Header Banner avec Logo Officiel
+            $logoHtml = $logoBase64 ? '<img src="data:image/png;base64,' . $logoBase64 . '" width="34" height="34" style="vertical-align:middle;margin-right:10px;" alt="VigilCore Logo" /> ' : '';
             $titleBanner = $isEn ? 'VIGILCORE ENTERPRISE — SLA AUDIT & INCIDENT LOGS REPORT' : 'VIGILCORE ENTERPRISE — RAPPORT D\'AUDIT & TRAÇABILITÉ DES INCIDENTS SLA';
             $subtitle = $isEn 
                 ? ('Generated on ' . date('Y-m-d \a\t H:i:s') . ' (Africa/Douala WAT) | Period: ' . strtoupper($period) . ' | Environment: Production srv901529 • Douala Datacenter')
                 : ('Généré le ' . date('d/m/Y à H:i:s') . ' (WAT Douala) | Période : ' . strtoupper($period) . ' | Environnement : Production srv901529 • Douala Datacenter');
             
-            echo '<tr><td colspan="12" class="title-banner">' . $titleBanner . '</td></tr>';
+            echo '<tr><td colspan="12" class="title-banner">' . $logoHtml . '<span style="vertical-align:middle;">' . $titleBanner . '</span></td></tr>';
             echo '<tr><td colspan="12" class="subtitle">' . $subtitle . '</td></tr>';
             echo '<tr><td colspan="12" style="height:10px;"></td></tr>';
 
