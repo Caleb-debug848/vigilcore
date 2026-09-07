@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # ==============================================================================
-# 🛡️ VIGILCORE ENTERPRISE INCIDENT ORCHESTRATOR & SIMULATOR
+# VIGILCORE ENTERPRISE INCIDENT ORCHESTRATOR & SIMULATOR
 # ==============================================================================
 # Plateforme de Télémétrie, Observabilité & Alerting de Haute Disponibilité
 # Écosystème : Maviance / Smobilpay • Douala Datacenter (Cameroun)
@@ -10,6 +10,7 @@
 
 N8N_URL="https://n8n.srv901529.hstgr.cloud/webhook/vigilcore-alert"
 HOST_NAME="srv901529"
+DASHBOARD_URL="https://vigilcore.calebdevs.com/dashboard"
 NOW_WAT=$(date "+%d/%m/%Y %H:%M:%S (WAT - Douala)")
 NOW_ISO=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
 
@@ -46,7 +47,7 @@ echo -e "   ${C_GRAY}Hôte : ${C_WHITE}${HOST_NAME}${C_RESET} ${C_GRAY}| Fuseau 
 echo -e "${C_GRAY}────────────────────────────────────────────────────────────────────────────────${C_RESET}"
 
 # --- CATÉGORIE 1 : PLATEFORMES MAVIANCE ---
-echo -e " ${C_BOLD}${C_CYAN}🏦 1. PLATEFORMES MAVIANCE CORE${C_RESET}"
+echo -e " ${C_BOLD}${C_CYAN}[1. PLATEFORMES MAVIANCE CORE]${C_RESET}"
 printf "   ${C_BLUE}[%2d]${C_RESET} %-36s ${C_BLUE}[%2d]${C_RESET} %-36s\n" \
   1 "Smobilpay Platform & APIs" \
   3 "Agent & Merchant Portal"
@@ -56,7 +57,7 @@ printf "   ${C_BLUE}[%2d]${C_RESET} %-36s ${C_BLUE}[%2d]${C_RESET} %-36s\n" \
 echo ""
 
 # --- CATÉGORIE 2 : MOBILE MONEY & TÉLÉCOMS ---
-echo -e " ${C_BOLD}${C_AMBER}📱 2. MOBILE MONEY & TÉLÉCOMS (CAMEROUN)${C_RESET}"
+echo -e " ${C_BOLD}${C_AMBER}[2. MOBILE MONEY & TELECOMS - CAMEROUN]${C_RESET}"
 printf "   ${C_AMBER}[%2d]${C_RESET} %-36s ${C_AMBER}[%2d]${C_RESET} %-36s\n" \
   5 "MTN Mobile Money (Général)" \
   10 "Orange Money : Retraits / Cashout"
@@ -74,14 +75,14 @@ printf "   ${C_AMBER}[%2d]${C_RESET} %-36s\n" \
 echo ""
 
 # --- CATÉGORIE 3 : FACTURIERS ÉNERGIE & EAU ---
-echo -e " ${C_BOLD}${C_GREEN}⚡ 3. FACTURES D'ÉNERGIE & D'EAU${C_RESET}"
+echo -e " ${C_BOLD}${C_GREEN}[3. FACTURES D'ENERGIE & D'EAU]${C_RESET}"
 printf "   ${C_GREEN}[%2d]${C_RESET} %-36s ${C_GREEN}[%2d]${C_RESET} %-36s\n" \
   14 "Factures ENEO (Électricité / Tokens)" \
   15 "Factures Camwater (Eau & Assainissement)"
 echo ""
 
 # --- CATÉGORIE 4 : RÉABONNEMENTS TV ---
-echo -e " ${C_BOLD}${C_PURPLE}📺 4. RÉABONNEMENTS TÉLÉVISION${C_RESET}"
+echo -e " ${C_BOLD}${C_PURPLE}[4. REABONNEMENTS TELEVISION]${C_RESET}"
 printf "   ${C_PURPLE}[%2d]${C_RESET} %-36s ${C_PURPLE}[%2d]${C_RESET} %-36s\n" \
   16 "Canal+ Télévision" \
   18 "StarTimes TV"
@@ -90,25 +91,25 @@ printf "   ${C_PURPLE}[%2d]${C_RESET} %-36s\n" \
 echo ""
 
 # --- CATÉGORIE 5 : RÉGIONAL & ENTREPRISES ---
-echo -e " ${C_BOLD}${C_CYAN}🌍 5. SERVICES RÉGIONAUX & PARTENAIRES${C_RESET}"
+echo -e " ${C_BOLD}${C_CYAN}[5. SERVICES REGIONAUX & PARTENAIRES]${C_RESET}"
 printf "   ${C_CYAN}[%2d]${C_RESET} %-36s ${C_CYAN}[%2d]${C_RESET} %-36s\n" \
   19 "MTN Mobile Money Congo" \
   20 "SABC Boissons (Paiements Marchands)"
 echo ""
 
 # --- PACKS DE DÉMONSTRATION SPÉCIAUX ---
-echo -e " ${C_BOLD}${C_WHITE}🚀 6. SCÉNARIOS MULTI-SERVICES (DÉMO SOUTENANCE)${C_RESET}"
+echo -e " ${C_BOLD}${C_WHITE}[6. SCENARIOS MULTI-SERVICES & DEMONSTRATION]${C_RESET}"
 printf "   ${C_AMBER}[%2d]${C_RESET} %-74s\n" \
-  15 "⚡ PACK 15 SERVICES MAJEURS (Pannes combinées MoMo, Orange, ENEO, Canal+, S3P...)"
+  15 "PACK 15 SERVICES MAJEURS (Pannes combinées MoMo, Orange, ENEO, Canal+, S3P...)"
 printf "   ${C_RED}[%2d]${C_RESET} %-74s\n" \
-  20 "🔥 BLACKOUT GLOBAL TOTAL (Simulation simultanée des 20 Passerelles Partenaires)"
+  20 "BLACKOUT GLOBAL TOTAL (Simulation simultanée des 20 Passerelles Partenaires)"
 printf "   ${C_GREEN}[ r]${C_RESET} %-74s\n" \
-  "🟢 RÉTABLIR TOUS LES SERVICES (Clôturer tous les incidents & Repasser à 20/20 Verts)"
+  "RETABLIR TOUS LES SERVICES (Clôturer tous les incidents & Repasser à 20/20 Verts)"
 echo ""
 
 echo -e "   ${C_RED}[ 0]${C_RESET} ${C_GRAY}Annuler et Quitter${C_RESET}"
 echo -e "${C_GRAY}────────────────────────────────────────────────────────────────────────────────${C_RESET}"
-echo -ne " ${C_BOLD}${C_WHITE}👉 Entrez votre choix ${C_CYAN}(ex: 5 | 15 pour pack 15 | 20 pour blackout | r pour tout rétablir au vert)${C_WHITE} : ${C_RESET}"
+echo -ne " ${C_BOLD}${C_WHITE}> Entrez votre choix ${C_CYAN}(ex: 5 | 15 pour pack 15 | 20 pour blackout | r pour reset)${C_WHITE} : ${C_RESET}"
 read user_input
 
 # Nettoyage de la saisie
@@ -123,11 +124,11 @@ fi
 if [ "$user_input" = "r" ] || [ "$user_input" = "R" ] || [ "$user_input" = "reset" ] || [ "$user_input" = "clean" ]; then
     echo ""
     echo -e "${C_BOLD}${C_GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${C_RESET}"
-    echo -e " ${C_BOLD}${C_GREEN}🟢 RÉSOLUTION ET CLÔTURE DE TOUS LES INCIDENTS EN COURS...${C_RESET}"
+    echo -e " ${C_BOLD}${C_GREEN}[RESOLUTION ET CLOTURE DE TOUS LES INCIDENTS EN COURS...]${C_RESET}"
     echo -e "${C_GRAY}────────────────────────────────────────────────────────────────────────────────${C_RESET}"
     php artisan vigilcore:reset-active-incidents
-    echo -e "\n ${C_BOLD}${C_GREEN}✓ SUCCÈS : Tous les 20 services sont maintenant 100% OPÉRATIONNELS (20/20 Verts) !${C_RESET}"
-    echo -e " ${C_GRAY}Actualisez votre Dashboard : ${C_CYAN}http://localhost:8000/dashboard${C_RESET}"
+    echo -e "\n ${C_BOLD}${C_GREEN}[OK] SUCCES : Tous les 20 services sont maintenant 100% OPERATIONNELS (20/20 Verts) !${C_RESET}"
+    echo -e " ${C_GRAY}Consultez le Dashboard : ${C_CYAN}${DASHBOARD_URL}${C_RESET}"
     echo -e "${C_BOLD}${C_GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${C_RESET}\n"
     exit 0
 fi
@@ -135,10 +136,10 @@ fi
 # Gestion des sélections spéciales
 if [ "$user_input" = "15" ] || [ "$user_input" = "95" ] || [ "$user_input" = "1-15" ]; then
     SELECTED_SERVICES=(1 2 3 4 5 6 7 8 11 12 13 14 15 16 17)
-    echo -e "\n${C_BOLD}${C_AMBER}⚡ ACTIVATION DU PACK 15 SERVICES MAJEURS (15 Passerelles Sélectionnées)${C_RESET}"
+    echo -e "\n${C_BOLD}${C_AMBER}[ACTIVATION DU PACK 15 SERVICES MAJEURS - 15 Passerelles Selectionnees]${C_RESET}"
 elif [ "$user_input" = "20" ] || [ "$user_input" = "99" ] || [ "$user_input" = "all" ] || [ "$user_input" = "1-20" ]; then
     SELECTED_SERVICES=(1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20)
-    echo -e "\n${C_BOLD}${C_RED}🔥 ACTIVATION DU BLACKOUT GLOBAL (20 PASSERELLES EN SIMULATION SIMULTANÉE)${C_RESET}"
+    echo -e "\n${C_BOLD}${C_RED}[ACTIVATION DU BLACKOUT GLOBAL - 20 PASSERELLES EN SIMULATION SIMULTANEE]${C_RESET}"
 else
     SELECTED_SERVICES=($user_input)
 fi
@@ -439,11 +440,11 @@ EOF
     HTTP_STATUS=$(echo "$HTTP_RESP" | tail -n 1)
 
     if [ "$HTTP_STATUS" = "200" ] || [ "$HTTP_STATUS" = "201" ] || [ "$HTTP_STATUS" = "204" ]; then
-        echo -e "    ${C_GRAY}└─${C_RESET} Statut n8n : ${C_GREEN}✓ SUCCÈS (HTTP ${HTTP_STATUS})${C_RESET} — Alertes WhatsApp NOC & Status Page synchronisées !"
-        REPORT_STATUSES+=("✓ DIFFUSÉ")
+        echo -e "    ${C_GRAY}└─${C_RESET} Statut n8n : ${C_GREEN}[SUCCÈS 200]${C_RESET} — Alertes WhatsApp NOC & Status Page synchronisées !"
+        REPORT_STATUSES+=("[OK]")
     else
-        echo -e "    ${C_GRAY}└─${C_RESET} Statut n8n : ${C_AMBER}⚠ Transmis (HTTP ${HTTP_STATUS} ou Mode Local Traité)${C_RESET}"
-        REPORT_STATUSES+=("✓ ENREGISTRÉ")
+        echo -e "    ${C_GRAY}└─${C_RESET} Statut n8n : ${C_AMBER}[TRANSMIS ${HTTP_STATUS}]${C_RESET}"
+        REPORT_STATUSES+=("[OK]")
     fi
 
     # Mémorisation pour le rapport final
@@ -467,7 +468,7 @@ done
 # --- BILAN & TABLEAU RÉCAPITULATIF DE LA DÉMONSTRATION ---
 echo ""
 echo -e "${C_GRAY}════════════════════════════════════════════════════════════════════════════════${C_RESET}"
-echo -e " ${C_BOLD}${C_GREEN}🎯 SYNTHÈSE DE LA SIMULATION : ${TOTAL_COUNT} SERVICES ENREGISTRÉS DANS VIGILCORE${C_RESET}"
+echo -e " ${C_BOLD}${C_GREEN}SYNTHESE DE LA SIMULATION : ${TOTAL_COUNT} SERVICES ENREGISTRES DANS VIGILCORE${C_RESET}"
 echo -e "${C_GRAY}────────────────────────────────────────────────────────────────────────────────${C_RESET}"
 printf " ${C_BOLD}%-3s | %-30s | %-8s | %-20s | %-12s${C_RESET}\n" "#" "Passerelle Partenaire" "HTTP" "Code Erreur" "Empreinte SHA"
 echo -e "${C_GRAY}────┼────────────────────────────────┼──────────┼──────────────────────┼─────────────${C_RESET}"
@@ -479,8 +480,8 @@ for i in "${!REPORT_NAMES[@]}"; do
 done
 
 echo -e "${C_GRAY}════════════════════════════════════════════════════════════════════════════════${C_RESET}"
-echo -e " ${C_BOLD}${C_WHITE}💡 CONSEIL POUR VOTRE SOUTENANCE :${C_RESET}"
-echo -e "  1. Consultez le Dashboard Live : ${C_CYAN}http://localhost:8000/dashboard${C_RESET} pour observer les jauges rouges."
-echo -e "  2. Cliquez sur un incident pour montrer le ${C_PURPLE}Payload JSON scellé par SHA-256${C_RESET} (Preuve SLA)."
+echo -e " ${C_BOLD}${C_WHITE}PROTOCOLE DE DEMONSTRATION & SOUTENANCE :${C_RESET}"
+echo -e "  1. Consultez le Dashboard Live : ${C_CYAN}${DASHBOARD_URL}${C_RESET} pour observer les alertes en direct."
+echo -e "  2. Cliquez sur un incident pour inspecter le ${C_PURPLE}Payload JSON scellé par SHA-256${C_RESET} (Preuve SLA)."
 echo -e "  3. Rendez-vous sur ${C_CYAN}/reports${C_RESET} pour télécharger le ${C_GREEN}Rapport d'Audit & Analytics SLA (PDF/Excel)${C_RESET}."
 echo -e "${C_GRAY}────────────────────────────────────────────────────────────────────────────────${C_RESET}\n"
