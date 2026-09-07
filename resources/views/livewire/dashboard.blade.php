@@ -25,10 +25,8 @@
             <!-- Gauche : Marque VigilCore & Statut NOC Opérationnel (Style Zabbix/Datadog Haute Précision) -->
             <div class="flex items-center gap-3 sm:gap-4 min-w-0 flex-shrink-0">
                 <a href="{{ route('dashboard') }}" class="flex items-center gap-2.5 sm:gap-3 group">
-                    <!-- Bouclier Sentinel SVG Vectoriel Haute Définition -->
-                    <div class="w-8 h-8 sm:w-9 sm:h-9 shrink-0 rounded-xl bg-gradient-to-br from-[#0020B2]/15 to-blue-600/20 dark:from-blue-500/20 dark:to-blue-900/40 border border-blue-500/30 dark:border-blue-400/30 shadow-xs flex items-center justify-center p-1 group-hover:scale-105 transition-transform">
-                        <img src="{{ asset('images/logo.svg') }}" alt="VigilCore" class="w-full h-full object-contain">
-                    </div>
+                    <!-- Bouclier Sentinel SVG Vectoriel (Épuré & Sans Encadrement) -->
+                    <img src="{{ asset('images/logo.svg') }}" alt="VigilCore" class="h-8 w-8 sm:h-9 sm:w-9 shrink-0 object-contain group-hover:scale-105 transition-transform">
                     
                     <!-- Bloc Typographie Net & Haute Lisibilité (Zabbix-Style) -->
                     <div class="flex flex-col">

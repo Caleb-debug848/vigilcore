@@ -23,9 +23,7 @@
 
         <!-- En-tête Logo & Marque Haute Fidélité (Style Zabbix/Datadog) -->
         <div class="flex flex-col items-center text-center space-y-3">
-            <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#0020B2]/15 to-blue-600/20 dark:from-blue-500/20 dark:to-blue-900/40 border border-blue-500/30 dark:border-blue-400/30 shadow-lg shadow-blue-500/10 flex items-center justify-center p-2">
-                <img src="{{ asset('images/logo.svg') }}" alt="VigilCore" class="w-full h-full object-contain">
-            </div>
+            <img src="{{ asset('images/logo.svg') }}" alt="VigilCore" class="w-14 h-14 object-contain">
             
             <div class="space-y-1">
                 <div class="flex items-center justify-center gap-2">

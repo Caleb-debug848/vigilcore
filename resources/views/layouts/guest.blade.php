@@ -23,9 +23,7 @@
         <div class="min-h-screen flex flex-col sm:justify-center items-center p-4 sm:pt-0">
             <div class="flex items-center justify-center mb-6">
                 <a href="/" class="flex items-center gap-3 group">
-                    <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-[#0020B2]/15 to-blue-600/20 dark:from-blue-500/20 dark:to-blue-900/40 border border-blue-500/30 dark:border-blue-400/30 shadow-md flex items-center justify-center p-1.5 group-hover:scale-105 transition-transform">
-                        <img src="{{ asset('images/logo.svg') }}" alt="VigilCore" class="w-full h-full object-contain">
-                    </div>
+                    <img src="{{ asset('images/logo.svg') }}" alt="VigilCore" class="w-11 h-11 object-contain shrink-0 group-hover:scale-105 transition-transform">
                     <div class="flex flex-col">
                         <div class="flex items-center gap-2">
                             <span class="font-black text-xl tracking-tight text-slate-900 dark:text-white uppercase font-sans leading-none">

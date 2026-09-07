@@ -6,9 +6,7 @@
                 <!-- Logo Officiel VigilCore Complet (Style Zabbix/Datadog) -->
                 <div class="shrink-0 flex items-center">
                     <a href="{{ route('dashboard') }}" class="flex items-center gap-2.5 group">
-                        <div class="w-8 h-8 rounded-xl bg-gradient-to-br from-[#0020B2]/15 to-blue-600/20 dark:from-blue-500/20 dark:to-blue-900/40 border border-blue-500/30 dark:border-blue-400/30 flex items-center justify-center p-1 group-hover:scale-105 transition-transform">
-                            <img src="{{ asset('images/logo.svg') }}" alt="VigilCore" class="w-full h-full object-contain">
-                        </div>
+                        <img src="{{ asset('images/logo.svg') }}" alt="VigilCore" class="w-8 h-8 object-contain shrink-0 group-hover:scale-105 transition-transform">
                         <div class="flex items-center gap-1.5">
                             <span class="font-black text-base tracking-tight text-slate-900 dark:text-white uppercase font-sans">
                                 VIGIL<span class="text-[#2563EB] dark:text-[#38BDF8]">CORE</span>
