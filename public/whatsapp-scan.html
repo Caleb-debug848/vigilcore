@@ -110,11 +110,21 @@
         <h1>Connecter VigilCore WhatsApp</h1>
         <p class="subtitle">Scannez ce QR code avec votre téléphone</p>
 
-        <div class="qr-box">
+        <div id="status-badge" style="margin-bottom: 16px; font-weight: bold; font-size: 14px; color: #ffb703;">
+            Synchronisation avec le serveur en direct...
+        </div>
+
+        <div class="qr-box" id="qr-wrapper">
             <canvas id="qr-canvas"></canvas>
         </div>
 
-        <div class="instructions">
+        <div id="connected-box" style="display: none; background: #00a88422; border: 2px solid #00a884; border-radius: 12px; padding: 24px; margin-bottom: 24px;">
+            <div style="font-size: 48px; color: #00a884; margin-bottom: 8px;">✓</div>
+            <h2 style="color: #00a884; margin: 0 0 8px 0; font-size: 20px;">WhatsApp Connecté !</h2>
+            <p style="color: #e9edef; font-size: 14px; margin: 0;">L'instance VigilCore est active et prête à envoyer des alertes instantanées.</p>
+        </div>
+
+        <div class="instructions" id="instructions-box">
             <ol>
                 <li>Ouvrez <strong>WhatsApp</strong> sur votre téléphone.</li>
                 <li>Appuyez sur <span class="badge">⋮</span> (Android) ou <strong>Réglages</strong> (iPhone).</li>
@@ -124,14 +134,11 @@
         </div>
 
         <div class="input-group">
-            <input type="text" id="custom-code" placeholder="Si expiré, collez le nouveau code 2@... ici">
-            <button onclick="updateQR()">Actualiser</button>
+            <button onclick="fetchLiveStatus()" style="width: 100%;">Rafraîchir le QR Code Immédiatement</button>
         </div>
     </div>
 
     <script>
-        const initialCode = "2@nCpFBapU8ulW+G1J22sPhaPxGL2d0Enx3Wp2PggYBrgeyJmragWyBdCxamcFcXRvL4m8FqGa+P45t+0hKWnobC2AY7XG8X2K37s=,LxjeFyZxpJ1+k6s3OJAg3kJizWYh7nXf8IMSwueVmj0=,MkM4xlQt8BL/SMFZm83It3PFrApnu26FHgVyuRDQDBg=,Gw1JS3Ut4uoLx7EnuygXW+sRGTeHd7KGr3j9QlT6UuQ=";
-
         function renderQR(text) {
             const canvas = document.getElementById('qr-canvas');
             if (text.startsWith('data:image')) {
@@ -163,14 +170,41 @@
             }
         }
 
-        function updateQR() {
-            const val = document.getElementById('custom-code').value.trim();
-            if (val) {
-                renderQR(val);
+        async function fetchLiveStatus() {
+            const badge = document.getElementById('status-badge');
+            const qrWrapper = document.getElementById('qr-wrapper');
+            const connectedBox = document.getElementById('connected-box');
+            const instructionsBox = document.getElementById('instructions-box');
+
+            try {
+                const res = await fetch('/whatsapp-live-status');
+                const data = await res.json();
+
+                if (data.status === 'connected') {
+                    badge.innerHTML = '<span style="color: #00a884;">● En Ligne & Connecté</span>';
+                    qrWrapper.style.display = 'none';
+                    instructionsBox.style.display = 'none';
+                    connectedBox.style.display = 'block';
+                } else if (data.data) {
+                    badge.innerHTML = '<span style="color: #ffb703;">● QR Code En Direct (Auto-actualisé)</span>';
+                    qrWrapper.style.display = 'inline-block';
+                    instructionsBox.style.display = 'block';
+                    connectedBox.style.display = 'none';
+
+                    if (data.data.base64) {
+                        renderQR(data.data.base64);
+                    } else if (data.data.code) {
+                        renderQR(data.data.code);
+                    }
+                }
+            } catch (err) {
+                badge.innerHTML = '<span style="color: #ef4444;">Erreur de synchronisation...</span>';
             }
         }
 
-        renderQR(initialCode);
+        // Chargement initial et rafraîchissement automatique toutes les 4 secondes
+        fetchLiveStatus();
+        setInterval(fetchLiveStatus, 4000);
     </script>
 </body>
 </html>
