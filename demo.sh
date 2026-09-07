@@ -31,132 +31,143 @@ C_GRAY="\033[38;5;244m"
 C_WHITE="\033[1;37m"
 BG_BLUE="\033[48;5;21m"
 
-clear
+while true; do
+    NOW_WAT=$(date "+%d/%m/%Y %H:%M:%S (WAT - Douala)")
+    NOW_ISO=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
 
-# --- BANNIÈRE ASCII OFFICIELLE VIGILCORE ---
-echo -e "${C_BLUE}"
-echo "  ██╗   ██╗██╗ ██████╗ ██╗██╗      ██████╗ ██████╗ ██████╗ ███████╗"
-echo "  ██║   ██║██║██╔════╝ ██║██║     ██╔════╝██╔═══██╗██╔══██╗██╔════╝"
-echo "  ██║   ██║██║██║  ███╗██║██║     ██║     ██║   ██║██████╔╝█████╗  "
-echo "  ╚██╗ ██╔╝██║██║   ██║██║██║     ██║     ██║   ██║██╔══██╗██╔══╝  "
-echo "   ╚████╔╝ ██║╚██████╔╝██║███████╗╚██████╗╚██████╔╝██║  ██║███████╗"
-echo "    ╚═══╝  ╚═╝ ╚═════╝ ╚═╝╚══════╝ ╚═════╝ ╚═════╝ ╚═╝  ╚═╝╚══════╝"
-echo -e "${C_RESET}"
-echo -e "   ${C_BOLD}${C_WHITE}VIGILCORE ENTERPRISE${C_RESET} ${C_GRAY}•${C_RESET} ${C_CYAN}Incident & SLA Observability Suite${C_RESET} ${C_GRAY}•${C_RESET} ${C_GREEN}20 Services Hub${C_RESET}"
-echo -e "   ${C_GRAY}Hôte : ${C_WHITE}${HOST_NAME}${C_RESET} ${C_GRAY}| Fuseau Horaire : ${C_AMBER}Africa/Douala (WAT UTC+1)${C_RESET} ${C_GRAY}| Heure : ${C_WHITE}${NOW_WAT}${C_RESET}"
-echo -e "${C_GRAY}────────────────────────────────────────────────────────────────────────────────${C_RESET}"
+    clear
 
-# --- CATÉGORIE 1 : PLATEFORMES MAVIANCE ---
-echo -e " ${C_BOLD}${C_CYAN}[1. PLATEFORMES MAVIANCE CORE]${C_RESET}"
-printf "   ${C_BLUE}[%2d]${C_RESET} %-36s ${C_BLUE}[%2d]${C_RESET} %-36s\n" \
-  1 "Smobilpay Platform & APIs" \
-  3 "Agent & Merchant Portal"
-printf "   ${C_BLUE}[%2d]${C_RESET} %-36s ${C_BLUE}[%2d]${C_RESET} %-36s\n" \
-  2 "Third Party Merchant API (S3P)" \
-  4 "Smobilpay for e-commerce"
-echo ""
-
-# --- CATÉGORIE 2 : MOBILE MONEY & TÉLÉCOMS ---
-echo -e " ${C_BOLD}${C_AMBER}[2. MOBILE MONEY & TELECOMS - CAMEROUN]${C_RESET}"
-printf "   ${C_AMBER}[%2d]${C_RESET} %-36s ${C_AMBER}[%2d]${C_RESET} %-36s\n" \
-  5 "MTN Mobile Money (Général)" \
-  10 "Orange Money : Retraits / Cashout"
-printf "   ${C_AMBER}[%2d]${C_RESET} %-36s ${C_AMBER}[%2d]${C_RESET} %-36s\n" \
-  6 "Orange Money (Général)" \
-  11 "MTN Recharge / Airtime"
-printf "   ${C_AMBER}[%2d]${C_RESET} %-36s ${C_AMBER}[%2d]${C_RESET} %-36s\n" \
-  7 "MTN MoMo : Collections (Dépôts)" \
-  12 "Orange Recharge / Airtime"
-printf "   ${C_AMBER}[%2d]${C_RESET} %-36s ${C_AMBER}[%2d]${C_RESET} %-36s\n" \
-  8 "Orange Money : Collections" \
-  13 "Camtel Recharge / Top-up"
-printf "   ${C_AMBER}[%2d]${C_RESET} %-36s\n" \
-  9 "MTN MoMo : Retraits / Cashout"
-echo ""
-
-# --- CATÉGORIE 3 : FACTURIERS ÉNERGIE & EAU ---
-echo -e " ${C_BOLD}${C_GREEN}[3. FACTURES D'ENERGIE & D'EAU]${C_RESET}"
-printf "   ${C_GREEN}[%2d]${C_RESET} %-36s ${C_GREEN}[%2d]${C_RESET} %-36s\n" \
-  14 "Factures ENEO (Électricité / Tokens)" \
-  15 "Factures Camwater (Eau & Assainissement)"
-echo ""
-
-# --- CATÉGORIE 4 : RÉABONNEMENTS TV ---
-echo -e " ${C_BOLD}${C_PURPLE}[4. REABONNEMENTS TELEVISION]${C_RESET}"
-printf "   ${C_PURPLE}[%2d]${C_RESET} %-36s ${C_PURPLE}[%2d]${C_RESET} %-36s\n" \
-  16 "Canal+ Télévision" \
-  18 "StarTimes TV"
-printf "   ${C_PURPLE}[%2d]${C_RESET} %-36s\n" \
-  17 "DSTV Télévision"
-echo ""
-
-# --- CATÉGORIE 5 : RÉGIONAL & ENTREPRISES ---
-echo -e " ${C_BOLD}${C_CYAN}[5. SERVICES REGIONAUX & PARTENAIRES]${C_RESET}"
-printf "   ${C_CYAN}[%2d]${C_RESET} %-36s ${C_CYAN}[%2d]${C_RESET} %-36s\n" \
-  19 "MTN Mobile Money Congo" \
-  20 "SABC Boissons (Paiements Marchands)"
-echo ""
-
-# --- PACKS DE DÉMONSTRATION SPÉCIAUX ---
-echo -e " ${C_BOLD}${C_WHITE}[6. SCENARIOS MULTI-SERVICES & DEMONSTRATION]${C_RESET}"
-printf "   ${C_AMBER}[%2d]${C_RESET} %-74s\n" \
-  15 "PACK 15 SERVICES MAJEURS (Pannes combinées MoMo, Orange, ENEO, Canal+, S3P...)"
-printf "   ${C_RED}[%2d]${C_RESET} %-74s\n" \
-  20 "BLACKOUT GLOBAL TOTAL (Simulation simultanée des 20 Passerelles Partenaires)"
-printf "   ${C_GREEN}[ r]${C_RESET} %-74s\n" \
-  "RETABLIR TOUS LES SERVICES (Clôturer tous les incidents & Repasser à 20/20 Verts)"
-echo ""
-
-echo -e "   ${C_RED}[ 0]${C_RESET} ${C_GRAY}Annuler et Quitter${C_RESET}"
-echo -e "${C_GRAY}────────────────────────────────────────────────────────────────────────────────${C_RESET}"
-echo -ne " ${C_BOLD}${C_WHITE}> Entrez votre choix ${C_CYAN}(ex: 5 | 15 pour pack 15 | 20 pour blackout | r pour reset)${C_WHITE} : ${C_RESET}"
-read user_input
-
-# Nettoyage de la saisie
-user_input=$(echo "$user_input" | tr ',' ' ' | tr ';' ' ')
-
-if [ -z "$user_input" ] || [ "$user_input" = "0" ]; then
-    echo -e "${C_AMBER}Opération annulée par l'opérateur.${C_RESET}"
-    exit 0
-fi
-
-# Option Rétablissement / Reset de tous les incidents
-if [ "$user_input" = "r" ] || [ "$user_input" = "R" ] || [ "$user_input" = "reset" ] || [ "$user_input" = "clean" ]; then
-    echo ""
-    echo -e "${C_BOLD}${C_GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${C_RESET}"
-    echo -e " ${C_BOLD}${C_GREEN}[RESOLUTION ET CLOTURE DE TOUS LES INCIDENTS EN COURS...]${C_RESET}"
+    # --- BANNIÈRE ASCII OFFICIELLE VIGILCORE ---
+    echo -e "${C_BLUE}"
+    echo "  ██╗   ██╗██╗ ██████╗ ██╗██╗      ██████╗ ██████╗ ██████╗ ███████╗"
+    echo "  ██║   ██║██║██╔════╝ ██║██║     ██╔════╝██╔═══██╗██╔══██╗██╔════╝"
+    echo "  ██║   ██║██║██║  ███╗██║██║     ██║     ██║   ██║██████╔╝█████╗  "
+    echo "  ╚██╗ ██╔╝██║██║   ██║██║██║     ██║     ██║   ██║██╔══██╗██╔══╝  "
+    echo "   ╚████╔╝ ██║╚██████╔╝██║███████╗╚██████╗╚██████╔╝██║  ██║███████╗"
+    echo "    ╚═══╝  ╚═╝ ╚═════╝ ╚═╝╚══════╝ ╚═════╝ ╚═════╝ ╚═╝  ╚═╝╚══════╝"
+    echo -e "${C_RESET}"
+    echo -e "   ${C_BOLD}${C_WHITE}VIGILCORE ENTERPRISE${C_RESET} ${C_GRAY}•${C_RESET} ${C_CYAN}Incident & SLA Observability Suite${C_RESET} ${C_GRAY}•${C_RESET} ${C_GREEN}20 Services Hub${C_RESET}"
+    echo -e "   ${C_GRAY}Hôte : ${C_WHITE}${HOST_NAME}${C_RESET} ${C_GRAY}| Fuseau Horaire : ${C_AMBER}Africa/Douala (WAT UTC+1)${C_RESET} ${C_GRAY}| Heure : ${C_WHITE}${NOW_WAT}${C_RESET}"
     echo -e "${C_GRAY}────────────────────────────────────────────────────────────────────────────────${C_RESET}"
-    php artisan vigilcore:reset-active-incidents
-    echo -e "\n ${C_BOLD}${C_GREEN}[OK] SUCCES : Tous les 20 services sont maintenant 100% OPERATIONNELS (20/20 Verts) !${C_RESET}"
-    echo -e " ${C_GRAY}Consultez le Dashboard : ${C_CYAN}${DASHBOARD_URL}${C_RESET}"
-    echo -e "${C_BOLD}${C_GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${C_RESET}\n"
-    exit 0
-fi
 
-# Gestion des sélections spéciales
-if [ "$user_input" = "15" ] || [ "$user_input" = "95" ] || [ "$user_input" = "1-15" ]; then
-    SELECTED_SERVICES=(1 2 3 4 5 6 7 8 11 12 13 14 15 16 17)
-    echo -e "\n${C_BOLD}${C_AMBER}[ACTIVATION DU PACK 15 SERVICES MAJEURS - 15 Passerelles Selectionnees]${C_RESET}"
-elif [ "$user_input" = "20" ] || [ "$user_input" = "99" ] || [ "$user_input" = "all" ] || [ "$user_input" = "1-20" ]; then
-    SELECTED_SERVICES=(1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20)
-    echo -e "\n${C_BOLD}${C_RED}[ACTIVATION DU BLACKOUT GLOBAL - 20 PASSERELLES EN SIMULATION SIMULTANEE]${C_RESET}"
-else
-    SELECTED_SERVICES=($user_input)
-fi
+    # --- CATÉGORIE 1 : PLATEFORMES MAVIANCE ---
+    echo -e " ${C_BOLD}${C_CYAN}[1. PLATEFORMES MAVIANCE CORE]${C_RESET}"
+    printf "   ${C_BLUE}[%2d]${C_RESET} %-36s ${C_BLUE}[%2d]${C_RESET} %-36s\n" \
+      1 "Smobilpay Platform & APIs" \
+      3 "Agent & Merchant Portal"
+    printf "   ${C_BLUE}[%2d]${C_RESET} %-36s ${C_BLUE}[%2d]${C_RESET} %-36s\n" \
+      2 "Third Party Merchant API (S3P)" \
+      4 "Smobilpay for e-commerce"
+    echo ""
 
-TOTAL_COUNT=${#SELECTED_SERVICES[@]}
-CURRENT_INDEX=1
+    # --- CATÉGORIE 2 : MOBILE MONEY & TÉLÉCOMS ---
+    echo -e " ${C_BOLD}${C_AMBER}[2. MOBILE MONEY & TELECOMS - CAMEROUN]${C_RESET}"
+    printf "   ${C_AMBER}[%2d]${C_RESET} %-36s ${C_AMBER}[%2d]${C_RESET} %-36s\n" \
+      5 "MTN Mobile Money (Général)" \
+      10 "Orange Money : Retraits / Cashout"
+    printf "   ${C_AMBER}[%2d]${C_RESET} %-36s ${C_AMBER}[%2d]${C_RESET} %-36s\n" \
+      6 "Orange Money (Général)" \
+      11 "MTN Recharge / Airtime"
+    printf "   ${C_AMBER}[%2d]${C_RESET} %-36s ${C_AMBER}[%2d]${C_RESET} %-36s\n" \
+      7 "MTN MoMo : Collections (Dépôts)" \
+      12 "Orange Recharge / Airtime"
+    printf "   ${C_AMBER}[%2d]${C_RESET} %-36s ${C_AMBER}[%2d]${C_RESET} %-36s\n" \
+      8 "Orange Money : Collections" \
+      13 "Camtel Recharge / Top-up"
+    printf "   ${C_AMBER}[%2d]${C_RESET} %-36s\n" \
+      9 "MTN MoMo : Retraits / Cashout"
+    echo ""
 
-echo ""
-echo -e "${C_BOLD}${C_WHITE}📋 DÉMARRAGE DU PROTOCOLE DE TÉLÉMÉTRIE POUR ${C_CYAN}${TOTAL_COUNT} SERVICE(S)${C_WHITE}...${C_RESET}"
-echo -e "${C_GRAY}════════════════════════════════════════════════════════════════════════════════${C_RESET}"
+    # --- CATÉGORIE 3 : FACTURIERS ÉNERGIE & EAU ---
+    echo -e " ${C_BOLD}${C_GREEN}[3. FACTURES D'ENERGIE & D'EAU]${C_RESET}"
+    printf "   ${C_GREEN}[%2d]${C_RESET} %-36s ${C_GREEN}[%2d]${C_RESET} %-36s\n" \
+      14 "Factures ENEO (Électricité / Tokens)" \
+      15 "Factures Camwater (Eau & Assainissement)"
+    echo ""
 
-# Tableaux de collecte pour le bilan final
-declare -a REPORT_NAMES
-declare -a REPORT_ERRORS
-declare -a REPORT_HTTP
-declare -a REPORT_HASHES
-declare -a REPORT_STATUSES
+    # --- CATÉGORIE 4 : RÉABONNEMENTS TV ---
+    echo -e " ${C_BOLD}${C_PURPLE}[4. REABONNEMENTS TELEVISION]${C_RESET}"
+    printf "   ${C_PURPLE}[%2d]${C_RESET} %-36s ${C_PURPLE}[%2d]${C_RESET} %-36s\n" \
+      16 "Canal+ Télévision" \
+      18 "StarTimes TV"
+    printf "   ${C_PURPLE}[%2d]${C_RESET} %-36s\n" \
+      17 "DSTV Télévision"
+    echo ""
+
+    # --- CATÉGORIE 5 : RÉGIONAL & ENTREPRISES ---
+    echo -e " ${C_BOLD}${C_CYAN}[5. SERVICES REGIONAUX & PARTENAIRES]${C_RESET}"
+    printf "   ${C_CYAN}[%2d]${C_RESET} %-36s ${C_CYAN}[%2d]${C_RESET} %-36s\n" \
+      19 "MTN Mobile Money Congo" \
+      20 "SABC Boissons (Paiements Marchands)"
+    echo ""
+
+    # --- PACKS DE DÉMONSTRATION SPÉCIAUX ---
+    echo -e " ${C_BOLD}${C_WHITE}[6. SCENARIOS MULTI-SERVICES & DEMONSTRATION]${C_RESET}"
+    printf "   ${C_AMBER}[%2d]${C_RESET} %-74s\n" \
+      15 "PACK 15 SERVICES MAJEURS (Pannes combinées MoMo, Orange, ENEO, Canal+, S3P...)"
+    printf "   ${C_RED}[%2d]${C_RESET} %-74s\n" \
+      20 "BLACKOUT GLOBAL TOTAL (Simulation simultanée des 20 Passerelles Partenaires)"
+    printf "   ${C_GREEN}[ r]${C_RESET} %-74s\n" \
+      "RETABLIR TOUS LES SERVICES (Clôturer tous les incidents & Repasser à 20/20 Verts)"
+    echo ""
+
+    echo -e "   ${C_RED}[ 0]${C_RESET} ${C_GRAY}Annuler et Quitter (ou tapez 'q')${C_RESET}"
+    echo -e "${C_GRAY}────────────────────────────────────────────────────────────────────────────────${C_RESET}"
+    echo -ne " ${C_BOLD}${C_WHITE}> Entrez votre choix ${C_CYAN}(ex: 5 | 15 | 20 | r pour reset | 0/q pour quitter)${C_WHITE} : ${C_RESET}"
+    read user_input
+
+    # Nettoyage de la saisie
+    user_input=$(echo "$user_input" | tr ',' ' ' | tr ';' ' ')
+
+    if [ -z "$user_input" ] || [ "$user_input" = "0" ] || [ "$user_input" = "q" ] || [ "$user_input" = "Q" ] || [ "$user_input" = "exit" ]; then
+        echo -e "\n ${C_AMBER}Session de simulation terminée. À bientôt !${C_RESET}\n"
+        exit 0
+    fi
+
+    # Option Rétablissement / Reset de tous les incidents
+    if [ "$user_input" = "r" ] || [ "$user_input" = "R" ] || [ "$user_input" = "reset" ] || [ "$user_input" = "clean" ]; then
+        echo ""
+        echo -e "${C_BOLD}${C_GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${C_RESET}"
+        echo -e " ${C_BOLD}${C_GREEN}[RESOLUTION ET CLOTURE DE TOUS LES INCIDENTS EN COURS...]${C_RESET}"
+        echo -e "${C_GRAY}────────────────────────────────────────────────────────────────────────────────${C_RESET}"
+        php artisan vigilcore:reset-active-incidents
+        echo -e "\n ${C_BOLD}${C_GREEN}[OK] SUCCES : Tous les 20 services sont maintenant 100% OPERATIONNELS (20/20 Verts) !${C_RESET}"
+        echo -e " ${C_GRAY}Consultez le Dashboard : ${C_CYAN}${DASHBOARD_URL}${C_RESET}"
+        echo -e "${C_BOLD}${C_GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${C_RESET}\n"
+        
+        echo -ne " ${C_BOLD}${C_WHITE}> Appuyez sur [Entrée] pour revenir au menu ou [0 / q] pour quitter : ${C_RESET}"
+        read continue_choice
+        if [ "$continue_choice" = "0" ] || [ "$continue_choice" = "q" ] || [ "$continue_choice" = "Q" ] || [ "$continue_choice" = "exit" ]; then
+            echo -e "\n ${C_AMBER}Session terminée.${C_RESET}\n"
+            exit 0
+        fi
+        continue
+    fi
+
+    # Gestion des sélections spéciales
+    if [ "$user_input" = "15" ] || [ "$user_input" = "95" ] || [ "$user_input" = "1-15" ]; then
+        SELECTED_SERVICES=(1 2 3 4 5 6 7 8 11 12 13 14 15 16 17)
+        echo -e "\n${C_BOLD}${C_AMBER}[ACTIVATION DU PACK 15 SERVICES MAJEURS - 15 Passerelles Selectionnees]${C_RESET}"
+    elif [ "$user_input" = "20" ] || [ "$user_input" = "99" ] || [ "$user_input" = "all" ] || [ "$user_input" = "1-20" ]; then
+        SELECTED_SERVICES=(1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20)
+        echo -e "\n${C_BOLD}${C_RED}[ACTIVATION DU BLACKOUT GLOBAL - 20 PASSERELLES EN SIMULATION SIMULTANEE]${C_RESET}"
+    else
+        SELECTED_SERVICES=($user_input)
+    fi
+
+    TOTAL_COUNT=${#SELECTED_SERVICES[@]}
+    CURRENT_INDEX=1
+
+    echo ""
+    echo -e "${C_BOLD}${C_WHITE}[INFO] DEMARRAGE DU PROTOCOLE DE TELEMETRIE POUR ${C_CYAN}${TOTAL_COUNT} SERVICE(S)${C_WHITE}...${C_RESET}"
+    echo -e "${C_GRAY}════════════════════════════════════════════════════════════════════════════════${C_RESET}"
+
+    # Tableaux de collecte pour le bilan final
+    REPORT_NAMES=()
+    REPORT_ERRORS=()
+    REPORT_HTTP=()
+    REPORT_HASHES=()
+    REPORT_STATUSES=()
 
 # Fonction de traitement pédagogique et technique d'un service
 process_service() {
@@ -487,3 +498,11 @@ echo -e "  2. Inspection Forensique : Cliquez sur un incident pour voir le ${C_P
 echo -e "  3. Rapports d'exploitation : Rendez-vous sur ${C_CYAN}https://vigilcore.calebdevs.com/reports${C_RESET} (Export PDF / Excel)"
 echo -e "  4. Console n8n (Workflow Multicanal) : ${C_CYAN}https://n8n.srv901529.hstgr.cloud${C_RESET}"
 echo -e "${C_GRAY}────────────────────────────────────────────────────────────────────────────────${C_RESET}\n"
+
+    echo -ne " ${C_BOLD}${C_WHITE}> Appuyez sur [Entrée] pour effectuer une autre simulation ou [0 / q] pour quitter : ${C_RESET}"
+    read next_action
+    if [ "$next_action" = "0" ] || [ "$next_action" = "q" ] || [ "$next_action" = "Q" ] || [ "$next_action" = "exit" ]; then
+        echo -e "\n ${C_AMBER}Session de simulation terminée. À bientôt !${C_RESET}\n"
+        exit 0
+    fi
+done
