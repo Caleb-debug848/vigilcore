@@ -10,11 +10,11 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ config('app.name', 'VigilCore') }} — Connexion</title>
+        <title>{{ config('app.name', 'VigilCore') }} — Platform</title>
 
         <!-- Favicon Officiel VigilCore -->
-        <link rel="icon" type="image/svg+xml" href="{{ asset('images/logo.svg') }}?v=3">
-        <link rel="shortcut icon" type="image/svg+xml" href="{{ asset('images/logo.svg') }}?v=3">
+        <link rel="icon" type="image/svg+xml" href="{{ asset('images/logo.svg') }}?v=4">
+        <link rel="shortcut icon" type="image/svg+xml" href="{{ asset('images/logo.svg') }}?v=4">
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -26,8 +26,12 @@
                     <x-application-logo class="w-12 h-12" />
                     <div>
                         <div class="flex items-center gap-2">
-                            <span class="font-mono font-black text-xl tracking-tight text-slate-900 dark:text-white">VigilCore</span>
-                            <span class="px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-purple-100 dark:bg-purple-950/70 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-800">OPS-01</span>
+                            <span class="font-extrabold text-2xl tracking-tight text-slate-900 dark:text-white">
+                                Vigil<span class="text-[#2563EB] dark:text-blue-400">Core</span>
+                            </span>
+                            <span class="px-2 py-0.5 rounded-full text-[9.5px] font-mono font-bold bg-blue-50 dark:bg-blue-950/70 text-[#0020B2] dark:text-blue-300 border border-blue-200 dark:border-blue-800">
+                                ENTERPRISE
+                            </span>
                         </div>
                         <p class="text-[11px] font-mono text-slate-400 dark:text-slate-500">Accès Sécurisé Supervision</p>
                     </div>

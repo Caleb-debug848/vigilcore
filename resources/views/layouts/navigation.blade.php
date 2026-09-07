@@ -5,8 +5,11 @@
             <div class="flex">
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
-                    <a href="{{ route('dashboard') }}">
-                        <x-application-logo class="block h-9 w-auto fill-current text-gray-800 dark:text-gray-200" />
+                    <a href="{{ route('dashboard') }}" class="flex items-center gap-2.5 group">
+                        <x-application-logo class="block h-9 w-auto object-contain group-hover:scale-105 transition-transform" />
+                        <span class="font-extrabold text-lg tracking-tight text-slate-900 dark:text-white">
+                            Vigil<span class="text-[#2563EB] dark:text-blue-400">Core</span>
+                        </span>
                     </a>
                 </div>
 

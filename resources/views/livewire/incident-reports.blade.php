@@ -27,7 +27,7 @@
                 <div style="display:flex; align-items:center; gap:12px;">
                     <img src="{{ asset('images/logo.svg') }}" style="width:38px; height:38px; object-fit:contain;">
                     <div>
-                        <h1>{{ __('VIGILCORE OPS-01 — RAPPORT D\'AUDIT & ANALYTICS SLA') }}</h1>
+                        <h1>{{ __('VIGILCORE ENTERPRISE — RAPPORT D\'AUDIT & ANALYTICS SLA') }}</h1>
                         <p>{{ __('Plateforme de Supervision, Surveillance des Services & Corrélation d\'Alertes') }}</p>
                     </div>
                 </div>
@@ -55,9 +55,11 @@
                 <a href="{{ route('dashboard') }}" class="flex items-center gap-2 group">
                     <img src="{{ asset('images/logo.svg') }}" alt="VigilCore Logo" class="h-8 w-8 sm:h-9 sm:w-9 object-contain group-hover:scale-105 transition-transform">
                     <div class="flex items-center gap-1.5 sm:gap-2">
-                        <span class="font-extrabold text-base sm:text-lg tracking-tight text-slate-900 dark:text-white">VigilCore</span>
-                        <span class="px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-blue-50 dark:bg-blue-950/80 text-[#0020B2] dark:text-blue-300 border border-blue-200 dark:border-blue-800">
-                            OPS-01
+                        <span class="font-extrabold text-base sm:text-lg tracking-tight text-slate-900 dark:text-white">
+                            Vigil<span class="text-[#2563EB] dark:text-blue-400">Core</span>
+                        </span>
+                        <span class="px-2 py-0.5 rounded-full text-[9px] sm:text-[10px] font-mono font-bold bg-blue-50 dark:bg-blue-950/80 text-[#0020B2] dark:text-blue-300 border border-blue-200 dark:border-blue-800">
+                            ANALYTICS
                         </span>
                     </div>
                 </a>
@@ -704,7 +706,7 @@
         <!-- ==================================================== -->
         <div class="print-only print-footer-banner">
             <div style="display:flex; align-items:center; justify-content:space-between;">
-                <span>🛡️ <b>VigilCore OPS-01</b> — {{ __('Rapport d\'exploitation et conformité SLA généré automatiquement') }}</span>
+                <span>🛡️ <b>VigilCore Enterprise</b> — {{ __('Rapport d\'exploitation et conformité SLA généré automatiquement') }}</span>
                 <span>{{ __('Document strictement confidentiel — Usage interne') }}</span>
             </div>
         </div>

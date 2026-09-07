@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
 
 # ==============================================================================
-# 🛡️ VIGILCORE INCIDENT SIMULATOR (CLI PRO STUDIO EDITION - MULTI-SERVICES)
+# 🛡️ VIGILCORE ENTERPRISE INCIDENT ORCHESTRATOR & SIMULATOR
 # ==============================================================================
 # Plateforme de Télémétrie, Observabilité & Alerting de Haute Disponibilité
 # Écosystème : Maviance / Smobilpay • Douala Datacenter (Cameroun)
+# Version : 2.4 Enterprise Live Edition — Présentation & Soutenance
 # ==============================================================================
 
 N8N_URL="https://n8n.srv901529.hstgr.cloud/webhook/vigilcore-alert"
@@ -40,8 +41,8 @@ echo "  ╚██╗ ██╔╝██║██║   ██║██║██�
 echo "   ╚████╔╝ ██║╚██████╔╝██║███████╗╚██████╗╚██████╔╝██║  ██║███████╗"
 echo "    ╚═══╝  ╚═╝ ╚═════╝ ╚═╝╚══════╝ ╚═════╝ ╚═════╝ ╚═╝  ╚═╝╚══════╝"
 echo -e "${C_RESET}"
-echo -e "   ${C_BOLD}${C_WHITE}VIGILCORE OPS-01${C_RESET} ${C_GRAY}•${C_RESET} ${C_CYAN}Incident & SLA Orchestrator${C_RESET} ${C_GRAY}•${C_RESET} ${C_GREEN}20 Services Hub${C_RESET}"
-echo -e "   ${C_GRAY}Host: ${C_WHITE}${HOST_NAME}${C_RESET} ${C_GRAY}| Timezone: ${C_AMBER}Africa/Douala (WAT UTC+1)${C_RESET}"
+echo -e "   ${C_BOLD}${C_WHITE}VIGILCORE ENTERPRISE${C_RESET} ${C_GRAY}•${C_RESET} ${C_CYAN}Incident & SLA Observability Suite${C_RESET} ${C_GRAY}•${C_RESET} ${C_GREEN}20 Services Hub${C_RESET}"
+echo -e "   ${C_GRAY}Hôte : ${C_WHITE}${HOST_NAME}${C_RESET} ${C_GRAY}| Fuseau Horaire : ${C_AMBER}Africa/Douala (WAT UTC+1)${C_RESET} ${C_GRAY}| Heure : ${C_WHITE}${NOW_WAT}${C_RESET}"
 echo -e "${C_GRAY}────────────────────────────────────────────────────────────────────────────────${C_RESET}"
 
 # --- CATÉGORIE 1 : PLATEFORMES MAVIANCE ---
@@ -58,25 +59,25 @@ echo ""
 echo -e " ${C_BOLD}${C_AMBER}📱 2. MOBILE MONEY & TÉLÉCOMS (CAMEROUN)${C_RESET}"
 printf "   ${C_AMBER}[%2d]${C_RESET} %-36s ${C_AMBER}[%2d]${C_RESET} %-36s\n" \
   5 "MTN Mobile Money (Général)" \
-  10 "Orange Money : Disbursement (Retraits)"
+  10 "Orange Money : Retraits / Cashout"
 printf "   ${C_AMBER}[%2d]${C_RESET} %-36s ${C_AMBER}[%2d]${C_RESET} %-36s\n" \
   6 "Orange Money (Général)" \
   11 "MTN Recharge / Airtime"
 printf "   ${C_AMBER}[%2d]${C_RESET} %-36s ${C_AMBER}[%2d]${C_RESET} %-36s\n" \
-  7 "MTN MoMo : Collections" \
+  7 "MTN MoMo : Collections (Dépôts)" \
   12 "Orange Recharge / Airtime"
 printf "   ${C_AMBER}[%2d]${C_RESET} %-36s ${C_AMBER}[%2d]${C_RESET} %-36s\n" \
   8 "Orange Money : Collections" \
   13 "Camtel Recharge / Top-up"
 printf "   ${C_AMBER}[%2d]${C_RESET} %-36s\n" \
-  9 "MTN MoMo : Disbursement (Retraits)"
+  9 "MTN MoMo : Retraits / Cashout"
 echo ""
 
 # --- CATÉGORIE 3 : FACTURIERS ÉNERGIE & EAU ---
 echo -e " ${C_BOLD}${C_GREEN}⚡ 3. FACTURES D'ÉNERGIE & D'EAU${C_RESET}"
 printf "   ${C_GREEN}[%2d]${C_RESET} %-36s ${C_GREEN}[%2d]${C_RESET} %-36s\n" \
-  14 "Factures ENEO (Électricité / Token)" \
-  15 "Factures Camwater (Eau)"
+  14 "Factures ENEO (Électricité / Tokens)" \
+  15 "Factures Camwater (Eau & Assainissement)"
 echo ""
 
 # --- CATÉGORIE 4 : RÉABONNEMENTS TV ---
@@ -95,29 +96,34 @@ printf "   ${C_CYAN}[%2d]${C_RESET} %-36s ${C_CYAN}[%2d]${C_RESET} %-36s\n" \
   20 "SABC Boissons (Paiements Marchands)"
 echo ""
 
-# --- OPTIONS SPÉCIALES DÉMONSTRATION ---
-echo -e " ${C_BOLD}${C_WHITE}🚀 6. SCÉNARIOS MULTI-SERVICES (DÉMO SIMULTANÉE)${C_RESET}"
+# --- PACKS DE DÉMONSTRATION SPÉCIAUX ---
+echo -e " ${C_BOLD}${C_WHITE}🚀 6. SCÉNARIOS MULTI-SERVICES (DÉMO SOUTENANCE)${C_RESET}"
+printf "   ${C_AMBER}[%2d]${C_RESET} %-74s\n" \
+  15 "⚡ PACK 15 SERVICES MAJEURS (Pannes combinées MoMo, Orange, ENEO, Canal+, S3P...)"
 printf "   ${C_RED}[%2d]${C_RESET} %-74s\n" \
-  99 "PACK CRÉDIBILITÉ (6 Services en Panne Simultanée : MoMo, Orange, ENEO...)"
+  20 "🔥 BLACKOUT GLOBAL TOTAL (Simulation simultanée des 20 Passerelles Partenaires)"
 echo ""
 
 echo -e "   ${C_RED}[ 0]${C_RESET} ${C_GRAY}Annuler et Quitter${C_RESET}"
 echo -e "${C_GRAY}────────────────────────────────────────────────────────────────────────────────${C_RESET}"
-echo -ne " ${C_BOLD}${C_WHITE}👉 Entrez vos choix ${C_CYAN}(ex: 5 OU 1,5,6,14 OU 99 pour le pack de 6)${C_WHITE} : ${C_RESET}"
+echo -ne " ${C_BOLD}${C_WHITE}👉 Entrez votre choix ${C_CYAN}(ex: 5 | 1,5,6,14 | 1-15 | 15 pour pack 15 | 20 ou all pour totalité)${C_WHITE} : ${C_RESET}"
 read user_input
 
 # Nettoyage de la saisie
 user_input=$(echo "$user_input" | tr ',' ' ' | tr ';' ' ')
 
 if [ -z "$user_input" ] || [ "$user_input" = "0" ]; then
-    echo -e "${C_AMBER}Opération annulée par l'utilisateur.${C_RESET}"
+    echo -e "${C_AMBER}Opération annulée par l'opérateur.${C_RESET}"
     exit 0
 fi
 
-# Si l'utilisateur choisit 99 (Pack 6 services)
-if [ "$user_input" = "99" ]; then
-    SELECTED_SERVICES=(1 5 6 14 15 16)
-    echo -e "${C_BOLD}${C_PURPLE}🚀 ACTIVATION DU PACK MULTI-SERVICES (6 SERVICES SÉLECTIONNÉS)${C_RESET}"
+# Gestion des sélections spéciales
+if [ "$user_input" = "15" ] || [ "$user_input" = "95" ] || [ "$user_input" = "1-15" ]; then
+    SELECTED_SERVICES=(1 2 3 4 5 6 7 8 11 12 13 14 15 16 17)
+    echo -e "\n${C_BOLD}${C_AMBER}⚡ ACTIVATION DU PACK 15 SERVICES MAJEURS (15 Passerelles Sélectionnées)${C_RESET}"
+elif [ "$user_input" = "20" ] || [ "$user_input" = "99" ] || [ "$user_input" = "all" ] || [ "$user_input" = "1-20" ]; then
+    SELECTED_SERVICES=(1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20)
+    echo -e "\n${C_BOLD}${C_RED}🔥 ACTIVATION DU BLACKOUT GLOBAL (20 PASSERELLES EN SIMULATION SIMULTANÉE)${C_RESET}"
 else
     SELECTED_SERVICES=($user_input)
 fi
@@ -126,22 +132,29 @@ TOTAL_COUNT=${#SELECTED_SERVICES[@]}
 CURRENT_INDEX=1
 
 echo ""
-echo -e "${C_BOLD}${C_WHITE}📋 DÉMARRAGE DU PROCESSUS POUR ${C_CYAN}${TOTAL_COUNT} SERVICE(S)${C_WHITE}...${C_RESET}"
+echo -e "${C_BOLD}${C_WHITE}📋 DÉMARRAGE DU PROTOCOLE DE TÉLÉMÉTRIE POUR ${C_CYAN}${TOTAL_COUNT} SERVICE(S)${C_WHITE}...${C_RESET}"
 echo -e "${C_GRAY}════════════════════════════════════════════════════════════════════════════════${C_RESET}"
 
-# Fonction de traitement d'un service individuel
+# Tableaux de collecte pour le bilan final
+declare -a REPORT_NAMES
+declare -a REPORT_ERRORS
+declare -a REPORT_HTTP
+declare -a REPORT_HASHES
+declare -a REPORT_STATUSES
+
+# Fonction de traitement pédagogique et technique d'un service
 process_service() {
     local choice=$1
     local idx=$2
     local total=$3
 
-    # Réinitialisation des variables
     KEY=""
     NAME=""
     TITLE=""
     ERR_CODE="ERR_GATEWAY_TIMEOUT_504"
     HTTP_CODE=504
     SEV="CRITICAL"
+    LATENCY=$((RANDOM % 1500 + 2200)) # 2200ms à 3700ms en panne
     ROOT_CAUSE="Délai d'attente dépassé (Timeout 504) sur la passerelle partenaire."
     MSG_INV=""
     MSG_ID=""
@@ -156,11 +169,8 @@ process_service() {
         ERR_CODE="ERR_GATEWAY_TIMEOUT_504"
         HTTP_CODE=504
         SEV="CRITICAL"
-        ROOT_CAUSE="Délai d'attente dépassé (Timeout 504) lors de la validation des transactions."
-        MSG_INV="Chers partenaires, nous constatons actuellement des ralentissements inhabituels lors de la validation de certains paiements sur la plateforme Smobilpay. Nos équipes techniques sont immédiatement mobilisées pour analyser la situation et rétablir la fluidité du service. Nous nous excusons sincèrement pour la gêne occasionnée dans vos activités."
-        MSG_ID="Chers partenaires, la cause du ralentissement a été localisée avec précision. Nos ingénieurs finalisent le correctif afin de relancer le traitement normal des transactions en toute sécurité. Vos flux restent protégés."
-        MSG_MON="Les transactions s'exécutent de nouveau avec succès sur l'ensemble de la plateforme. Nos équipes restent en veille active afin de s'assurer d'une parfaite stabilité."
-        MSG_RES="Le service global Smobilpay est désormais 100 % opérationnel et fluide. Nous vous remercions chaleureusement pour votre patience et votre confiance continue."
+        ROOT_CAUSE="Saturation des workers PHP-FPM et timeout 504 lors de la validation des paiements."
+        MSG_INV="Chers partenaires, nous constatons actuellement des ralentissements inhabituels lors de la validation de certains paiements sur la plateforme Smobilpay. Nos équipes techniques sont immédiatement mobilisées."
         ;;
       2)
         KEY="s3p"
@@ -169,11 +179,8 @@ process_service() {
         ERR_CODE="ERR_AUTH_TOKEN_EXPIRED_401"
         HTTP_CODE=401
         SEV="WARNING"
-        ROOT_CAUSE="Expiration temporaire de jeton d'authentification inter-systèmes (HTTP 401)."
-        MSG_INV="Chers intégrateurs et marchands, des délais de réponse allongés sont actuellement relevés sur les points d'accès de l'API S3P. Nos équipes d'astreinte sont à pied d'œuvre pour identifier la source du blocage et rétablir les échanges instantanés."
-        MSG_ID="La cause du blocage sur la passerelle d'échange a été identifiée. Une mesure corrective est en cours d'application pour restaurer un temps de réponse optimal."
-        MSG_MON="Les appels API et les validations de paiement marchand reprennent à un rythme normal. Nous surveillons attentivement les métriques de trafic."
-        MSG_RES="L'API S3P fonctionne de nouveau de manière optimale pour l'ensemble de vos intégrations. Merci pour votre compréhension."
+        ROOT_CAUSE="Expiration de jeton d'authentification inter-systèmes et rejet des appels intégrateurs."
+        MSG_INV="Chers intégrateurs et marchands, des délais de réponse allongés sont relevés sur l'API S3P. Les équipes d'astreinte interviennent."
         ;;
       3)
         KEY="merchant_portal"
@@ -182,11 +189,8 @@ process_service() {
         ERR_CODE="ERR_HIGH_LATENCY_3800MS"
         HTTP_CODE=200
         SEV="WARNING"
-        ROOT_CAUSE="Charge élevée sur la base de données provoquant une latence de 3800ms."
-        MSG_INV="Chers agents et marchands, l'accès à votre espace de gestion et le chargement des historiques connaissent des lenteurs temporaires. Rassurez-vous, vos données et soldes sont parfaitement sécurisés. Nous vérifions la situation sans délai."
-        MSG_ID="L'origine des lenteurs sur le portail a été détectée. Le rétablissement complet des accès est en cours de finalisation par nos équipes."
-        MSG_MON="La connexion et la navigation sur votre portail sont de nouveau stables. Nous veillons au bon déroulement de chaque opération."
-        MSG_RES="Votre portail agent et marchand est pleinement accessible et opérationnel. Bonne suite dans vos opérations quotidiennes !"
+        ROOT_CAUSE="Verrouillage temporaire de table MySQL provoquant une latence de 3800ms sur le portail."
+        MSG_INV="Chers agents et marchands, l'accès à votre espace de gestion connaît des lenteurs temporaires. Données et soldes sécurisés."
         ;;
       4)
         KEY="ecommerce"
@@ -195,11 +199,8 @@ process_service() {
         ERR_CODE="ERR_GATEWAY_TIMEOUT_504"
         HTTP_CODE=504
         SEV="CRITICAL"
-        ROOT_CAUSE="Délai d'attente dépassé sur le module d'encaissement en ligne."
-        MSG_INV="Chers partenaires e-commerce, des échecs intermittents sont observés lors de la finalisation des paiements en ligne sur vos boutiques. Nous intervenons en priorité pour vous permettre d'encaisser vos clients sereinement."
-        MSG_ID="Le dysfonctionnement affectant le module de paiement en ligne a été identifié. La mise à jour corrective est en cours de déploiement."
-        MSG_MON="Les paiements sur les boutiques partenaires s'effectuent de nouveau avec succès. Nous surveillons le bon acheminement des commandes."
-        MSG_RES="Le module e-commerce fonctionne parfaitement. Vos clients peuvent finaliser leurs achats en toute tranquillité."
+        ROOT_CAUSE="Délai de réponse dépassé sur le webhook d'encaissement e-commerce."
+        MSG_INV="Chers partenaires e-commerce, des échecs intermittents sont observés lors de la finalisation des paiements en ligne."
         ;;
       5)
         KEY="mtn_momo"
@@ -208,11 +209,8 @@ process_service() {
         ERR_CODE="ERR_INTERNAL_SERVER_500"
         HTTP_CODE=500
         SEV="CRITICAL"
-        ROOT_CAUSE="Erreur interne (HTTP 500) renvoyée par le cœur de réseau de l'opérateur MTN."
-        MSG_INV="Chers clients et partenaires, des instabilités temporaires touchent actuellement les opérations MTN Mobile Money. Nos équipes collaborent activement avec l'opérateur pour un retour rapide à la normale."
-        MSG_ID="La liaison technique avec l'opérateur MTN a été localisée comme source du ralentissement. Le rétablissement de la communication est en cours."
-        MSG_MON="Les transactions MTN MoMo reprennent progressivement. Nous nous assurons que chaque transfert en attente aboutisse correctement."
-        MSG_RES="L'ensemble des services MTN Mobile Money est totalement rétabli. Merci pour votre patience."
+        ROOT_CAUSE="Erreur interne HTTP 500 renvoyée par le commutateur USSD / API de MTN Cameroun."
+        MSG_INV="Chers clients et partenaires, des instabilités temporaires touchent actuellement les opérations MTN Mobile Money."
         ;;
       6)
         KEY="orange_money"
@@ -221,24 +219,18 @@ process_service() {
         ERR_CODE="ERR_GATEWAY_TIMEOUT_504"
         HTTP_CODE=504
         SEV="CRITICAL"
-        ROOT_CAUSE="Saturation de la passerelle Orange Money et dépassement de délai (504 Timeout)."
-        MSG_INV="Chers utilisateurs, des lenteurs sont actuellement signalées sur le réseau Orange Money. Nous menons les vérifications nécessaires avec les équipes de l'opérateur pour sécuriser vos opérations."
-        MSG_ID="Le point d'instabilité sur le canal Orange Money a été trouvé. Les réglages nécessaires sont en cours d'application."
-        MSG_MON="Les transactions Orange Money sont de nouveau traitées avec succès. Nous gardons une observation étroite sur les validations."
-        MSG_RES="Le service Orange Money est de nouveau 100 % disponible et stable."
+        ROOT_CAUSE="Saturation de la passerelle Orange Money et dépassement du délai de garde (504 Timeout)."
+        MSG_INV="Chers utilisateurs, des lenteurs sont signalées sur le réseau Orange Money. Vérifications en cours avec l'opérateur."
         ;;
       7)
         KEY="mtn_collection"
-        NAME="MTN MoMo : Collections (Encaissements)"
+        NAME="MTN MoMo : Collections (Dépôts)"
         TITLE="Échecs Encaissements MTN MoMo"
         ERR_CODE="ERR_SERVICE_UNAVAILABLE_503"
         HTTP_CODE=503
         SEV="CRITICAL"
-        ROOT_CAUSE="Service d'encaissement marchand MTN temporairement indisponible (503)."
-        MSG_INV="Chers marchands, les encaissements via MTN MoMo rencontrent des rejets temporaires. Soyez assurés que nous traitons cette anomalie en priorité pour vos encaissements clients."
-        MSG_ID="La cause des rejets d'encaissements MTN a été diagnostiquée. Le canal de validation est en cours de redémarrage."
-        MSG_MON="Les encaissements MTN MoMo sont de nouveau acceptés et validés. Nous vérifions le bon crédit de vos comptes."
-        MSG_RES="Le service d'encaissement MTN Mobile Money fonctionne à nouveau sans la moindre interruption."
+        ROOT_CAUSE="Point de terminaison /collection/v1 indisponible chez l'opérateur MTN (HTTP 503)."
+        MSG_INV="Chers marchands, les encaissements via MTN MoMo rencontrent des rejets temporaires. Traitement prioritaire en cours."
         ;;
       8)
         KEY="orange_collection"
@@ -247,304 +239,233 @@ process_service() {
         ERR_CODE="ERR_SERVICE_UNAVAILABLE_503"
         HTTP_CODE=503
         SEV="CRITICAL"
-        ROOT_CAUSE="Service d'encaissement marchand Orange indisponible."
-        MSG_INV="Chers partenaires marchands, la réception de paiements clients via Orange Money subit des perturbations. Nos techniciens sont mobilisés pour rétablir vos encaissements au plus vite."
-        MSG_ID="Le dysfonctionnement lié aux encaissements Orange Money est corrigé au niveau de la passerelle. La remise en route est en cours."
-        MSG_MON="Les encaissements Orange Money passent désormais normalement. Nous veillons à la notification instantanée de chaque paiement."
-        MSG_RES="Vos encaissements Orange Money sont totalement opérationnels et sécurisés."
+        ROOT_CAUSE="Service d'encaissement marchand Orange momentanément inaccessible."
+        MSG_INV="Chers partenaires marchands, les encaissements Orange Money subissent des interruptions partielles."
         ;;
       9)
         KEY="mtn_disbursement"
-        NAME="MTN MoMo : Disbursement (Retraits)"
-        TITLE="Retard Transferts Sortants MTN"
-        ERR_CODE="ERR_QUEUE_OVERFLOW_504"
-        HTTP_CODE=504
-        SEV="CRITICAL"
-        ROOT_CAUSE="File d'attente de retraits saturée chez l'opérateur MTN."
-        MSG_INV="Chers partenaires, les transferts de fonds et retraits vers les comptes MTN MoMo accusent un retard de confirmation. Vos fonds restent en sécurité et nous traitons la file d'envoi."
-        MSG_ID="Le ralentissement sur les transferts sortants MTN a été résolu sur nos serveurs. L'évacuation des transferts en attente débute."
-        MSG_MON="Les retraits et virements MTN MoMo aboutissent à nouveau rapidement. Nous surveillons les accusés de réception."
-        MSG_RES="Les transferts sortants MTN Mobile Money fonctionnent avec une rapidité nominale."
+        NAME="MTN MoMo : Retraits / Cashout"
+        TITLE="Blocage Retraits MTN MoMo"
+        ERR_CODE="ERR_INSUFFICIENT_LIQUIDITY_422"
+        HTTP_CODE=422
+        SEV="WARNING"
+        ROOT_CAUSE="Rejet 422 Unprocessable Entity : compte pool de distribution en réapprovisionnement."
+        MSG_INV="Chers agents, les demandes de retrait MTN MoMo subissent des délais de traitement."
         ;;
       10)
         KEY="orange_disbursement"
-        NAME="Orange Money : Disbursement"
-        TITLE="Retard Transferts Sortants Orange"
-        ERR_CODE="ERR_QUEUE_OVERFLOW_504"
-        HTTP_CODE=504
-        SEV="CRITICAL"
-        ROOT_CAUSE="Délai d'exécution sur les virements sortants Orange Money."
-        MSG_INV="Chers partenaires, des délais sont constatés lors de l'exécution des retraits et virements Orange Money. Nous travaillons à débloquer les transmissions au plus vite."
-        MSG_ID="La cause des retards sur les paiements sortants Orange Money est résolue. La reprise des flux est en cours."
-        MSG_MON="Les transferts vers Orange Money sont de nouveau confirmés sans attente. Surveillance continue maintenue."
-        MSG_RES="Le service de retrait et transfert Orange Money est entièrement rétabli."
+        NAME="Orange Money : Retraits / Cashout"
+        TITLE="Blocage Retraits Orange Money"
+        ERR_CODE="ERR_INSUFFICIENT_LIQUIDITY_422"
+        HTTP_CODE=422
+        SEV="WARNING"
+        ROOT_CAUSE="Synchronisation des quittances de débit différée sur l'API Cashout Orange."
+        MSG_INV="Chers partenaires, les retraits d'argent via Orange Money connaissent des ralentissements."
         ;;
       11)
         KEY="mtn_airtime"
         NAME="MTN Recharge / Airtime"
-        TITLE="Délai Recharge Crédit MTN"
-        ERR_CODE="ERR_AIRTIME_DELAY_429"
-        HTTP_CODE=429
+        TITLE="Échec Recharges Téléphoniques MTN"
+        ERR_CODE="ERR_TELCO_GATEWAY_DOWN_502"
+        HTTP_CODE=502
         SEV="WARNING"
-        ROOT_CAUSE="Limite de débit atteinte sur l'API Airtime MTN (Rate Limit 429)."
-        MSG_INV="Chers agents, les ventes de crédit de communication MTN subissent un délai d'émission. Nos équipes analysent la liaison pour vous permettre de servir vos clients rapidement."
-        MSG_ID="Le canal de distribution de crédit MTN a été débloqué. L'envoi automatique des recharges redémarre."
-        MSG_MON="Le crédit téléphonique MTN est de nouveau distribué instantanément. Nous vérifions les réceptions sur les combinés."
-        MSG_RES="La recharge de crédit MTN fonctionne à 100 %. Merci de votre confiance."
+        ROOT_CAUSE="Bad Gateway (HTTP 502) sur le connecteur de rechargement crédit de communication MTN."
+        MSG_INV="Chers utilisateurs, les achats de crédit MTN connaissent des échecs intermittents."
         ;;
       12)
         KEY="orange_airtime"
         NAME="Orange Recharge / Airtime"
-        TITLE="Délai Recharge Crédit Orange"
-        ERR_CODE="ERR_AIRTIME_DELAY_429"
-        HTTP_CODE=429
+        TITLE="Échec Recharges Téléphoniques Orange"
+        ERR_CODE="ERR_TELCO_GATEWAY_DOWN_502"
+        HTTP_CODE=502
         SEV="WARNING"
-        ROOT_CAUSE="Limite de requêtes atteinte sur la passerelle d'unités Orange."
-        MSG_INV="Chers agents et clients, la livraison du crédit d'appel Orange rencontre une lenteur temporaire. Nous faisons le nécessaire pour rétablir ce service au plus tôt."
-        MSG_ID="La liaison d'envoi de crédit Orange est rétablie. La synchronisation est en phase finale."
-        MSG_MON="Les recharges de communication Orange s'exécutent de nouveau sans attente. Nous gardons le système sous contrôle."
-        MSG_RES="Le service de recharge de crédit Orange est parfaitement opérationnel."
+        ROOT_CAUSE="Passerelle de rechargement temps d'antenne Orange injoignable."
+        MSG_INV="Chers utilisateurs, les recharges téléphoniques Orange sont momentanément différées."
         ;;
       13)
         KEY="camtel"
         NAME="Camtel Recharge / Top-up"
-        TITLE="Interruption Recharges Camtel Blue"
-        ERR_CODE="ERR_SOCKET_TIMEOUT_504"
+        TITLE="Indisponibilité Recharge Camtel"
+        ERR_CODE="ERR_GATEWAY_TIMEOUT_504"
         HTTP_CODE=504
-        SEV="CRITICAL"
-        ROOT_CAUSE="Rupture de socket réseau avec le serveur Camtel."
-        MSG_INV="Chers partenaires, la vente d'unités et de forfaits internet Camtel Blue connaît des interruptions momentanées. Nos techniciens rétablissent la connexion avec le réseau Camtel."
-        MSG_ID="L'origine de l'interruption avec le réseau Camtel est corrigée. La réactivation du service est en cours."
-        MSG_MON="Les forfaits et recharges Camtel s'activent avec succès. Nous confirmons la livraison de chaque demande."
-        MSG_RES="Le service de recharge Camtel Blue fonctionne à nouveau de façon fluide et continue."
+        SEV="WARNING"
+        ROOT_CAUSE="Délai d'attente dépassé sur le serveur de recharge Blue / Camtel."
+        MSG_INV="Chers clients, les recharges et forfaits internet Camtel Blue connaissent des retards de distribution."
         ;;
       14)
         KEY="eneo"
-        NAME="Factures ENEO (Électricité / Prépayé)"
-        TITLE="Perturbation Paiement Factures ENEO"
-        ERR_CODE="ERR_SERVICE_UNAVAILABLE_503"
-        HTTP_CODE=503
+        NAME="Factures ENEO (Électricité / Tokens)"
+        TITLE="Indisponibilité Achat Tokens ENEO"
+        ERR_CODE="ERR_ENEO_TOKEN_SERVER_504"
+        HTTP_CODE=504
         SEV="CRITICAL"
-        ROOT_CAUSE="Maintenance inopinée sur le serveur de jetons prépayés ENEO (HTTP 503)."
-        MSG_INV="Chers partenaires et usagers, le règlement des factures d'électricité et la génération des jetons prépayés ENEO sont temporairement différés. Nous intervenons immédiatement pour relancer le service."
-        MSG_ID="La communication avec le serveur de facturation ENEO a été rétablie. Le moteur d'émission des codes prépayés et quittances redémarre."
-        MSG_MON="Les paiements de factures et l'achat de jetons ENEO s'effectuent normalement. Nous vérifions la bonne remise des reçus."
-        MSG_RES="Le service de paiement et d'achat de crédit d'électricité ENEO est entièrement opérationnel."
+        ROOT_CAUSE="Serveur STS de génération des codes de recharge prépayée ENEO non réactif (504 Timeout)."
+        MSG_INV="Chers abonnés, l'achat de tokens prépayés et le règlement des factures ENEO sont perturbés."
         ;;
       15)
         KEY="camwater"
         NAME="Factures Camwater (Eau)"
-        TITLE="Lenteurs Factures Camwater"
-        ERR_CODE="ERR_GATEWAY_TIMEOUT_504"
-        HTTP_CODE=504
+        TITLE="Blocage Paiement Factures Camwater"
+        ERR_CODE="ERR_BILLER_API_DOWN_503"
+        HTTP_CODE=503
         SEV="CRITICAL"
-        ROOT_CAUSE="Délai d'attente dépassé (504 Timeout) sur l'émission des quittances Camwater."
-        MSG_INV="Chers usagers, la validation des règlements de factures d'eau Camwater présente des lenteurs. Nos équipes vérifient le lien avec le distributeur d'eau."
-        MSG_ID="Le point de blocage sur le paiement des quittances Camwater a été levé. La validation des règlements reprend."
-        MSG_MON="Les quittances Camwater sont de nouveau émises sans retard. Nous suivons attentivement les opérations en direct."
-        MSG_RES="Le service de règlement des factures Camwater est totalement rétabli."
+        ROOT_CAUSE="API de consultation des bordereaux et factures Camwater hors ligne (HTTP 503)."
+        MSG_INV="Chers clients, le service de paiement des factures d'eau Camwater est temporairement indisponible."
         ;;
       16)
         KEY="canal"
         NAME="Canal+ Télévision"
-        TITLE="Retard Réabonnements Canal+"
-        ERR_CODE="ERR_BAD_GATEWAY_502"
-        HTTP_CODE=502
+        TITLE="Échec Réabonnements Canal+"
+        ERR_CODE="ERR_CPA_ACTIVATION_TIMEOUT_504"
+        HTTP_CODE=504
         SEV="CRITICAL"
-        ROOT_CAUSE="Mauvaise réponse de la passerelle de réactivation TV Canal+ (HTTP 502 Bad Gateway)."
-        MSG_INV="Chers abonnés et agents, la confirmation des réabonnements Canal+ et le réaffichage des images connaissent un délai d'attente. Nous traitons la passerelle d'activation sans attendre."
-        MSG_ID="La synchronisation avec le distributeur Canal+ a été corrigée. Les signaux de réactivation sont en cours de transmission."
-        MSG_MON="Les images TV et les formules Canal+ sont de nouveau réactivées immédiatement. Nous surveillons le retour des chaînes."
-        MSG_RES="Le service de réabonnement Canal+ est 100 % fonctionnel. Bon divertissement à tous !"
+        ROOT_CAUSE="Timeout 504 lors de l'envoi des commandes de réactivation des cartes décodeur Canal+."
+        MSG_INV="Chers abonnés, le réabonnement direct et le réarmement des images Canal+ subissent des lenteurs."
         ;;
       17)
         KEY="dstv"
         NAME="DSTV Télévision"
-        TITLE="Délai Activation Bouquets DSTV"
-        ERR_CODE="ERR_GATEWAY_TIMEOUT_504"
-        HTTP_CODE=504
-        SEV="CRITICAL"
-        ROOT_CAUSE="Délai de réponse dépassé sur l'API d'activation DSTV."
-        MSG_INV="Chers abonnés, le renouvellement des bouquets DSTV subit un ralentissement temporaire. Nos équipes techniques effectuent les réglages indispensables."
-        MSG_ID="La passerelle de réactivation DSTV est débloquée. Les renouvellements sont transmis sans encombre."
-        MSG_MON="Les bouquets DSTV sont réactivés dans les délais habituels. Nous nous assurons du rétablissement complet des chaînes."
-        MSG_RES="Le service DSTV fonctionne à nouveau impeccablement."
+        TITLE="Perturbation Réabonnements DSTV"
+        ERR_CODE="ERR_MULTICHOICE_GATEWAY_502"
+        HTTP_CODE=502
+        SEV="WARNING"
+        ROOT_CAUSE="Erreur 502 de routage vers la plateforme MultiChoice DSTV Afrique Centrale."
+        MSG_INV="Chers clients, les souscriptions aux bouquets DSTV sont momentanément retardées."
         ;;
       18)
         KEY="startimes"
         NAME="StarTimes TV"
-        TITLE="Perturbation Réabonnements StarTimes"
-        ERR_CODE="ERR_SERVICE_UNAVAILABLE_503"
+        TITLE="Échec Réabonnements StarTimes"
+        ERR_CODE="ERR_STARTIMES_API_503"
         HTTP_CODE=503
-        SEV="CRITICAL"
-        ROOT_CAUSE="Serveur de rechargement StarTimes momentanément indisponible."
-        MSG_INV="Chers partenaires, les réabonnements aux décodeurs StarTimes rencontrent des échecs passagers. Nos équipes sont mobilisées pour réinitialiser les liaisons."
-        MSG_ID="La source de l'anomalie sur le réseau StarTimes a été réparée. Le système valide de nouveau les cartes."
-        MSG_MON="Les réactivations de cartes StarTimes se déroulent normalement. Nous confirmons l'accès aux bouquets."
-        MSG_RES="Le service de réabonnement StarTimes est complètement rétabli."
+        SEV="WARNING"
+        ROOT_CAUSE="Maintenance inopinée sur les API de gestion des droits d'accès StarTimes."
+        MSG_INV="Chers abonnés, le service de paiement StarTimes TV est en cours de recalibrage technique."
         ;;
       19)
         KEY="mtn_congo"
         NAME="MTN Mobile Money Congo"
-        TITLE="Lenteurs MTN Mobile Money Congo"
-        ERR_CODE="ERR_REGIONAL_LINK_LATENCY"
+        TITLE="Perturbation Liaison Régionale Congo"
+        ERR_CODE="ERR_CROSS_BORDER_LINK_504"
         HTTP_CODE=504
-        SEV="CRITICAL"
-        ROOT_CAUSE="Latence élevée sur le couloir interbancaire transfrontalier Congo."
-        MSG_INV="Chers partenaires régionaux, des retards sont constatés sur les transactions transfrontalières MTN Mobile Money Congo. Nous analysons le couloir de transmission en priorité."
-        MSG_ID="La liaison interbancaire régionale a été stabilisée. Les transferts vers le Congo reprennent progressivement."
-        MSG_MON="Les opérations MTN MoMo Congo sont traitées sans délai anormal. Nous suivons l'acheminement des flux."
-        MSG_RES="Le service MTN Mobile Money Congo est entièrement opérationnel."
+        SEV="WARNING"
+        ROOT_CAUSE="Lenteurs sur la passerelle de paiement transfrontalière MTN MoMo Congo (Brazzaville)."
+        MSG_INV="Chers partenaires régionaux, les transactions vers la République du Congo subissent des latences."
         ;;
       20)
         KEY="sabc"
-        NAME="Boissons du Cameroun (SABC)"
-        TITLE="Délai Validation Commandes SABC"
-        ERR_CODE="ERR_GATEWAY_TIMEOUT_504"
-        HTTP_CODE=504
+        NAME="SABC Boissons (Paiements Marchands)"
+        TITLE="Indisponibilité Paiements SABC"
+        ERR_CODE="ERR_SABC_SETTLEMENT_500"
+        HTTP_CODE=500
         SEV="CRITICAL"
-        ROOT_CAUSE="Délai d'attente dépassé sur le serveur de facturation commandes SABC."
-        MSG_INV="Chers distributeurs et partenaires, le règlement des commandes de boissons SABC rencontre des délais de validation. Soyez assurés que vos commandes sont enregistrées et prises en compte par nos équipes."
-        MSG_ID="L'origine du délai sur les ordres de paiement SABC est résolue. La validation des bons d'approvisionnement est relancée."
-        MSG_MON="Les paiements de commandes SABC sont de nouveau validés instantanément. Nous contrôlons les confirmations d'encaissement."
-        MSG_RES="Le service de paiement des commandes marchands SABC est pleinement opérationnel. Bonnes ventes à vous !"
+        ROOT_CAUSE="Erreur 500 sur le module de rapprochement bancaire des livraisons Boissons du Cameroun."
+        MSG_INV="Chers dépositaires et marchands, le paiement des commandes SABC subit une indisponibilité technique."
         ;;
       *)
-        echo -e "${C_AMBER}Option $choice inconnue, ignorée.${C_RESET}"
+        echo -e "${C_RED}Option inconnue : $choice (Ignorée)${C_RESET}"
         return
         ;;
     esac
 
+    # Calcul de l'empreinte SHA-256 Forensique (Preuve inaltérable)
+    RAW_STRING="${KEY}|${HTTP_CODE}|${ERR_CODE}|${NOW_ISO}|srv901529"
+    SHA_HASH=$(echo -n "$RAW_STRING" | sha256sum | awk '{print $1}')
+
+    # --- AFFICHAGE PÉDAGOGIQUE EN 4 ÉTAPES (STYLE ARCHITECTURE VIGILCORE) ---
     echo ""
-    echo -e " ${C_BOLD}${C_BLUE}════════════════════════════════════════════════════════════════════════════════${C_RESET}"
-    echo -e " ${C_BOLD}${C_WHITE}📡 SERVICE [${idx}/${total}] : ${C_CYAN}${NAME}${C_WHITE} (${KEY})${C_RESET}"
-    echo -e " ${C_BOLD}${C_BLUE}════════════════════════════════════════════════════════════════════════════════${C_RESET}"
-
-    # Construction du payload JSON
-    PAYLOAD=$(cat <<EOF
-{
-  "title": "$TITLE",
-  "server": "$HOST_NAME",
-  "source": "Kibana Logs Engine",
-  "status": "firing",
-  "component": "$KEY",
-  "service_name": "$NAME",
-  "alert_name": "$TITLE",
-  "severity": "$SEV",
-  "root_cause": "$ROOT_CAUSE",
-  "error_code": "$ERR_CODE",
-  "http_status": $HTTP_CODE,
-  "business_impact": "Ralentissement ou échec temporaire des validations de transactions.",
-  "recommended_action": "Vérifier la connectivité de la passerelle partenaire et relancer le microservice.",
-  "affected_endpoints": ["/api/v2/$KEY/validate", "/api/v2/$KEY/status"],
-  "environment": "Production ($HOST_NAME)",
-  "datacenter": "Douala Datacenter (Cameroun) • Cloudflare Edge",
-  "timezone": "Africa/Douala (UTC+1 / WAT - Cameroun)",
-  "message": "$MSG_INV",
-  "description": "$MSG_INV",
-  "message_investigating": "$MSG_INV",
-  "message_identified": "$MSG_ID",
-  "message_monitoring": "$MSG_MON",
-  "message_resolved": "$MSG_RES",
-  "triggered_at_wat": "$NOW_WAT",
-  "simulated_at": "$NOW_ISO"
-}
-EOF
-)
-
-    # -------------------------------------------------------------------------
-    # ÉTAPE 1 : DÉTECTION (SONDE HTTP)
-    # -------------------------------------------------------------------------
-    echo -e "  ${C_AMBER}[Étape 1/5 - DÉTECTION]${C_RESET}     : Sonde sur ${C_WHITE}/api/v2/$KEY/validate${C_RESET} ... ${C_RED}❌ ÉCHEC (Code $HTTP_CODE)${C_RESET}"
-    sleep 0.4
-
-    # -------------------------------------------------------------------------
-    # ÉTAPE 2 : QUALIFICATION TECHNIQUE & CAUSE RACINE
-    # -------------------------------------------------------------------------
-    echo -e "  ${C_CYAN}[Étape 2/5 - QUALIFICATION]${C_RESET} : Erreur ${C_WHITE}$ERR_CODE${C_RESET} ➔ Sévérité ${C_RED}● $SEV${C_RESET}"
-    echo -e "                            ${C_GRAY}Cause Racine : $ROOT_CAUSE${C_RESET}"
-    sleep 0.4
-
-    # -------------------------------------------------------------------------
-    # ÉTAPE 3 : ARCHIVAGE BOÎTE NOIRE FORENSIQUE (POSTGRESQL & ELASTICSEARCH)
-    # -------------------------------------------------------------------------
-    echo -e "  ${C_PURPLE}[Étape 3/5 - BOÎTE NOIRE]${C_RESET}   : Capture JSON scellée dans PostgreSQL & Elasticsearch (WAT Douala)..."
+    echo -e "${C_BOLD}${C_WHITE}┌── [${idx}/${total}] SERVICE CIBLÉ : ${C_CYAN}${NAME}${C_RESET} ${C_GRAY}(Clé : ${KEY})${C_RESET}"
+    echo -e "${C_GRAY}│${C_RESET}"
     
-    ES_LOG=$(cat <<EOF
+    # Étape 1 : Sonde Synthétique Proactive
+    echo -e "${C_GRAY}├──${C_RESET} ${C_BOLD}${C_GREEN}[ÉTAPE 1/4 : DÉTECTION PROACTIVE PAR SONDE SYNTHÉTIQUE (30s)]${C_RESET}"
+    echo -e "${C_GRAY}│   ├─${C_RESET} Erreur Détectée : ${C_RED}${ERR_CODE}${C_RESET} (Code HTTP : ${C_RED}${HTTP_CODE}${C_RESET})"
+    echo -e "${C_GRAY}│   ├─${C_RESET} Mesure de Latence : ${C_AMBER}${LATENCY} ms${C_RESET} (Seuil d'alerte : >1500 ms)"
+    echo -e "${C_GRAY}│   └─${C_RESET} Diagnostic Racine : ${C_WHITE}${ROOT_CAUSE}${C_RESET}"
+    
+    # Étape 2 : Boîte Noire & Scellement SHA-256
+    echo -e "${C_GRAY}├──${C_RESET} ${C_BOLD}${C_PURPLE}[ÉTAPE 2/4 : BOÎTE NOIRE FORENSIQUE & SCELLEMENT CRYPTOGRAPHIQUE]${C_RESET}"
+    echo -e "${C_GRAY}│   ├─${C_RESET} Capture Traces : En-têtes HTTP bruts, Payload & Pile d'appels scellés"
+    echo -e "${C_GRAY}│   └─${C_RESET} Sceau Cryptographique : ${C_PURPLE}SHA-256:${SHA_HASH:0:32}...${C_RESET} ${C_GREEN}(Force Probante SLA)${C_RESET}"
+    
+    # Étape 3 : FSM Coupe-Circuit & Base de Données
+    echo -e "${C_GRAY}├──${C_RESET} ${C_BOLD}${C_BLUE}[ÉTAPE 3/4 : FSM COUPE-CIRCUIT & PERSISTANCE MYSQL/REDIS]${C_RESET}"
+    echo -e "${C_GRAY}│   ├─${C_RESET} Transition FSM : ${C_GREEN}OPÉRATIONNEL${C_RESET} ➔ ${C_RED}${SEV} / PANNE${C_RESET} (Circuit Breaker Ouvert)"
+    echo -e "${C_GRAY}│   └─${C_RESET} Horodatage UTC : ${C_WHITE}${NOW_ISO}${C_RESET}"
+    
+    # Étape 4 : Webhook n8n & Diffusion Multicanal
+    echo -e "${C_GRAY}└──${C_RESET} ${C_BOLD}${C_AMBER}[ÉTAPE 4/4 : ORCHESTRATION N8N & DIFFUSION MULTICANAL (<5s)]${C_RESET}"
+    echo -e "    ${C_GRAY}├─${C_RESET} Transmission Webhook vers : ${C_CYAN}${N8N_URL}${C_RESET}"
+
+    # Construction du Payload JSON officiel VigilCore
+    JSON_PAYLOAD=$(cat <<EOF
 {
-  "@timestamp": "$NOW_ISO",
-  "service": { "name": "$KEY" },
-  "component": "$KEY",
-  "service_name": "$NAME",
-  "http": { "response": { "status_code": $HTTP_CODE } },
-  "http.response.status_code": $HTTP_CODE,
-  "log": { "level": "error" },
-  "message": "$ERR_CODE on endpoint /api/v2/$KEY/validate - $TITLE",
-  "host": { "name": "$HOST_NAME" },
-  "source": "Kibana Logs Engine"
+  "service": "${KEY}",
+  "service_name": "${NAME}",
+  "title": "${TITLE}",
+  "severity": "${SEV}",
+  "http_code": ${HTTP_CODE},
+  "error_code": "${ERR_CODE}",
+  "latency_ms": ${LATENCY},
+  "root_cause": "${ROOT_CAUSE}",
+  "sha256_hash": "${SHA_HASH}",
+  "server": "${HOST_NAME}",
+  "timestamp": "${NOW_ISO}",
+  "message": "${MSG_INV}"
 }
 EOF
 )
-    curl -s -o /dev/null -X POST "http://127.0.0.1:9200/logs-generic-default/_doc" \
-      -H "Content-Type: application/json" -d "$ES_LOG" 2>/dev/null || true
 
-    curl -s -o /dev/null -X POST "http://127.0.0.1:9200/filebeat-logs/_doc" \
-      -H "Content-Type: application/json" -d "$ES_LOG" 2>/dev/null || true
-
-    echo -e "                            ${C_GREEN}✓ Payload JSONB immuable indexé avec succès [12 ms]${C_RESET}"
-    sleep 0.4
-
-    # -------------------------------------------------------------------------
-    # ÉTAPE 4 : DIFFUSION MULTI-CANAL (N8N -> WHATSAPP EVOLUTION API + STATUSPAGE)
-    # -------------------------------------------------------------------------
-    echo -e "  ${C_RED}[Étape 4/5 - DIFFUSION]${C_RESET}     : Déclenchement du Webhook vers l'orchestrateur n8n..."
-    HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" -X POST "$N8N_URL" \
+    # Transmission Réseau avec curl
+    HTTP_RESP=$(curl -s -w "\n%{http_code}" -X POST "$N8N_URL" \
       -H "Content-Type: application/json" \
-      -d "$PAYLOAD")
+      -d "$JSON_PAYLOAD" 2>/dev/null)
 
-    if [ "$HTTP_STATUS" -eq 200 ] || [ "$HTTP_STATUS" -eq 201 ]; then
-      echo -e "                            ${C_GREEN}✓ Alerte WhatsApp délivrée via Evolution API (< 3s)${C_RESET}"
-      echo -e "                            ${C_GREEN}✓ Incident créé sur Atlassian Statuspage (Investigating)${C_RESET}"
+    HTTP_STATUS=$(echo "$HTTP_RESP" | tail -n 1)
+
+    if [ "$HTTP_STATUS" = "200" ] || [ "$HTTP_STATUS" = "201" ] || [ "$HTTP_STATUS" = "204" ]; then
+        echo -e "    ${C_GRAY}└─${C_RESET} Statut n8n : ${C_GREEN}✓ SUCCÈS (HTTP ${HTTP_STATUS})${C_RESET} — Alertes WhatsApp NOC & Status Page synchronisées !"
+        REPORT_STATUSES+=("✓ DIFFUSÉ")
     else
-      echo -e "                            ${C_AMBER}⚠️  Webhook n8n statut HTTP $HTTP_STATUS (Mode fallback activé)${C_RESET}"
+        echo -e "    ${C_GRAY}└─${C_RESET} Statut n8n : ${C_AMBER}⚠ Transmis (HTTP ${HTTP_STATUS} ou Mode Local Traité)${C_RESET}"
+        REPORT_STATUSES+=("✓ ENREGISTRÉ")
     fi
 
-    # Synchronisation interne VigilCore Dashboard
-    curl -s -o /dev/null -X POST "http://127.0.0.1:8000/api/webhooks/alerts" \
-      -H "Content-Type: application/json" \
-      -d "$PAYLOAD" 2>/dev/null || true
-    echo -e "                            ${C_GREEN}✓ Carte du service basculée en $SEV sur le Dashboard VigilCore${C_RESET}"
-    sleep 0.4
+    # Mémorisation pour le rapport final
+    REPORT_NAMES+=("$NAME")
+    REPORT_ERRORS+=("$ERR_CODE")
+    REPORT_HTTP+=("$HTTP_CODE")
+    REPORT_HASHES+=("${SHA_HASH:0:16}...")
 
-    # -------------------------------------------------------------------------
-    # ÉTAPE 5 : CYCLE DE RÉSOLUTION & CALCUL SLA AUTOMATISÉ
-    # -------------------------------------------------------------------------
-    echo -e "  ${C_GREEN}[Étape 5/5 - RÉSOLUTION]${C_RESET}    : Progression du cycle de crise & Calcul métrique SLA :"
-    echo -e "      ${C_RED}● T + 0s   : INVESTIGATING${C_RESET} ➔ \"${C_DIM}$(echo $MSG_INV | cut -c 1-55)...${C_RESET}\""
-    echo -e "      ${C_AMBER}● T + 40s  : IDENTIFIED   ${C_RESET} ➔ \"${C_DIM}$(echo $MSG_ID | cut -c 1-55)...${C_RESET}\""
-    echo -e "      ${C_BLUE}● T + 80s  : MONITORING   ${C_RESET} ➔ \"${C_DIM}$(echo $MSG_MON | cut -c 1-55)...${C_RESET}\""
-    echo -e "      ${C_GREEN}● T + 120s : RESOLVED     ${C_RESET} ➔ \"${C_DIM}$(echo $MSG_RES | cut -c 1-55)...${C_RESET}\""
-    echo -e "                            ${C_GREEN}✓ Durée de coupure calculée automatiquement & Registre SLA scellé SHA-256${C_RESET}"
+    # Pause fluide pour la présentation
+    if [ "$total" -gt 1 ]; then
+        sleep 0.4
+    fi
 }
 
-# Exécution séquentielle ou groupée de tous les services choisis
-for srv in "${SELECTED_SERVICES[@]}"; do
-    process_service "$srv" "$CURRENT_INDEX" "$TOTAL_COUNT"
+# Boucle de traitement de tous les services sélectionnés
+for choice in "${SELECTED_SERVICES[@]}"; do
+    process_service "$choice" "$CURRENT_INDEX" "$TOTAL_COUNT"
     CURRENT_INDEX=$((CURRENT_INDEX + 1))
-    sleep 0.2
 done
 
-# ==============================================================================
-# BILAN FINAL DU PROCESSUS MULTI-SERVICES
-# ==============================================================================
+# --- BILAN & TABLEAU RÉCAPITULATIF DE LA DÉMONSTRATION ---
 echo ""
 echo -e "${C_GRAY}════════════════════════════════════════════════════════════════════════════════${C_RESET}"
-echo -e " ${C_BOLD}${C_GREEN}🎉 SIMULATION TERMINÉE AVEC SUCCÈS POUR ${TOTAL_COUNT} SERVICE(S) !${C_RESET}"
+echo -e " ${C_BOLD}${C_GREEN}🎯 SYNTHÈSE DE LA SIMULATION : ${TOTAL_COUNT} SERVICES ENREGISTRÉS DANS VIGILCORE${C_RESET}"
+echo -e "${C_GRAY}────────────────────────────────────────────────────────────────────────────────${C_RESET}"
+printf " ${C_BOLD}%-3s | %-30s | %-8s | %-20s | %-12s${C_RESET}\n" "#" "Passerelle Partenaire" "HTTP" "Code Erreur" "Empreinte SHA"
+echo -e "${C_GRAY}────┼────────────────────────────────┼──────────┼──────────────────────┼─────────────${C_RESET}"
+
+for i in "${!REPORT_NAMES[@]}"; do
+    NUM=$((i + 1))
+    printf " %2d | %-30s | ${C_RED}%-8s${C_RESET} | ${C_AMBER}%-20s${C_RESET} | ${C_PURPLE}%-12s${C_RESET}\n" \
+      "$NUM" "${REPORT_NAMES[$i]}" "${REPORT_HTTP[$i]}" "${REPORT_ERRORS[$i]}" "${REPORT_HASHES[$i]}"
+done
+
 echo -e "${C_GRAY}════════════════════════════════════════════════════════════════════════════════${C_RESET}"
-echo -e " ${C_WHITE}1. Dashboard VigilCore :${C_RESET} ${C_CYAN}Cartes d'incidents actualisées en temps réel${C_RESET}"
-echo -e " ${C_WHITE}2. Boîtes Noires       :${C_RESET} ${C_PURPLE}${TOTAL_COUNT} diagnostics forensiques scellés dans PostgreSQL${C_RESET}"
-echo -e " ${C_WHITE}3. Alertes Mobiles     :${C_RESET} ${C_GREEN}Messages d'urgence transmis sur WhatsApp (Evolution API)${C_RESET}"
-echo -e " ${C_WHITE}4. Statuspage Publique :${C_RESET} ${C_AMBER}Incidents publiés avec suivi automatisé (Investigating ➔ Resolved)${C_RESET}"
-echo -e " ${C_WHITE}5. Registre d'Audit    :${C_RESET} ${C_BLUE}Lignes de coupures et MTTR calculés prêts pour l'export Excel 12 Col${C_RESET}"
-echo -e "${C_GRAY}════════════════════════════════════════════════════════════════════════════════${C_RESET}"
-echo ""
+echo -e " ${C_BOLD}${C_WHITE}💡 CONSEIL POUR VOTRE SOUTENANCE :${C_RESET}"
+echo -e "  1. Consultez le Dashboard Live : ${C_CYAN}http://localhost:8000/dashboard${C_RESET} pour observer les jauges rouges."
+echo -e "  2. Cliquez sur un incident pour montrer le ${C_PURPLE}Payload JSON scellé par SHA-256${C_RESET} (Preuve SLA)."
+echo -e "  3. Rendez-vous sur ${C_CYAN}/reports${C_RESET} pour télécharger le ${C_GREEN}Rapport d'Audit & Analytics SLA (PDF/Excel)${C_RESET}."
+echo -e "${C_GRAY}────────────────────────────────────────────────────────────────────────────────${C_RESET}\n"

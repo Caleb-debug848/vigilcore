@@ -105,6 +105,49 @@ class Dashboard extends Component
         $this->refreshData($statuspage);
     }
 
+    /**
+     * Déclenche un lot de scénarios d'incidents simultanés
+     */
+    public function triggerBatchScenarios(array $scenarioKeys, StatuspageService $statuspage, string $severity = 'CRITICAL')
+    {
+        $count = 0;
+        foreach ($scenarioKeys as $key) {
+            $scenario = IncidentScenarioService::findScenario($key);
+            if ($scenario) {
+                IncidentScenarioService::trigger($key, true, $severity);
+                $count++;
+            }
+        }
+        $this->simulationFeedback = "✓ Injection groupée réussie : {$count} services passés en incident ({$severity}) et synchronisés !";
+        $this->simulationFeedbackType = 'success';
+        \Illuminate\Support\Facades\Cache::forget('vigilcore_active_counts');
+        \Illuminate\Support\Facades\Cache::forget('vigilcore_dashboard_counts');
+        $this->refreshData($statuspage);
+    }
+
+    /**
+     * Injection rapide du Pack 15 Services Clés
+     */
+    public function trigger15CoreServices(StatuspageService $statuspage)
+    {
+        $fifteenKeys = [
+            'smobilpay', 's3p', 'merchant_portal', 'ecommerce',
+            'mtn_momo', 'orange_money', 'mtn_collection', 'orange_collection',
+            'mtn_airtime', 'orange_airtime', 'camtel',
+            'eneo', 'camwater', 'canal', 'dstv'
+        ];
+        $this->triggerBatchScenarios($fifteenKeys, $statuspage, 'CRITICAL');
+    }
+
+    /**
+     * Injection globale des 20 Passerelles Partenaires
+     */
+    public function triggerAll20Services(StatuspageService $statuspage)
+    {
+        $allKeys = array_column(IncidentScenarioService::getScenarios(), 'key');
+        $this->triggerBatchScenarios($allKeys, $statuspage, 'CRITICAL');
+    }
+
 
     public function viewJson(int $incidentId)
     {

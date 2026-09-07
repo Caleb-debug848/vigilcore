@@ -270,9 +270,11 @@ new class extends Component
                         </svg>
                     </div>
                     <div class="flex items-center gap-1.5 min-w-0">
-                        <span class="font-extrabold text-sm sm:text-base tracking-tight truncate text-slate-900 dark:text-white">VigilCore</span>
-                        <span class="text-[9px] sm:text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-purple-100 dark:bg-purple-950/80 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-800/60">
-                            OPS-01
+                        <span class="font-extrabold text-sm sm:text-base tracking-tight truncate text-slate-900 dark:text-white">
+                            Vigil<span class="text-[#2563EB] dark:text-blue-400">Core</span>
+                        </span>
+                        <span class="text-[9px] sm:text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-blue-50 dark:bg-blue-950/80 text-[#0020B2] dark:text-blue-300 border border-blue-200 dark:border-blue-800/60">
+                            LIVE NOC
                         </span>
                     </div>
                 </div>

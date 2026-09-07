@@ -22,14 +22,16 @@
         <!-- ==================================================== -->
         <header class="sticky-glass-header no-print sticky top-2 sm:top-3 z-40 flex items-center justify-between gap-2 sm:gap-4 p-2.5 sm:px-4 rounded-xl sm:rounded-2xl shadow-sm transition-all duration-200 animate-entrance-1">
             
-            <!-- Gauche : Logo & Badge OPS-01 -->
+            <!-- Gauche : Logo & Badge Enterprise -->
             <div class="flex items-center gap-2 sm:gap-3 min-w-0 flex-shrink-0">
                 <a href="{{ route('dashboard') }}" class="flex items-center gap-2 group">
                     <img src="{{ asset('images/logo.svg') }}" alt="VigilCore Logo" class="h-8 w-8 sm:h-9 sm:w-9 object-contain group-hover:scale-105 transition-transform">
                     <div class="flex items-center gap-1.5 sm:gap-2">
-                        <span class="font-extrabold text-base sm:text-lg tracking-tight text-slate-900 dark:text-white">VigilCore</span>
-                        <span class="px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-blue-50 dark:bg-blue-950/80 text-[#0020B2] dark:text-blue-300 border border-blue-200 dark:border-blue-800">
-                            OPS-01
+                        <span class="font-extrabold text-base sm:text-lg tracking-tight text-slate-900 dark:text-white">
+                            Vigil<span class="text-[#2563EB] dark:text-blue-400">Core</span>
+                        </span>
+                        <span class="px-2 py-0.5 rounded-full text-[9px] sm:text-[10px] font-mono font-bold bg-blue-50 dark:bg-blue-950/80 text-[#0020B2] dark:text-blue-300 border border-blue-200 dark:border-blue-800">
+                            LIVE NOC
                         </span>
                         <span class="relative flex h-2 w-2">
                             <span class="radar-live absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
@@ -817,6 +819,35 @@
                 {{ $simulationFeedback }}
             </div>
             @endif
+
+            <!-- Boutons d'Injection de Masse (Pack 15 Services & Blackout 20 Services) -->
+            <div class="p-3 rounded-xl bg-gradient-to-r from-blue-500/10 via-indigo-500/10 to-amber-500/10 border border-blue-200 dark:border-blue-900/60 flex flex-col sm:flex-row items-center justify-between gap-3">
+                <div>
+                    <span class="text-xs font-bold text-slate-900 dark:text-white font-mono flex items-center gap-1.5">
+                        <span>🚀</span>
+                        <span>{{ __('Injections Multi-Services en 1 Clic') }}</span>
+                    </span>
+                    <p class="text-[11px] text-slate-500 dark:text-slate-400 font-mono">
+                        {{ __('Simulez instantanément des pannes massives pour vos démos et soutenances') }}
+                    </p>
+                </div>
+                <div class="flex items-center gap-2 w-full sm:w-auto">
+                    <button wire:click="trigger15CoreServices" 
+                            type="button"
+                            title="{{ __('Injecter 15 services partenaires simultanément') }}"
+                            class="flex-1 sm:flex-initial px-3.5 py-2 rounded-xl text-xs font-mono font-bold bg-amber-500 hover:bg-amber-600 text-white shadow-xs transition flex items-center justify-center gap-1.5 cursor-pointer">
+                        <span>⚡</span>
+                        <span>{{ __('Pack 15 Services') }}</span>
+                    </button>
+                    <button wire:click="triggerAll20Services" 
+                            type="button"
+                            title="{{ __('Injecter l\'ensemble des 20 services partenaires') }}"
+                            class="flex-1 sm:flex-initial px-3.5 py-2 rounded-xl text-xs font-mono font-bold bg-red-600 hover:bg-red-700 text-white shadow-xs transition flex items-center justify-center gap-1.5 cursor-pointer">
+                        <span>🔥</span>
+                        <span>{{ __('Total 20 Services') }}</span>
+                    </button>
+                </div>
+            </div>
 
             <!-- Filtres de Catégories de Services (Flex Wrap & Contraste Élevé) -->
             <div class="flex items-center gap-1.5 sm:gap-2 flex-wrap text-xs font-mono">
