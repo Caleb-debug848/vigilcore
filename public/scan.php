@@ -35,7 +35,7 @@ if (!$isConnected) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WhatsApp QR Connect - VigilCore</title>
     <?php if (!$isConnected): ?>
-    <meta http-equiv="refresh" content="8">
+    <meta http-equiv="refresh" content="20">
     <?php endif; ?>
     <style>
         body {
@@ -51,7 +51,7 @@ if (!$isConnected) {
         }
         .card {
             background: #111b21;
-            padding: 32px;
+            padding: 32px 24px;
             border-radius: 16px;
             text-align: center;
             max-width: 440px;
@@ -66,16 +66,19 @@ if (!$isConnected) {
             margin-bottom: 8px;
         }
         .qr-frame {
-            background: #fff;
-            padding: 16px;
+            background: #ffffff;
+            padding: 20px;
             border-radius: 12px;
             display: inline-block;
-            margin: 20px 0;
+            margin: 20px auto;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
         }
         .qr-frame img {
             display: block;
-            width: 260px;
-            height: 260px;
+            max-width: 300px;
+            width: 100%;
+            height: auto;
+            margin: 0 auto;
         }
         .connected-banner {
             background: #00a88422;
