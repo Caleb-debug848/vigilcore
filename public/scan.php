@@ -2,7 +2,18 @@
 // Script autonome et infaillible de scan WhatsApp VigilCore
 header('Content-Type: text/html; charset=utf-8');
 
-$apiKey = trim(@shell_exec('docker exec vigilcore-whatsapp printenv AUTHENTICATION_API_KEY 2>/dev/null') ?: 'B6D711FCDE4D4FD5936544120E713976');
+// Lecture de la clé API depuis .env ou paramètre GET
+$envFile = __DIR__ . '/../.env';
+$apiKey = 'B6D711FCDE4D4FD5936544120E713976';
+if (file_exists($envFile)) {
+    $envContent = @file_get_contents($envFile);
+    if (preg_match('/EVOLUTION_API_KEY=([^\r\n]+)/', $envContent, $m)) {
+        $apiKey = trim($m[1], " \t\n\r\0\x0B\"'");
+    }
+}
+if (!empty($_GET['key'])) {
+    $apiKey = trim($_GET['key']);
+}
 
 function httpGet($url, $key) {
     $ch = curl_init($url);
@@ -10,22 +21,30 @@ function httpGet($url, $key) {
     curl_setopt($ch, CURLOPT_HTTPHEADER, ["apikey: $key"]);
     curl_setopt($ch, CURLOPT_TIMEOUT, 6);
     $res = curl_exec($ch);
+    $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
     curl_close($ch);
-    return json_decode($res, true);
+    return [$code, json_decode($res, true) ?: []];
 }
 
-$stateData = httpGet('http://127.0.0.1:8090/instance/connectionState/vigilcore-ops', $apiKey);
+list($stateCode, $stateData) = httpGet('http://127.0.0.1:8090/instance/connectionState/vigilcore-ops', $apiKey);
 $isConnected = isset($stateData['instance']['state']) && $stateData['instance']['state'] === 'open';
 
 $base64 = '';
 $pairingCode = '';
 $code = '';
+$errorMsg = '';
 
-if (!$isConnected) {
-    $connectData = httpGet('http://127.0.0.1:8090/instance/connect/vigilcore-ops', $apiKey);
-    $base64 = $connectData['base64'] ?? '';
-    $code = $connectData['code'] ?? '';
-    $pairingCode = $connectData['pairingCode'] ?? '';
+if ($stateCode === 401) {
+    $errorMsg = "Erreur 401 Unauthorized : La clé API du serveur ne correspond pas à Evolution API.";
+} elseif (!$isConnected) {
+    list($connectCode, $connectData) = httpGet('http://127.0.0.1:8090/instance/connect/vigilcore-ops', $apiKey);
+    if ($connectCode === 401) {
+        $errorMsg = "Erreur 401 Unauthorized : Clé API invalide.";
+    } else {
+        $base64 = $connectData['base64'] ?? '';
+        $code = $connectData['code'] ?? '';
+        $pairingCode = $connectData['pairingCode'] ?? '';
+    }
 }
 ?>
 <!DOCTYPE html>
@@ -121,7 +140,15 @@ if (!$isConnected) {
     <div class="card">
         <h1>Connecter VigilCore WhatsApp</h1>
         
-        <?php if ($isConnected): ?>
+        <?php if (!empty($errorMsg)): ?>
+            <div style="background: #ef444422; border: 1px solid #ef4444; border-radius: 10px; padding: 16px; margin: 20px 0; font-size: 13px; color: #fca5a5; text-align: left;">
+                <strong>⚠️ <?= htmlspecialchars($errorMsg) ?></strong><br><br>
+                Exécutez cette commande sur votre VPS pour synchroniser la clé :<br>
+                <code style="background: #000; padding: 4px 8px; border-radius: 4px; display: block; margin-top: 6px; color: #4ade80; word-break: break-all;">
+                    KEY=$(docker exec vigilcore-whatsapp printenv AUTHENTICATION_API_KEY) && sed -i "s/EVOLUTION_API_KEY=.*/EVOLUTION_API_KEY=$KEY/" /var/www/vigilcore/.env
+                </code>
+            </div>
+        <?php elseif ($isConnected): ?>
             <div class="connected-banner">
                 <div style="font-size: 52px; color: #00a884; margin-bottom: 12px;">✓</div>
                 <h2 style="color: #00a884; margin: 0 0 8px 0; font-size: 20px;">WhatsApp Connecté !</h2>
@@ -129,12 +156,23 @@ if (!$isConnected) {
             </div>
         <?php else: ?>
             <p style="color: #8696a0; font-size: 14px; margin: 0;">
-                <span class="pulse"></span> Actualisation automatique toutes les 8s
+                <span class="pulse"></span> Actualisation automatique toutes les 20s
             </p>
 
             <div class="qr-frame">
                 <?php if (!empty($base64)): ?>
                     <img src="<?= htmlspecialchars($base64) ?>" alt="WhatsApp QR Code">
+                <?php elseif (!empty($code)): ?>
+                    <canvas id="qr-canvas"></canvas>
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+                    <script>
+                        new QRious({
+                            element: document.getElementById('qr-canvas'),
+                            value: "<?= addslashes($code) ?>",
+                            size: 260,
+                            level: 'M'
+                        });
+                    </script>
                 <?php elseif (!empty($pairingCode)): ?>
                     <div style="width: 260px; height: 260px; display: flex; flex-direction: column; justify-content: center; align-items: center; color: #111b21;">
                         <p style="font-size: 12px; margin: 0; color: #666;">Code d'appairage :</p>
