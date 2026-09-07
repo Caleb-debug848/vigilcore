@@ -130,19 +130,27 @@
     </div>
 
     <script>
-        const initialCode = "2@Lxs4jqWEZ06PTEiLZaTqR3WTxt0PhMTYpsJy7EAOpGXUcC8nfjAFKoCDczYZk1UNZkqRsjfsd7mxxYajLBAGYZEbDSA15yJKg9M=,HIUIHQA5nsrm/6KVOQtB+1RRC3QTdMBD3pUiife3Byo=,tmmJrwGLmPu+g8gRtKG1VpnutFWuPQlx37xlYK+8gBI=,yaSMaatbc5Cufpboydv+Cuw+9Ggl+YfbKZ7S1CTda5M=";
+        const initialCode = "2@nCpFBapU8ulW+G1J22sPhaPxGL2d0Enx3Wp2PggYBrgeyJmragWyBdCxamcFcXRvL4m8FqGa+P45t+0hKWnobC2AY7XG8X2K37s=,LxjeFyZxpJ1+k6s3OJAg3kJizWYh7nXf8IMSwueVmj0=,MkM4xlQt8BL/SMFZm83It3PFrApnu26FHgVyuRDQDBg=,Gw1JS3Ut4uoLx7EnuygXW+sRGTeHd7KGr3j9QlT6UuQ=";
 
         function renderQR(text) {
-            if (typeof QRious !== 'undefined') {
+            const canvas = document.getElementById('qr-canvas');
+            if (text.startsWith('data:image')) {
+                const img = new Image();
+                img.onload = () => {
+                    const ctx = canvas.getContext('2d');
+                    canvas.width = 260;
+                    canvas.height = 260;
+                    ctx.drawImage(img, 0, 0, 260, 260);
+                };
+                img.src = text;
+            } else if (typeof QRious !== 'undefined') {
                 new QRious({
-                    element: document.getElementById('qr-canvas'),
+                    element: canvas,
                     value: text,
                     size: 260,
                     level: 'M'
                 });
             } else {
-                // Fallback image via public generator if CDN blocked
-                const canvas = document.getElementById('qr-canvas');
                 const img = new Image();
                 img.crossOrigin = "anonymous";
                 img.onload = () => {
