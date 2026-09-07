@@ -140,12 +140,29 @@ class Dashboard extends Component
     }
 
     /**
-     * Injection globale des 20 Passerelles Partenaires
+     * Clôture et résout tous les incidents actifs pour remettre tous les services au Vert (20/20)
      */
-    public function triggerAll20Services(StatuspageService $statuspage)
+    public function resolveAllIncidents(StatuspageService $statuspage)
     {
-        $allKeys = array_column(IncidentScenarioService::getScenarios(), 'key');
-        $this->triggerBatchScenarios($allKeys, $statuspage, 'CRITICAL');
+        $count = Incident::where('status', '!=', 'resolved')->count();
+        Incident::where('status', '!=', 'resolved')->update([
+            'status'      => 'resolved',
+            'is_resolved' => true,
+            'resolved_at' => now(),
+            'updated_at'  => now(),
+        ]);
+
+        \Illuminate\Support\Facades\Cache::forget('vigilcore_active_counts');
+        \Illuminate\Support\Facades\Cache::forget('vigilcore_dashboard_counts');
+        \Illuminate\Support\Facades\Cache::forget('vigilcore_reports_kpis_today');
+        \Illuminate\Support\Facades\Cache::forget('vigilcore_reports_kpis_week');
+        \Illuminate\Support\Facades\Cache::forget('vigilcore_reports_kpis_month');
+        \Illuminate\Support\Facades\Cache::forget('vigilcore_reports_kpis_all');
+        \Illuminate\Support\Facades\Cache::forget('statuspage_components_cache');
+
+        $this->simulationFeedback = "✓ Rétablissement réussi : {$count} incident(s) résolu(s). Le système est de nouveau 100% opérationnel (20/20 OK) !";
+        $this->simulationFeedbackType = 'success';
+        $this->refreshData($statuspage);
     }
 
 

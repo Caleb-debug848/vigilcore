@@ -846,6 +846,13 @@
                         <span>🔥</span>
                         <span>{{ __('Total 20 Services') }}</span>
                     </button>
+                    <button wire:click="resolveAllIncidents" 
+                            type="button"
+                            title="{{ __('Résoudre tous les incidents et repasser à 20/20 Opérationnels') }}"
+                            class="flex-1 sm:flex-initial px-3.5 py-2 rounded-xl text-xs font-mono font-bold bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs transition flex items-center justify-center gap-1.5 cursor-pointer">
+                        <span>🟢</span>
+                        <span>{{ __('Rétablir (Tout Vert)') }}</span>
+                    </button>
                 </div>
             </div>
 

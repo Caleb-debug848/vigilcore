@@ -102,11 +102,13 @@ printf "   ${C_AMBER}[%2d]${C_RESET} %-74s\n" \
   15 "⚡ PACK 15 SERVICES MAJEURS (Pannes combinées MoMo, Orange, ENEO, Canal+, S3P...)"
 printf "   ${C_RED}[%2d]${C_RESET} %-74s\n" \
   20 "🔥 BLACKOUT GLOBAL TOTAL (Simulation simultanée des 20 Passerelles Partenaires)"
+printf "   ${C_GREEN}[ r]${C_RESET} %-74s\n" \
+  "🟢 RÉTABLIR TOUS LES SERVICES (Clôturer tous les incidents & Repasser à 20/20 Verts)"
 echo ""
 
 echo -e "   ${C_RED}[ 0]${C_RESET} ${C_GRAY}Annuler et Quitter${C_RESET}"
 echo -e "${C_GRAY}────────────────────────────────────────────────────────────────────────────────${C_RESET}"
-echo -ne " ${C_BOLD}${C_WHITE}👉 Entrez votre choix ${C_CYAN}(ex: 5 | 1,5,6,14 | 1-15 | 15 pour pack 15 | 20 ou all pour totalité)${C_WHITE} : ${C_RESET}"
+echo -ne " ${C_BOLD}${C_WHITE}👉 Entrez votre choix ${C_CYAN}(ex: 5 | 15 pour pack 15 | 20 pour blackout | r pour tout rétablir au vert)${C_WHITE} : ${C_RESET}"
 read user_input
 
 # Nettoyage de la saisie
@@ -114,6 +116,19 @@ user_input=$(echo "$user_input" | tr ',' ' ' | tr ';' ' ')
 
 if [ -z "$user_input" ] || [ "$user_input" = "0" ]; then
     echo -e "${C_AMBER}Opération annulée par l'opérateur.${C_RESET}"
+    exit 0
+fi
+
+# Option Rétablissement / Reset de tous les incidents
+if [ "$user_input" = "r" ] || [ "$user_input" = "R" ] || [ "$user_input" = "reset" ] || [ "$user_input" = "clean" ]; then
+    echo ""
+    echo -e "${C_BOLD}${C_GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${C_RESET}"
+    echo -e " ${C_BOLD}${C_GREEN}🟢 RÉSOLUTION ET CLÔTURE DE TOUS LES INCIDENTS EN COURS...${C_RESET}"
+    echo -e "${C_GRAY}────────────────────────────────────────────────────────────────────────────────${C_RESET}"
+    php artisan vigilcore:reset-active-incidents
+    echo -e "\n ${C_BOLD}${C_GREEN}✓ SUCCÈS : Tous les 20 services sont maintenant 100% OPÉRATIONNELS (20/20 Verts) !${C_RESET}"
+    echo -e " ${C_GRAY}Actualisez votre Dashboard : ${C_CYAN}http://localhost:8000/dashboard${C_RESET}"
+    echo -e "${C_BOLD}${C_GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${C_RESET}\n"
     exit 0
 fi
 
