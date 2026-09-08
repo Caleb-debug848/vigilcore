@@ -132,8 +132,10 @@ while true; do
         echo -e " ${C_BOLD}${C_GREEN}[RESOLUTION ET CLOTURE DE TOUS LES INCIDENTS EN COURS...]${C_RESET}"
         echo -e "${C_GRAY}────────────────────────────────────────────────────────────────────────────────${C_RESET}"
         php artisan vigilcore:reset-active-incidents
+        bash seed_all_services_logs.sh >/dev/null 2>&1 &
         echo -e "\n ${C_BOLD}${C_GREEN}[OK] SUCCES : Tous les 20 services sont maintenant 100% OPERATIONNELS (20/20 Verts) !${C_RESET}"
         echo -e " ${C_GRAY}Consultez le Dashboard : ${C_CYAN}${DASHBOARD_URL}${C_RESET}"
+        echo -e " ${C_GRAY}Télémétrie Kibana : ${C_CYAN}https://coast-maritime-subject-everything.trycloudflare.com${C_RESET}"
         echo -e "${C_BOLD}${C_GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${C_RESET}\n"
         
         echo -ne " ${C_BOLD}${C_WHITE}> Appuyez sur [Entrée] pour revenir au menu ou [0 / q] pour quitter : ${C_RESET}"
@@ -451,6 +453,26 @@ EOF
       -d "$JSON_PAYLOAD" 2>/dev/null)
 
     HTTP_STATUS=$(echo "$HTTP_RESP" | tail -n 1)
+
+    # Indexation temps réel dans Elasticsearch / Kibana
+    ES_DOC=$(cat <<EOF
+{
+  "@timestamp": "${NOW_ISO}",
+  "service": { "name": "${KEY}" },
+  "component": "${KEY}",
+  "service_name": "${NAME}",
+  "http": { "response": { "status_code": ${HTTP_CODE} } },
+  "http.response.status_code": ${HTTP_CODE},
+  "log": { "level": "error" },
+  "message": "${ERR_CODE} on ${NAME} : ${ROOT_CAUSE}",
+  "sha256_hash": "${SHA_HASH}",
+  "host": { "name": "${HOST_NAME}" },
+  "source": "Kibana Logs Engine"
+}
+EOF
+)
+    curl -s -o /dev/null -X POST "http://127.0.0.1:9200/filebeat-logs/_doc" -H "Content-Type: application/json" -d "$ES_DOC" 2>/dev/null || true
+    curl -s -o /dev/null -X POST "http://127.0.0.1:9200/logs-generic-default/_doc" -H "Content-Type: application/json" -d "$ES_DOC" 2>/dev/null || true
 
     if [ "$HTTP_STATUS" = "200" ] || [ "$HTTP_STATUS" = "201" ] || [ "$HTTP_STATUS" = "204" ]; then
         echo -e "    ${C_GRAY}└─${C_RESET} Statut Distribution : ${C_GREEN}[SUCCÈS 200 OK]${C_RESET} — Alertes WhatsApp NOC & Status Page synchronisées !"
