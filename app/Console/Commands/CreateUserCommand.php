@@ -103,8 +103,9 @@ class CreateUserCommand extends Command
         $user = User::updateOrCreate(
             ['email' => $email],
             [
-                'name'     => $name,
-                'password' => Hash::make($password),
+                'name'              => $name,
+                'password'          => Hash::make($password),
+                'email_verified_at' => now(),
             ]
         );
 
