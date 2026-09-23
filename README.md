@@ -48,7 +48,6 @@ vigilcore/
 │   └── Services/               # Logique de détection, FSM et intégrations
 ├── config/                     # Fichiers de configuration de l'application
 ├── database/                   # Migrations de schéma, seeders et structures relationnelles
-├── diagrams/                   # Dossier de conception et modélisation UML / Architecture
 ├── public/                     # Point d'entrée web (index.php), assets compilés et logos
 ├── resources/                  # Vues Blade, templates d'emails et composants UI
 ├── routes/                     # Définition des routes applicatives (web.php, api.php)

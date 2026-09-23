@@ -120,13 +120,16 @@ renderToPng(iconSvgContent, path.join(imagesDir, 'logo_vigilcore_transparent.png
 renderToPng(iconSvgContent, path.join(imagesDir, 'logo_vigilcore_white_bg.png'), 2048, '#FFFFFF');
 renderToPng(iconSvgContent, path.join(imagesDir, 'logo_vigilcore_dark_bg.png'), 2048, '#0F172A');
 renderToPng(iconSvgContent, path.join(imagesDir, 'logo.png'), 1024);
-renderToPng(iconSvgContent, path.join(diagramsDir, 'logo_vigilcore.png'), 2048);
 
 // 2. Logos Complets Horizontaux (Typographie + Icône) (3120 x 720)
 renderToPng(fullSvgLight, path.join(imagesDir, 'logo_vigilcore_full_transparent.png'), 3120);
 renderToPng(fullSvgLight, path.join(imagesDir, 'logo_vigilcore_full_white_bg.png'), 3120, '#FFFFFF');
 renderToPng(fullSvgDark, path.join(imagesDir, 'logo_vigilcore_full_dark_transparent.png'), 3120);
 renderToPng(fullSvgDark, path.join(imagesDir, 'logo_vigilcore_full_dark_bg.png'), 3120, '#0F172A');
-renderToPng(fullSvgLight, path.join(diagramsDir, 'logo_vigilcore_full.png'), 3120, '#FFFFFF');
+
+if (fs.existsSync(diagramsDir)) {
+    renderToPng(iconSvgContent, path.join(diagramsDir, 'logo_vigilcore.png'), 2048);
+    renderToPng(fullSvgLight, path.join(diagramsDir, 'logo_vigilcore_full.png'), 3120, '#FFFFFF');
+}
 
 console.log('Tous les logos ont été générés avec succès !');
