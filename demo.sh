@@ -132,7 +132,13 @@ while true; do
         echo -e " ${C_BOLD}${C_GREEN}[RESOLUTION ET CLOTURE DE TOUS LES INCIDENTS EN COURS...]${C_RESET}"
         echo -e "${C_GRAY}────────────────────────────────────────────────────────────────────────────────${C_RESET}"
         php artisan vigilcore:reset-active-incidents
-        bash seed_all_services_logs.sh >/dev/null 2>&1 &
+        if [ -f "scripts/injection_logs_elasticsearch.sh" ]; then
+            bash scripts/injection_logs_elasticsearch.sh >/dev/null 2>&1 &
+        elif [ -f "scripts/seed_all_services_logs.sh" ]; then
+            bash scripts/seed_all_services_logs.sh >/dev/null 2>&1 &
+        elif [ -f "seed_all_services_logs.sh" ]; then
+            bash seed_all_services_logs.sh >/dev/null 2>&1 &
+        fi
         echo -e "\n ${C_BOLD}${C_GREEN}[OK] SUCCES : Tous les 20 services sont maintenant 100% OPERATIONNELS (20/20 Verts) !${C_RESET}"
         echo -e " ${C_GRAY}Consultez le Dashboard : ${C_CYAN}${DASHBOARD_URL}${C_RESET}"
         echo -e " ${C_GRAY}Télémétrie Kibana : ${C_CYAN}https://coast-maritime-subject-everything.trycloudflare.com${C_RESET}"

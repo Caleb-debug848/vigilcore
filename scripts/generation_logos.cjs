@@ -2,8 +2,9 @@ const fs = require('fs');
 const path = require('path');
 const { Resvg } = require('@resvg/resvg-js');
 
-const imagesDir = path.join(__dirname, 'public', 'images');
-const diagramsDir = path.join(__dirname, 'diagrams');
+const projectRoot = path.resolve(__dirname, '..');
+const imagesDir = path.join(projectRoot, 'public', 'images');
+const diagramsDir = path.join(projectRoot, 'diagrams');
 
 // 1. SVG Icône seul
 const iconSvgPath = path.join(imagesDir, 'logo.svg');

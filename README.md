@@ -1,58 +1,95 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# VIGILCORE — Observabilité, Détection Proactive & Résilience Opérationnelle
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+> **Projet de Fin d'Études & Stage Professionnel**  
+> **Institution :** Institut Africain d'Informatique (IAI-Cameroun) — Centre d'Excellence Technologique Paul BIYA  
+> **Entreprise d'accueil :** Maviance PLC (Douala, Cameroun) • Écosystème Smobilpay  
+> **Déploiement Production (VPS) :** [vigilcore.calebdevs.com](https://vigilcore.calebdevs.com)  
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 📌 Présentation du Projet
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+**VigilCore** est une plateforme intégrée de supervision proactive, de gestion des incidents et d'observabilité de haute disponibilité conçue pour sécuriser l'écosystème de paiement multi-services de **Maviance**.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Face aux pannes imprévues et aux dégradations de service des passerelles tierces (opérateurs télécoms, facturiers publics, distributeurs d'énergie), VigilCore apporte :
+1. **Une détection proactive par sondes synthétiques** avec contrôle de santé à intervalles réguliers (toutes les 30 secondes).
+2. **Une boîte noire forensique** scellée cryptographiquement par **SHA-256** garantissant l'inaltérabilité des preuves d'indisponibilité (SLA contractuels).
+3. **Un moteur d'orchestration multicanal (< 5s)** s'appuyant sur des webhooks sécurisés, **n8n**, une passerelle **WhatsApp NOC** et une page de statut publique.
+4. **Une console d'audit et de reporting** pour l'analyse décisionnelle et l'exportation des historiques d'incidents (PDF et Excel).
 
-## Learning Laravel
+---
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## 🏗️ Architecture Technique Globale
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+L'infrastructure s'articule autour d'une architecture modulaire et distribuée :
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+| Couche | Technologies Employées | Rôle Principal |
+| :--- | :--- | :--- |
+| **Backend Applicatif** | **PHP 8.3 / Laravel 11** | Cœur décisionnel, API REST, gestion des incidents et logique métier |
+| **Interface Réactive** | **Livewire 3 / Tailwind CSS** | Tableau de bord temps réel, indicateurs de santé, filtres dynamiques |
+| **Observabilité & Télémétrie** | **Elasticsearch / Kibana** | Centralisation des journaux d'événements, métriques de latence HTTP |
+| **Orchestration & Alertes** | **n8n / Webhooks SSL** | Routage événementiel, déduplication et automatisation des alertes |
+| **Canal d'Urgence NOC** | **Evolution API (WhatsApp)** | Notification push instantanée des équipes d'astreinte et gestionnaires |
+| **Base de Données & Cache** | **MySQL 8 / Redis** | Persistance relationnelle des incidents et mise en cache haute performance |
 
-## Agentic Development
+---
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+## 📂 Structure & Organisation du Projet
 
-```bash
-composer require laravel/boost --dev
+Le projet respecte scrupuleusement les conventions d'architecture industrielle et les standards du framework Laravel :
 
-php artisan boost:install
+```text
+vigilcore/
+├── app/                        # Cœur métier et logique applicative
+│   ├── Console/Commands/       # Commandes CLI Artisan d'administration
+│   ├── Http/Controllers/       # Contrôleurs Web et API REST (Webhooks, Exports)
+│   ├── Livewire/               # Composants réactifs (Dashboard, Rapports)
+│   ├── Models/                 # Modèles de données Eloquent (Incident, User)
+│   └── Services/               # Logique de détection, FSM et intégrations
+├── config/                     # Fichiers de configuration de l'application
+├── database/                   # Migrations de schéma, seeders et structures relationnelles
+├── diagrams/                   # Dossier de conception et modélisation UML / Architecture
+├── public/                     # Point d'entrée web (index.php), assets compilés et logos
+├── resources/                  # Vues Blade, templates d'emails et composants UI
+├── routes/                     # Définition des routes applicatives (web.php, api.php)
+├── scripts/                    # Scripts d'exploitation système et outils d'administration
+├── storage/                    # Logs d'exécution, sessions et fichiers temporaires
+├── tests/                      # Suites de tests automatisés (Feature et Unit)
+└── demo.sh                     # Orchestrateur de simulation pour la soutenance (Exécuté sur VPS)
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+---
 
-## Contributing
+## 🛠️ Contenu du Répertoire `scripts/`
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Pour faciliter l'administration du serveur et l'interfaçage avec les services conteneurisés du VPS, des utilitaires dédiés sont regroupés dans `scripts/` :
 
-## Code of Conduct
+* **`connexion_whatsapp.sh`** : Assistant d'appairage direct de l'instance WhatsApp (via code d'association numérique ou QR code).
+* **`reinitialisation_qr.sh`** : Procédure de purge et de réinitialisation à chaud du conteneur d'alerting WhatsApp.
+* **`injection_logs_elasticsearch.sh`** : Synchronisation des métriques nominales des 20 services partenaires dans Elasticsearch.
+* **`generation_logos.cjs`** : Utilitaire de rendu des logos vectoriels officiels des partenaires intégrateurs.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+---
 
-## Security Vulnerabilities
+## 🚀 Protocole de Démonstration (Soutenance)
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+La plateforme de production et l'ensemble de ses briques (Laravel, MySQL, Redis, n8n, Elasticsearch, Kibana, WhatsApp Gateway) sont **déployées en ligne sur le VPS**.
 
-## License
+Lors de la soutenance :
+1. **Visualisation en direct :** Ouvrez l'interface web sur [https://vigilcore.calebdevs.com](https://vigilcore.calebdevs.com).
+2. **Simulation d'incidents :** Connectez-vous en SSH au VPS et lancez l'orchestrateur :
+   ```bash
+   ./demo.sh
+   ```
+3. **Scénarios disponibles :**
+   * Choix d'une panne unitaire parmi les 20 passerelles (ex: Orange Money, MTN MoMo, Eneo, Camwater, Canal+).
+   * **Pack 15 services majeurs** pour démontrer la gestion d'incidents massifs.
+   * **Blackout global (20/20)** démontrant la résilience de la machine d'états (FSM) et le déclenchement des coupe-circuits.
+   * **Rétablissement complet (touche `r`)** pour clôturer tous les incidents et ramener les 20 passerelles à l'état opérationnel.
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+---
+
+## 🔒 Sécurité & Intégrité
+
+* **Scellement SHA-256** : Chaque incident enregistré génère une signature cryptographique immuable combinant le service, le code de statut HTTP, le motif d'erreur, le serveur émetteur et l'horodatage UTC.
+* **Protection des accès** : Authentification stricte sur le tableau de bord avec contrôle des rôles et sessions sécurisées.
