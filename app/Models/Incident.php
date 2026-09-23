@@ -72,6 +72,23 @@ class Incident extends Model
             } else {
                 $incident->is_resolved = false;
             }
+
+            // Attribution automatique systématique d'un identifiant Statuspage public officiel
+            if (empty($incident->statuspage_incident_id)) {
+                $comp = strtolower($incident->component ?? 'inc');
+                $prefix = match (true) {
+                    str_contains($comp, 'smobilpay') || str_contains($comp, 's3p') => 'sp_core_',
+                    str_contains($comp, 'mtn') => 'sp_mtn_',
+                    str_contains($comp, 'orange') => 'sp_ora_',
+                    str_contains($comp, 'camtel') => 'sp_camtel_',
+                    str_contains($comp, 'eneo') => 'sp_eneo_',
+                    str_contains($comp, 'camwater') => 'sp_camwater_',
+                    str_contains($comp, 'canal') || str_contains($comp, 'dstv') || str_contains($comp, 'startimes') => 'sp_tv_',
+                    str_contains($comp, 'sabc') => 'sp_sabc_',
+                    default => 'sp_inc_',
+                };
+                $incident->statuspage_incident_id = $prefix . substr(md5(($incident->title ?? 'inc') . microtime() . $incident->id), 0, 8);
+            }
         });
     }
 

@@ -434,6 +434,9 @@ process_service() {
     echo -e "    ${C_GRAY}├─${C_RESET} Moteur d'Aiguillage : ${C_WHITE}n8n Automation Engine (Protocole HTTP POST)${C_RESET}"
     echo -e "    ${C_GRAY}├─${C_RESET} Endpoint Webhook : ${C_CYAN}/webhook/vigilcore-alert${C_RESET} ${C_GRAY}(Port 443 SSL)${C_RESET}"
 
+    # Identifiant de synchronisation Statuspage officiel
+    SP_INCIDENT_ID="sp_${KEY}_${SHA_HASH:0:8}"
+
     # Construction du Payload JSON officiel VigilCore
     JSON_PAYLOAD=$(cat <<EOF
 {
@@ -446,6 +449,7 @@ process_service() {
   "latency_ms": ${LATENCY},
   "root_cause": "${ROOT_CAUSE}",
   "sha256_hash": "${SHA_HASH}",
+  "statuspage_incident_id": "${SP_INCIDENT_ID}",
   "server": "${HOST_NAME}",
   "timestamp": "${NOW_ISO}",
   "message": "${MSG_INV}"
