@@ -607,15 +607,7 @@
                                     {{ $endStr }}
                                 </td>
                                 <td class="py-2.5 px-3 font-semibold text-slate-900 dark:text-white">
-                                    <div>{{ $incident->title }}</div>
-                                    @if($incident->financial_impact && $incident->financial_impact['gross_volume_cfa'] > 0)
-                                        <div class="mt-1 flex items-center gap-1.5 text-[10px] text-amber-600 dark:text-amber-400 font-mono font-normal">
-                                            <span class="inline-flex items-center px-1.5 py-0.2 rounded bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800/60 font-semibold">
-                                                {{ $incident->financial_impact['status_badge_text'] }}
-                                            </span>
-                                            <span class="text-slate-400">({{ $incident->financial_impact['blocked_transactions_fmt'] }} ops)</span>
-                                        </div>
-                                    @endif
+                                    {{ $incident->title }}
                                 </td>
                                 <td class="py-2.5 px-2 text-center">
                                     @if(strtoupper($incident->severity) === 'CRITICAL')
@@ -655,21 +647,10 @@
                                     {{ $incident->source ?? 'Kibana Logs' }}
                                 </td>
                                 <td class="py-2.5 px-3 text-right whitespace-nowrap">
-                                    <div class="flex items-center justify-end gap-1.5">
-                                        <a href="{{ route('incidents.rca', $incident->id) }}" 
-                                           target="_blank"
-                                           title="{{ __('Télécharger / Imprimer le Rapport Post-Mortem (RCA)') }}"
-                                           class="px-2 py-1 rounded bg-emerald-50 dark:bg-emerald-950/40 hover:bg-emerald-100 dark:hover:bg-emerald-900/60 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800/80 text-[11px] font-mono font-bold transition flex items-center gap-1">
-                                            <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
-                                            </svg>
-                                            <span>RCA</span>
-                                        </a>
-                                        <button wire:click="viewJson({{ $incident->id }})" 
-                                                class="px-2.5 py-1 rounded bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 text-[11px] font-bold cursor-pointer transition">
-                                            JSON
-                                        </button>
-                                    </div>
+                                    <button wire:click="viewJson({{ $incident->id }})" 
+                                            class="px-2.5 py-1 rounded bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 text-[11px] font-bold cursor-pointer transition">
+                                        JSON
+                                    </button>
                                 </td>
                             </tr>
                         @empty
@@ -737,15 +718,6 @@
                             {{ $incident->title }}
                         </div>
 
-                        @if($incident->financial_impact && $incident->financial_impact['gross_volume_cfa'] > 0)
-                            <div class="flex items-center gap-1.5 text-[10px] text-amber-600 dark:text-amber-400 font-mono font-semibold">
-                                <span class="inline-flex items-center px-1.5 py-0.5 rounded bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800/60">
-                                    {{ $incident->financial_impact['status_badge_text'] }}
-                                </span>
-                                <span class="text-slate-400 font-normal">({{ $incident->financial_impact['blocked_transactions_fmt'] }} ops)</span>
-                            </div>
-                        @endif
-
                         <!-- Métadonnées (Code Erreur, Source & MTTR) -->
                         <div class="flex items-center justify-between text-[11px] text-slate-500 dark:text-slate-400 pt-1 border-t border-slate-200/60 dark:border-slate-800/60">
                             <span class="font-semibold text-slate-700 dark:text-slate-300">⚡ {{ $incident->error_code }}</span>
@@ -753,15 +725,10 @@
                         </div>
 
                         <!-- Actions Mobiles -->
-                        <div class="pt-1 grid grid-cols-2 gap-2">
-                            <a href="{{ route('incidents.rca', $incident->id) }}" 
-                               target="_blank"
-                               class="py-1.5 rounded-lg bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/80 text-emerald-700 dark:text-emerald-300 text-center font-bold text-xs flex items-center justify-center gap-1">
-                                <span>📄 Rapport RCA</span>
-                            </a>
+                        <div class="pt-1">
                             <button wire:click="viewJson({{ $incident->id }})" 
-                                    class="py-1.5 rounded-lg bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 text-center font-bold text-xs cursor-pointer">
-                                🔍 JSON
+                                    class="w-full py-1.5 rounded-lg bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 text-center font-bold text-xs cursor-pointer">
+                                📄 Payload JSON
                             </button>
                         </div>
 

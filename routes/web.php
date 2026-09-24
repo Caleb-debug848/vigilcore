@@ -21,9 +21,6 @@ Route::get('/lang/{locale}', function (string $locale) {
     return redirect()->back();
 })->name('lang.switch');
 
-// Consultation et impression officielle du rapport Post-Mortem (RCA)
-Route::get('/incidents/{id}/rca', [\App\Http\Controllers\IncidentRcaController::class, 'show'])->name('incidents.rca');
-
 // Routes protégées par le middleware d'authentification VigilCore
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', Dashboard::class)->name('dashboard');
