@@ -126,12 +126,21 @@ class FinancialImpactService
         $profile = self::getProfile($incident);
 
         // 1. Calcul de la durée en secondes
-        $start = $incident->created_at ?? now();
-        $end = ($incident->status === 'resolved')
-            ? ($incident->resolved_at ?? $incident->updated_at ?? now())
-            : now();
+        try {
+            $start = Carbon::parse($incident->created_at ?? now());
+        } catch (\Throwable $e) {
+            $start = now();
+        }
 
-        $diffSec = max(10, $start->diffInSeconds($end));
+        try {
+            $end = ($incident->status === 'resolved')
+                ? Carbon::parse($incident->resolved_at ?? $incident->updated_at ?? now())
+                : now();
+        } catch (\Throwable $e) {
+            $end = now();
+        }
+
+        $diffSec = max(10, abs($start->diffInSeconds($end)));
         $diffMin = max(0.2, $diffSec / 60);
 
         // 2. Calcul des métriques financières
