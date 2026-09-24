@@ -82,7 +82,7 @@ class IncidentRcaController extends Controller
                 ],
             ];
 
-            return view('reports.rca-document', [
+            $html = view('reports.rca-document', [
                 'incident'        => $incident,
                 'financial'       => $financialImpact,
                 'createdAtWat'    => $createdAtWat,
@@ -91,7 +91,9 @@ class IncidentRcaController extends Controller
                 'timeline'        => $timeline,
                 'rawPayload'      => $rawPayload,
                 'generatedAtWat'  => now()->timezone('Africa/Douala')->format('d/m/Y H:i:s') . ' (WAT - Douala)',
-            ]);
+            ])->render();
+
+            return response($html, 200)->header('Content-Type', 'text/html; charset=utf-8');
         } catch (\Throwable $e) {
             \Illuminate\Support\Facades\Log::error("RCA generation error: " . $e->getMessage() . " at " . $e->getFile() . ":" . $e->getLine());
             return response("<div style='font-family:sans-serif;padding:30px;max-width:800px;margin:auto;'><h2>Détail Diagnostic RCA (Incident #{$id})</h2><p style='color:red;'><b>Erreur :</b> " . htmlspecialchars($e->getMessage()) . "</p><p>Fichier : " . htmlspecialchars($e->getFile()) . " (Ligne " . $e->getLine() . ")</p><a href='/dashboard' style='display:inline-block;margin-top:15px;padding:8px 16px;background:#0020B2;color:#fff;text-decoration:none;border-radius:6px;'>Retour au Dashboard</a></div>", 200);
