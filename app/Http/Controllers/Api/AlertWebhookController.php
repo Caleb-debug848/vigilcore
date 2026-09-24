@@ -99,6 +99,23 @@ class AlertWebhookController extends Controller
         }
 
         // 2. CAS D'OUVERTURE D'INCIDENT (Création)
+        $spId = $data['statuspage_incident_id'] ?? null;
+        if (empty($spId)) {
+            $comp = strtolower($component ?? $title ?? 'inc');
+            $prefix = match (true) {
+                str_contains($comp, 'smobilpay') || str_contains($comp, 's3p') => 'sp_core_',
+                str_contains($comp, 'mtn') => 'sp_mtn_',
+                str_contains($comp, 'orange') => 'sp_ora_',
+                str_contains($comp, 'camtel') => 'sp_camtel_',
+                str_contains($comp, 'eneo') => 'sp_eneo_',
+                str_contains($comp, 'camwater') => 'sp_camwater_',
+                str_contains($comp, 'canal') || str_contains($comp, 'dstv') || str_contains($comp, 'startimes') => 'sp_tv_',
+                str_contains($comp, 'sabc') => 'sp_sabc_',
+                default => 'sp_inc_',
+            };
+            $spId = $prefix . substr(md5(($title ?? 'inc') . microtime()), 0, 8);
+        }
+
         $incident = Incident::create([
             'title'                  => $title,
             'description'            => $message,
@@ -106,7 +123,7 @@ class AlertWebhookController extends Controller
             'status'                 => 'open',
             'source'                 => $source,
             'component'              => $component,
-            'statuspage_incident_id' => $data['statuspage_incident_id'] ?? null,
+            'statuspage_incident_id' => $spId,
             'raw_payload'            => is_array($data) ? $data : json_decode($data, true),
         ]);
 
