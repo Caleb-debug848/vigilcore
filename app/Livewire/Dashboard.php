@@ -245,6 +245,7 @@ class Dashboard extends Component
             $payload['triggered_at_wat'] = $createdAtHuman;
             $payload['resolved_at_wat']  = $updatedAtHuman;
             $payload['duration_mttr']    = $mttrHuman;
+            $payload['financial_impact'] = $incident->financial_impact;
 
             $this->activeJsonPayload = $payload;
             $this->selectedIncidentTitle = $incident->title ?? 'Incident #' . $incident->id;

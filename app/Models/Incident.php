@@ -119,6 +119,14 @@ class Incident extends Model
     }
 
     /**
+     * Calcule l'impact financier et les flux à risque en direct (Smobilpay)
+     */
+    public function getFinancialImpactAttribute(): array
+    {
+        return \App\Services\FinancialImpactService::calculate($this);
+    }
+
+    /**
      * Récupère le code d'erreur technique (ex: ERR_GATEWAY_TIMEOUT_504, 500)
      */
     public function getErrorCodeAttribute(): string

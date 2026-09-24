@@ -26,6 +26,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', Dashboard::class)->name('dashboard');
     Route::get('/reports', IncidentReports::class)->name('reports');
     Route::get('/reports/export', [IncidentExportController::class, 'export'])->name('reports.export');
+    Route::get('/incidents/{id}/rca', [\App\Http\Controllers\IncidentRcaController::class, 'show'])->name('incidents.rca');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
