@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\Response;
 class SecurityHeaders
 {
     /**
-     * Enforce explicit enterprise security headers that guarantee Livewire & AlpineJS script execution.
+     * Configuration des en-têtes HTTP de sécurité.
      */
     public function handle(Request $request, Closure $next): Response
     {
