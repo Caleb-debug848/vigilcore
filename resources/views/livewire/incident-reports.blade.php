@@ -579,9 +579,9 @@
                     <tbody class="divide-y divide-slate-200 dark:divide-slate-800/60 text-slate-700 dark:text-slate-300">
                         @forelse($incidents as $incident)
                             @php
-                                $startStr = $incident->created_at ? $incident->created_at->format('d/m/Y H:i:s') : 'N/A';
+                                $startStr = $incident->created_at ? $incident->created_at->timezone('Africa/Douala')->format('d/m/Y H:i:s') : 'N/A';
                                 $endObj = $incident->resolved_at ?? (($incident->status === 'resolved') ? $incident->updated_at : null);
-                                $endStr = $endObj ? $endObj->format('d/m/Y H:i:s') : __('En cours');
+                                $endStr = $endObj ? $endObj->timezone('Africa/Douala')->format('d/m/Y H:i:s') : __('En cours');
                                 $mttr = $incident->mttr_formatted;
                             @endphp
                             <tr class="incident-row hover:bg-slate-50 dark:hover:bg-slate-800/30 transition">
@@ -646,9 +646,9 @@
             <div class="block md:hidden p-3 space-y-3">
                 @forelse($incidents as $incident)
                     @php
-                        $startStr = $incident->created_at ? $incident->created_at->format('d/m H:i') : 'N/A';
+                        $startStr = $incident->created_at ? $incident->created_at->timezone('Africa/Douala')->format('d/m H:i') : 'N/A';
                         $endObj = $incident->resolved_at ?? (($incident->status === 'resolved') ? $incident->updated_at : null);
-                        $endStr = $endObj ? $endObj->format('d/m H:i') : __('En cours');
+                        $endStr = $endObj ? $endObj->timezone('Africa/Douala')->format('d/m H:i') : __('En cours');
                         $mttr = $incident->mttr_formatted;
                     @endphp
                     <div class="p-3 rounded-xl bg-slate-50 dark:bg-[#0c101a] border border-slate-200 dark:border-slate-800 space-y-2.5 font-mono text-xs">
