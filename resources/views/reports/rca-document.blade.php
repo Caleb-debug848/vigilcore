@@ -396,6 +396,15 @@
     </style>
 </head>
 <body>
+@php
+    $financial = is_array($financial ?? null) ? $financial : [
+        'tpm' => 60,
+        'blocked_transactions_fmt' => '0',
+        'gross_volume_fmt' => '0 FCFA',
+        'commission_loss_fmt' => '0 FCFA',
+    ];
+    $timeline = is_array($timeline ?? null) ? $timeline : [];
+@endphp
 
     <!-- Barre d'action supérieure (Affichée à l'écran, masquée à l'impression) -->
     <div class="top-action-bar">
@@ -463,21 +472,21 @@
             <div class="fin-title">
                 <span>Évaluation d'Impact Financier & Continuité de Service (Smobilpay)</span>
                 <span style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: #38bdf8;">
-                    DÉBIT NOMINAL : {{ $financial['tpm'] }} TX/MIN
+                    DÉBIT NOMINAL : {{ $financial['tpm'] ?? 60 }} TX/MIN
                 </span>
             </div>
             <div class="fin-grid">
                 <div class="fin-card amber">
                     <div class="fin-label">Transactions Différées</div>
-                    <div class="fin-val">{{ $financial['blocked_transactions_fmt'] }} ops</div>
+                    <div class="fin-val">{{ $financial['blocked_transactions_fmt'] ?? '0' }} ops</div>
                 </div>
                 <div class="fin-card green">
                     <div class="fin-label">Volume Financier Préservé</div>
-                    <div class="fin-val">{{ $financial['gross_volume_fmt'] }}</div>
+                    <div class="fin-val">{{ $financial['gross_volume_fmt'] ?? '0 FCFA' }}</div>
                 </div>
                 <div class="fin-card green">
                     <div class="fin-label">Commissions Sécurisées</div>
-                    <div class="fin-val">{{ $financial['commission_loss_fmt'] }}</div>
+                    <div class="fin-val">{{ $financial['commission_loss_fmt'] ?? '0 FCFA' }}</div>
                 </div>
             </div>
         </div>
@@ -535,11 +544,11 @@
                 </div>
                 <div class="forensic-row">
                     <div class="f-label">Heure Début (WAT) :</div>
-                    <div class="f-val">{{ $createdAtWat->format('d/m/Y H:i:s') }}</div>
+                    <div class="f-val">{{ isset($createdAtWat) && is_object($createdAtWat) ? $createdAtWat->format('d/m/Y H:i:s') : (is_string($createdAtWat ?? null) ? $createdAtWat : now()->format('d/m/Y H:i:s')) }}</div>
                 </div>
                 <div class="forensic-row">
                     <div class="f-label">Heure Clôture (WAT) :</div>
-                    <div class="f-val">{{ $resolvedAtWat->format('d/m/Y H:i:s') }}</div>
+                    <div class="f-val">{{ isset($resolvedAtWat) && is_object($resolvedAtWat) ? $resolvedAtWat->format('d/m/Y H:i:s') : (is_string($resolvedAtWat ?? null) ? $resolvedAtWat : now()->format('d/m/Y H:i:s')) }}</div>
                 </div>
                 <div class="forensic-row">
                     <div class="f-label">Empreinte SHA-256 :</div>
