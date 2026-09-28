@@ -16,11 +16,17 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        // Sécurité critique : Ne jamais exécuter ce seeder de test en environnement de production !
+        if (app()->environment('production')) {
+            $this->command?->warn('Exécution de DatabaseSeeder annulée : environnement de production détecté.');
+            return;
+        }
+
         User::updateOrCreate(
             ['email' => 'calebdassi@gmail.com'],
             [
                 'name' => 'Caleb',
-                'password' => Hash::make('password123'),
+                'password' => Hash::make(env('SEED_DEFAULT_PASSWORD', 'password123')),
             ]
         );
 
@@ -28,7 +34,7 @@ class DatabaseSeeder extends Seeder
             ['email' => 'admin@vigilcore.internal'],
             [
                 'name' => 'Admin VigilCore',
-                'password' => Hash::make('password123'),
+                'password' => Hash::make(env('SEED_DEFAULT_PASSWORD', 'password123')),
             ]
         );
     }

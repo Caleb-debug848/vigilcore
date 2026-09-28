@@ -53,6 +53,7 @@ class IncidentReports extends Component
             session(['locale' => $locale]);
             session()->save();
             app()->setLocale($locale);
+            $this->js('window.location.reload()');
         }
     }
 

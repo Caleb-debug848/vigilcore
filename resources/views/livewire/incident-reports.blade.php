@@ -67,7 +67,7 @@
                             </span>
                         </div>
                         <div class="flex items-center gap-1.5 text-[9.5px] sm:text-[10px] font-mono text-slate-500 dark:text-slate-400 font-semibold tracking-wide uppercase pt-0.5 leading-none">
-                            <span>Rapports & SLA Forensics</span>
+                            <span>{{ __('Rapports & SLA Forensics') }}</span>
                         </div>
                     </div>
                 </a>
