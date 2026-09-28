@@ -379,20 +379,24 @@
                 </div>
             </div>
 
-            <!-- DISPONIBILITÉ GLOBALE (SLA) -->
-            <div class="dash-card print-kpi-card p-4 sm:p-5 rounded-2xl bg-white dark:bg-[#0d1322] border border-slate-200 dark:border-slate-800/90 shadow-sm space-y-2">
+            <!-- DISPONIBILITÉ GLOBALE (SLA) (Dynamique Vert/Rouge) -->
+            <div class="dash-card print-kpi-card p-4 sm:p-5 rounded-2xl bg-white dark:bg-[#0d1322] border {{ $uptimePct < 99.50 ? 'border-red-500/50 bg-red-500/5 shadow-red-500/10' : 'border-slate-200 dark:border-slate-800/90' }} shadow-sm space-y-2">
                 <div class="flex items-center justify-between">
-                    <span class="text-[10px] font-mono font-bold uppercase text-slate-500 dark:text-slate-400 tracking-wider flex items-center gap-1.5">
-                        <span class="w-2 h-2 rounded-full bg-emerald-500"></span> {{ __('Disponibilité SLA Globale') }}
+                    <span class="text-[10px] font-mono font-bold uppercase {{ $uptimePct < 99.50 ? 'text-red-600 dark:text-red-400' : 'text-slate-500 dark:text-slate-400' }} tracking-wider flex items-center gap-1.5">
+                        <span class="w-2 h-2 rounded-full {{ $uptimePct < 99.50 ? 'bg-red-500 animate-ping' : 'bg-emerald-500' }}"></span> {{ __('Disponibilité SLA Globale') }}
                     </span>
-                    <span class="badge-res px-2 py-0.5 rounded text-[10px] font-mono font-bold">{{ __('Objectif') }} ≥ 99.5%</span>
+                    <span class="{{ $uptimePct < 99.50 ? 'bg-red-100 text-red-700 dark:bg-red-950/60 dark:text-red-400 border border-red-200 dark:border-red-800 animate-pulse' : 'badge-res' }} px-2 py-0.5 rounded text-[10px] font-mono font-bold">
+                        {{ $uptimePct < 99.50 ? 'SLA ' . __('DÉGRADÉ') . ' (< 99.5%)' : __('Objectif') . ' ≥ 99.5%' }}
+                    </span>
                 </div>
                 <div class="flex items-baseline justify-between">
-                    <span class="kpi-sla-val text-3xl font-extrabold font-mono text-emerald-600 dark:text-emerald-400">{{ $uptimePct }}%</span>
-                    <span class="text-[11px] font-mono text-slate-400">Production</span>
+                    <span class="kpi-sla-val text-3xl font-extrabold font-mono {{ $uptimePct < 99.50 ? 'text-red-600 dark:text-red-400' : 'text-emerald-600 dark:text-emerald-400' }}">{{ $uptimePct }}%</span>
+                    <span class="text-[11px] font-mono {{ $uptimePct < 99.50 ? 'text-red-500 font-bold' : 'text-slate-400' }}">
+                        {{ $uptimePct < 99.50 ? __('Pénalités Applicables') : 'Production' }}
+                    </span>
                 </div>
                 <div class="no-print w-full bg-slate-100 dark:bg-slate-800/60 h-1.5 rounded-full overflow-hidden">
-                    <div class="bg-gradient-to-r from-emerald-500 to-teal-400 h-full rounded-full" style="width: {{ $uptimePct }}%"></div>
+                    <div class="{{ $uptimePct < 99.50 ? 'bg-gradient-to-r from-red-600 to-amber-500' : 'bg-gradient-to-r from-emerald-500 to-teal-400' }} h-full rounded-full" style="width: {{ $uptimePct }}%"></div>
                 </div>
             </div>
 
